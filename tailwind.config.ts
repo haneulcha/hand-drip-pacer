@@ -4,6 +4,13 @@ export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
+      transitionDuration: {
+        DEFAULT: 'var(--motion-duration-base)',
+        long: 'var(--motion-duration-long)',
+      },
+      transitionTimingFunction: {
+        DEFAULT: 'var(--motion-easing)',
+      },
       colors: {
         surface: {
           DEFAULT: 'var(--color-surface)',

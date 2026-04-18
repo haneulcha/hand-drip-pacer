@@ -1,12 +1,12 @@
 # Design Tokens
 
-`design.md` § Architecture의 보조 문서. UI 리디자인 시 컴포넌트 코드를 건드리지 않기 위한 토큰 시스템 스펙.
+`design.md` § Architecture의 보조 문서. 색/타이포/모션의 의미·선택 근거는 `brand.md`, 실제 값과 레이어 구조는 이 문서.
 
 ## Principles
 
 - **컴포넌트는 semantic 토큰만 참조**. primitive 직접 사용 금지.
 - **Tailwind 클래스로 접근**하되, 내부적으로 CSS 변수를 가리켜 런타임 테마 교체 가능.
-- **초기 값은 placeholder**. 중립 grey + 단일 accent로 시작하고 UI 디벨롭 단계에서 브랜드 컬러/타이포 확정.
+- 현재 값은 `brand.md` 1차 반영본. 브랜드 팔레트 범위(`#FBF7EF~#F5EFE4` / `#2A241E~#3A2F26` / `#B8843F~#A86832`)를 양끝 앵커로 삼고 중간을 인터폴레이션.
 
 ## Layer Structure
 
@@ -31,47 +31,62 @@ src/ui/
 
 로드 순서: `globals.css`에서 `primitives.css` → `semantic.css` 순으로 import. semantic이 primitive를 참조해야 하므로 순서 중요.
 
-## Primitive Tokens (placeholder 값)
+## Primitive Tokens
 
-### Neutral scale
+### Neutral scale (ivory → espresso)
 ```css
---neutral-0:   #ffffff;
---neutral-50:  #fafaf9;
---neutral-100: #f5f5f4;
---neutral-200: #e7e5e4;
---neutral-300: #d6d3d1;
---neutral-400: #a8a29e;
---neutral-500: #78716c;
---neutral-600: #57534e;
---neutral-700: #44403c;
---neutral-800: #292524;
---neutral-900: #1c1917;
---neutral-950: #0c0a09;
+--neutral-0:   #fbf7ef;  /* brand bg 밝은 한계 */
+--neutral-50:  #f5efe4;  /* brand bg 어두운 한계 */
+--neutral-100: #ede5d5;
+--neutral-200: #ddd2bd;
+--neutral-300: #c4b59d;
+--neutral-400: #a3927c;
+--neutral-500: #7d6f5e;
+--neutral-600: #5d5244;
+--neutral-700: #4a4036;
+--neutral-800: #3a2f26;  /* brand ink 밝은 한계 */
+--neutral-900: #2a241e;  /* brand ink 어두운 한계 */
+--neutral-950: #1c1914;
 ```
 
-### Accent scale (coffee/amber 계열 placeholder)
+### Accent scale (muted ochre)
 ```css
---accent-50:  #fef7ed;
---accent-100: #fdedd4;
---accent-200: #fad7a8;
---accent-300: #f6ba71;
---accent-400: #f19339;
---accent-500: #ed7614;  /* 주 accent */
---accent-600: #de5c0a;
---accent-700: #b8450b;
---accent-800: #933811;
---accent-900: #762f11;
+--accent-50:  #faf1e0;
+--accent-100: #f2deb8;
+--accent-200: #e5c289;
+--accent-300: #d4a25c;
+--accent-400: #c48f46;
+--accent-500: #b8843f;  /* brand 포인트 밝은 한계 · 주 accent */
+--accent-600: #a86832;  /* brand 포인트 어두운 한계 */
+--accent-700: #8a5528;
+--accent-800: #6e4420;
+--accent-900: #543319;
 ```
 
-### Signal
+### Signal (warm-adjusted)
 ```css
---red-500:   #ef4444;
---amber-500: #f59e0b;
---green-500: #10b981;
+--red-500:   #c45a4d;
+--amber-500: #d49a3c;
+--green-500: #6b9360;
 ```
+
+### Motion
+```css
+--motion-duration-base: 320ms;  /* 기본 트랜지션 (브랜드: 한 템포 늦게) */
+--motion-duration-long: 450ms;  /* 덜 중요한 전환 */
+--motion-easing: cubic-bezier(0.2, 0.8, 0.2, 1);  /* ease-out 계열, spring/bounce 금지 */
+```
+
+Tailwind에서 `theme.transitionDuration.DEFAULT` / `transitionTimingFunction.DEFAULT`를 이 변수에 매핑했으므로, 기존 `transition-colors` 등은 자동으로 320ms / 브랜드 easing 적용됨.
+
+### Typography (외부 로드)
+- **Pretendard Variable** (CDN: jsdelivr) — 한글/Latin 통합 sans, 숫자 가독성
+- **Inter** (Google Fonts) — Latin 전용 fallback / 특정 숫자 강조용
+- `index.html`의 `<link rel="stylesheet">` 로 로드, `globals.css`의 `body { font-family }`에서 Pretendard → Inter → system 스택 지정
+- 숫자는 `tabular-nums` 필수 (값 변경 시 레이아웃 흔들림 방지)
 
 ### Spacing / radius / shadow
-Tailwind 기본 스케일 사용. 필요 시 `tailwind.config.ts`의 `theme.extend`에서 확장.
+Tailwind 기본 스케일 사용. 브랜드 원칙상 radius 8~12px 범위(`rounded-md`/`rounded-lg`), shadow는 지양. 필요 시 `tailwind.config.ts`의 `theme.extend`에서 확장.
 
 ## Semantic Tokens
 
