@@ -1,0 +1,55 @@
+:root {
+  /* Surface */
+  --color-surface: var(--neutral-0);
+  --color-surface-subtle: var(--neutral-50);
+  --color-surface-inset: var(--neutral-100);
+  --color-border: var(--neutral-200);
+  --color-border-strong: var(--neutral-300);
+
+  /* Text */
+  --color-text-primary: var(--neutral-900);
+  --color-text-secondary: var(--neutral-700);
+  --color-text-muted: var(--neutral-500);
+  --color-text-on-accent: var(--neutral-0);
+
+  /* Accent */
+  --color-accent: var(--accent-500);
+  --color-accent-hover: var(--accent-600);
+  --color-accent-active: var(--accent-700);
+  --color-focus-ring: var(--accent-400);
+
+  /* State */
+  --color-danger: var(--red-500);
+  --color-warning: var(--amber-500);
+  --color-success: var(--green-500);
+
+  /* Domain */
+  --color-pour-bloom: var(--accent-300);
+  --color-pour-main: var(--accent-500);
+  --color-timeline-axis: var(--neutral-300);
+  --color-timeline-grid: var(--neutral-100);
+}
+
+[data-theme='dark'] {
+  /* 뼈대. 실제 값은 UI 디벨롭 시 확정. */
+  --color-surface: var(--neutral-900);
+  --color-surface-subtle: var(--neutral-800);
+  --color-surface-inset: var(--neutral-700);
+  --color-border: var(--neutral-700);
+  --color-border-strong: var(--neutral-600);
+
+  --color-text-primary: var(--neutral-50);
+  --color-text-secondary: var(--neutral-200);
+  --color-text-muted: var(--neutral-400);
+  --color-text-on-accent: var(--neutral-900);
+
+  --color-accent: var(--accent-400);
+  --color-accent-hover: var(--accent-300);
+  --color-accent-active: var(--accent-200);
+  --color-focus-ring: var(--accent-300);
+
+  --color-pour-bloom: var(--accent-200);
+  --color-pour-main: var(--accent-400);
+  --color-timeline-axis: var(--neutral-600);
+  --color-timeline-grid: var(--neutral-800);
+}
