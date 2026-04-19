@@ -65,7 +65,7 @@ export function CalculatorPage() {
   return (
     <div className="min-h-screen bg-surface text-text-primary">
       <header className="border-b border-border px-5 py-4">
-        <h1 className="text-lg font-semibold tracking-tight">Hand Drip Calculator</h1>
+        <h1 className="text-lg font-semibold tracking-tight">핸드드립 계산기</h1>
         <p className="mt-0.5 text-xs text-text-muted">파라미터 → 레시피</p>
       </header>
       <main className="mx-auto flex max-w-2xl flex-col gap-6 px-5 py-6">

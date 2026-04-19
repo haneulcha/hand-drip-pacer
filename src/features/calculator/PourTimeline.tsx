@@ -46,7 +46,7 @@ export function PourTimeline({ recipe }: Props) {
 
   const descText = pours
     .map(
-      (p) => `${formatTime(p.atSec)} +${p.pourAmount}그램 누적 ${p.cumulativeWater}그램`,
+      (p) => `${formatTime(p.atSec)} +${p.pourAmount}g 누적 ${p.cumulativeWater}g`,
     )
     .join(', ')
 
@@ -59,7 +59,7 @@ export function PourTimeline({ recipe }: Props) {
         className="block h-auto w-full"
       >
         <desc>
-          총 {formatTime(totalTimeSec)}, 누적 {totalWater}그램. 푸어: {descText}.
+          총 {formatTime(totalTimeSec)}, 누적 {totalWater}g. 푸어: {descText}.
         </desc>
 
         {pours.map((p) => (

@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import type { Recipe } from '@/domain/types'
-import { formatTime } from '@/ui/format'
+import { formatGrindHint, formatTime } from '@/ui/format'
 import { PourTimeline } from './PourTimeline'
 
 type Props = {
@@ -45,7 +45,7 @@ export function RecipeView({ recipe, methodName, onReset }: Props) {
 
       <div>
         <h3 className="mb-2 text-xs font-medium uppercase tracking-wider text-text-muted">
-          푸어 스케줄 · 총 {formatTime(recipe.totalTimeSec)}
+          차수 · 총 {formatTime(recipe.totalTimeSec)}
         </h3>
         <table className="w-full text-sm">
           <thead>
@@ -80,7 +80,7 @@ export function RecipeView({ recipe, methodName, onReset }: Props) {
 
       <div>
         <h3 className="mb-1 text-xs font-medium uppercase tracking-wider text-text-muted">분쇄도</h3>
-        <p className="text-sm">{recipe.grindHint}</p>
+        <p className="text-sm">{formatGrindHint(recipe.grindHint)}</p>
       </div>
 
       <div>

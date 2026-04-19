@@ -87,7 +87,7 @@ const compute = (input: RecipeInput): Recipe => {
 
 export const kalitaPulse: BrewMethod = {
   id: 'kalita_pulse',
-  name: 'Kalita Wave 펄스',
+  name: 'Kalita Wave',
   description: '평평한 바닥의 Kalita에 맞춘 펄스 추출. 짧게 끊어 부어 수위를 일정하게 유지.',
   supportedDrippers: ['kalita_wave'],
   defaultRatio: ratio(METHOD_RATIO),

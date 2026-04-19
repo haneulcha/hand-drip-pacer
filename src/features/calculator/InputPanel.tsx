@@ -115,10 +115,10 @@ export function InputPanel({
         />
       </Field>
 
-      <Field label="메서드">
+      <Field label="방식">
         <Segmented<BrewMethodId>
           name="method"
-          label="브루잉 메서드"
+          label="방식"
           value={method}
           onChange={onMethodChange}
           options={compat.map((m) => ({ value: m.id, label: m.name }))}
@@ -128,41 +128,41 @@ export function InputPanel({
       <Field label="로스팅">
         <Segmented<RoastLevel>
           name="roast"
-          label="로스팅 정도"
+          label="로스팅"
           value={roast}
           onChange={onRoastChange}
           options={[
-            { value: 'light', label: 'Light' },
-            { value: 'medium', label: 'Medium' },
-            { value: 'dark', label: 'Dark' },
+            { value: 'light', label: '라이트' },
+            { value: 'medium', label: '미디엄' },
+            { value: 'dark', label: '다크' },
           ]}
         />
       </Field>
 
-      <Field label="Sweetness">
+      <Field label="맛">
         <Segmented<SweetnessProfile>
           name="sweetness"
-          label="단맛"
+          label="맛"
           value={taste.sweetness}
           onChange={(v) => onTasteChange({ ...taste, sweetness: v })}
           options={[
-            { value: 'sweet', label: 'Sweet' },
-            { value: 'balanced', label: 'Balanced' },
-            { value: 'bright', label: 'Bright' },
+            { value: 'sweet', label: '달게' },
+            { value: 'balanced', label: '균형' },
+            { value: 'bright', label: '산뜻하게' },
           ]}
         />
       </Field>
 
-      <Field label="Strength">
+      <Field label="강도">
         <Segmented<StrengthProfile>
           name="strength"
-          label="농도"
+          label="강도"
           value={taste.strength}
           onChange={(v) => onTasteChange({ ...taste, strength: v })}
           options={[
-            { value: 'light', label: 'Light' },
-            { value: 'medium', label: 'Medium' },
-            { value: 'strong', label: 'Strong' },
+            { value: 'light', label: '연하게' },
+            { value: 'medium', label: '보통' },
+            { value: 'strong', label: '진하게' },
           ]}
         />
       </Field>
