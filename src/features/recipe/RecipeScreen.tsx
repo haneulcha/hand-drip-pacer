@@ -67,10 +67,12 @@ export function RecipeScreen({
   })
 
   return (
-    <div className="relative mx-auto flex min-h-screen max-w-lg flex-col bg-surface text-text-primary animate-slide-up">
+    <div className="relative mx-auto flex min-h-screen max-w-lg flex-col bg-surface text-text-primary">
       {/* top bar */}
       <header className="flex items-center gap-3 px-5 pt-12">
-        <DripperIcon type={dripper} size={56} selected />
+        <span style={{ viewTransitionName: `dripper-${dripper}` }}>
+          <DripperIcon type={dripper} size={56} selected />
+        </span>
         <div className="flex-1">
           <div className="text-lg font-medium">{dripperList.find((d) => d.id === dripper)?.name}</div>
           <div className="text-[11px] text-text-muted">{methodMeta.name}</div>

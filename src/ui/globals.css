@@ -26,8 +26,21 @@
   }
 }
 
+/* View Transitions — brand motion tokens */
+::view-transition-group(root) {
+  animation-duration: var(--motion-duration-base);
+  animation-timing-function: var(--motion-easing);
+}
+
+::view-transition-group(*) {
+  animation-duration: var(--motion-duration-base);
+  animation-timing-function: var(--motion-easing);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .animate-slide-up {
-    animation: none;
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }

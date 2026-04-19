@@ -15,6 +15,7 @@ import { RecipeScreen } from '@/features/recipe/RecipeScreen'
 import { WallScreen } from '@/features/wall/WallScreen'
 import { loadParams, saveParams, saveSession } from '@/features/share/storage'
 import { decodeState, encodeState } from '@/features/share/urlCodec'
+import { withViewTransition } from '@/ui/viewTransition'
 import { DEFAULT_STATE, mergeState, type AppState } from './state'
 
 const loadInitialState = (): AppState => {
@@ -60,13 +61,17 @@ export function AppRoot() {
   }, [state.method, state.dripper, state.coffee, state.roast, state.taste])
 
   const handleStart = (): void => {
-    setSession({ recipe, startedAt: Date.now() })
-    patch({ screen: 'brewing' })
+    withViewTransition(() => {
+      setSession({ recipe, startedAt: Date.now() })
+      setState((prev) => mergeState(prev, { screen: 'brewing' }))
+    })
   }
 
   const handleComplete = useCallback((): void => {
-    setSession((prev) => (prev ? { ...prev, completedAt: Date.now() } : null))
-    setState((prev) => mergeState(prev, { screen: 'complete' }))
+    withViewTransition(() => {
+      setSession((prev) => (prev ? { ...prev, completedAt: Date.now() } : null))
+      setState((prev) => mergeState(prev, { screen: 'complete' }))
+    })
   }, [])
 
   const handleFeeling = (feeling: Feeling | null): void => {
@@ -78,12 +83,16 @@ export function AppRoot() {
 
   const handleExit = (): void => {
     if (session) saveSession(session)
-    setSession(null)
-    patch({ screen: 'wall' })
+    withViewTransition(() => {
+      setSession(null)
+      setState((prev) => mergeState(prev, { screen: 'wall' }))
+    })
   }
 
   const handlePickDripper = (dripper: DripperId): void => {
-    patch({ dripper, screen: 'recipe' })
+    withViewTransition(() => {
+      setState((prev) => mergeState(prev, { dripper, screen: 'recipe' }))
+    })
   }
 
   if (state.screen === 'wall') {

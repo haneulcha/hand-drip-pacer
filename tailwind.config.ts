@@ -11,15 +11,6 @@ export default {
       transitionTimingFunction: {
         DEFAULT: 'var(--motion-easing)',
       },
-      keyframes: {
-        'slide-up': {
-          '0%': { transform: 'translateY(0.75rem)', opacity: '0' },
-          '100%': { transform: 'translateY(0)', opacity: '1' },
-        },
-      },
-      animation: {
-        'slide-up': 'slide-up var(--motion-duration-base) var(--motion-easing) both',
-      },
       colors: {
         surface: {
           DEFAULT: 'var(--color-surface)',

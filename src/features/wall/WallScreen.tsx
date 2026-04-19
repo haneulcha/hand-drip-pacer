@@ -32,6 +32,7 @@ export function WallScreen({ selectedDripper, onPickDripper }: Props) {
                 onClick={() => onPickDripper(d.id)}
                 aria-pressed={isSelected}
                 aria-label={d.name}
+                style={{ viewTransitionName: `dripper-${d.id}` }}
                 className="flex flex-col items-center gap-2 rounded-lg p-2 transition-colors hover:bg-surface-inset/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-focus"
               >
                 <DripperIcon type={d.id} size={96} selected={isSelected} />
