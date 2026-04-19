@@ -63,7 +63,7 @@ export function BrewingScreen({ session, onExit }: Props) {
                 i < activeIdx || done
                   ? 'bg-text-primary'
                   : i === activeIdx
-                  ? 'bg-[var(--color-pour-bloom)]'
+                  ? 'bg-pour-bloom'
                   : 'bg-border',
               )}
             />
@@ -84,11 +84,11 @@ export function BrewingScreen({ session, onExit }: Props) {
       {/* Hero */}
       <div className="mt-12 flex flex-col items-center px-5 text-center">
         {done ? (
-          <span className="text-[11px] font-semibold uppercase tracking-widest text-[var(--color-pour-bloom)]">
+          <span className="text-[11px] font-semibold uppercase tracking-widest text-pour-bloom">
             완료
           </span>
         ) : (
-          <span className="text-[11px] font-semibold uppercase tracking-widest text-[var(--color-pour-bloom)]">
+          <span className="text-[11px] font-semibold uppercase tracking-widest text-pour-bloom">
             지금
           </span>
         )}

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { Pour, Recipe } from '@/domain/types'
 import { c, g, ratio, s } from '@/domain/units'
@@ -85,5 +85,27 @@ describe('BrewingScreen', () => {
     render(<BrewingScreen session={session} onExit={onExit} />)
     fireEvent.click(screen.getByRole('button', { name: '처음으로' }))
     expect(onExit).toHaveBeenCalledTimes(1)
+  })
+
+  it('advances active step when elapsed crosses next pour boundary', () => {
+    vi.setSystemTime(new Date(1_000_000_000_000))
+    const session = makeSession(1_000_000_000_000)
+    render(<BrewingScreen session={session} onExit={vi.fn()} />)
+
+    // At elapsed=0: bloom step, cumulativeWater=30
+    expect(screen.getByTestId('hero-weight')).toHaveTextContent('30')
+
+    // Advance past the 45s boundary (2nd pour atSec)
+    act(() => {
+      vi.setSystemTime(new Date(1_000_000_046_000))
+      vi.advanceTimersByTime(500) // trigger useElapsed's 250ms interval to fire at least once
+    })
+
+    // 2nd pour is now active: cumulativeWater=150
+    expect(screen.getByTestId('hero-weight')).toHaveTextContent('150')
+
+    // aria-live region announces the new step
+    const status = screen.getByRole('status')
+    expect(status).toHaveTextContent('1차: 150그램까지')
   })
 })
