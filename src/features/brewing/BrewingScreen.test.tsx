@@ -48,7 +48,7 @@ describe('BrewingScreen', () => {
     // bloom pour cumulativeWater = 30
     expect(screen.getByTestId('hero-weight')).toHaveTextContent('30')
     // label for active step in progress rail
-    expect(screen.getByText('뜸')).toBeInTheDocument()
+    expect(screen.getByText('bloom')).toBeInTheDocument()
   })
 
   it('opens stop dialog when 중단 tapped', () => {

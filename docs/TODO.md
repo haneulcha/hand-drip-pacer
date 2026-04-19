@@ -14,7 +14,8 @@
 
 ## 보류 결정 (기록용)
 
-- **브랜드 3차 마감 (타이틀 `뜸` 교체 / Segmented shadow 제거 / 초기화 버튼 숨김)** — 불필요로 판단, 스킵.
+- **브랜드 3차 마감 (타이틀 교체 / Segmented shadow 제거 / 초기화 버튼 숨김)** — 불필요로 판단, 스킵.
+- **"뜸" 브랜드 네이밍 드롭** — 네이밍 자체가 어색해서 제거. Wall 타이틀은 `핸드드립 계산기`, Brewing 레이블은 `bloom`으로 일반화. 문서(brand.md, specs, plans 등)는 작업 히스토리라 유지.
 - 메서드 설명/노트는 brand.md 버전(짧고 단정)이 아니라 기존(더 정확함) 유지.
 - bloom 배지·고유명사(Kasuya/Hoffmann/Kalita Wave)는 원어 유지 — 브랜드 과잉 푸시 회피.
 - Phase 1 시작 전 servings 모드(by-coffee/by-servings 토글) 제거 — 핸드오프에 없고 침묵 원칙과 맞음.

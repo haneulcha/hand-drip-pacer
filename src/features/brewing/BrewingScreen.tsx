@@ -72,7 +72,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
                 i === activeIdx ? 'font-semibold text-text-primary' : 'text-text-muted',
               )}
             >
-              {p.label === 'bloom' ? '뜸' : `${i}차`}
+              {p.label === 'bloom' ? 'bloom' : `${i}차`}
             </span>
           </div>
         ))}
@@ -147,7 +147,7 @@ function AriaLiveStep({
   useEffect(() => {
     const pour = session.recipe.pours[activeIdx]
     if (!pour) return
-    const label = pour.label === 'bloom' ? '뜸' : `${activeIdx}차`
+    const label = pour.label === 'bloom' ? 'bloom' : `${activeIdx}차`
     setAnnounced(`${label}: ${pour.cumulativeWater}그램까지`)
   }, [session, activeIdx])
   return (

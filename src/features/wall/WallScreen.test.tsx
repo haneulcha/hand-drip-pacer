@@ -3,9 +3,9 @@ import { describe, expect, it, vi } from 'vitest'
 import { WallScreen } from './WallScreen'
 
 describe('WallScreen', () => {
-  it('renders brand mark and subtitle', () => {
+  it('renders title and subtitle', () => {
     render(<WallScreen selectedDripper="v60" onPickDripper={vi.fn()} />)
-    expect(screen.getByRole('heading', { level: 1, name: '뜸' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 1, name: '핸드드립 계산기' })).toBeInTheDocument()
     expect(screen.getByText('오늘 한 잔')).toBeInTheDocument()
   })
 
