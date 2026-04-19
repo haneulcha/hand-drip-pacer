@@ -8,8 +8,8 @@ import type {
   TasteProfile,
 } from '@/domain/types'
 import { g } from '@/domain/units'
-import { CalculatorPage } from '@/features/calculator/CalculatorPage'
-import { clearParams, loadParams, saveParams } from '@/features/share/storage'
+import { RecipeScreen } from '@/features/recipe/RecipeScreen'
+import { loadParams, saveParams } from '@/features/share/storage'
 import { decodeState, encodeState } from '@/features/share/urlCodec'
 import { DEFAULT_STATE, mergeState, type AppState } from './state'
 
@@ -39,9 +39,11 @@ export function AppRoot() {
   const handleTasteChange = (taste: TasteProfile): void => patch({ taste })
   const handleCoffeeChange = (coffee: number): void => patch({ coffee: g(coffee) })
 
-  const handleReset = (): void => {
-    setState(DEFAULT_STATE)
-    clearParams()
+  const handleStart = (): void => {
+    // Phase 2: patch({ screen: 'brewing', startedAt: Date.now() })
+    // Phase 1: placeholder
+    // eslint-disable-next-line no-console
+    console.log('[Phase 1] 시작 tapped — Brewing 화면은 Phase 2에서.')
   }
 
   const recipe = useMemo(() => {
@@ -55,22 +57,21 @@ export function AppRoot() {
     return brewMethods[state.method].compute(input)
   }, [state.method, state.dripper, state.coffee, state.roast, state.taste])
 
-  const methodMeta = brewMethods[state.method]
-
-  // Phase 0: screen 상태는 추가됐지만 'recipe' 하나만 라우팅.
-  // Phase 1에서 RecipeScreen으로 교체, Phase 2~4에서 분기 확장.
   if (state.screen === 'recipe') {
     return (
-      <CalculatorPage
-        state={state}
+      <RecipeScreen
+        coffee={state.coffee}
+        dripper={state.dripper}
+        method={state.method}
+        roast={state.roast}
+        taste={state.taste}
         recipe={recipe}
-        methodName={methodMeta.name}
         onCoffeeChange={handleCoffeeChange}
         onDripperChange={handleDripperChange}
         onMethodChange={handleMethodChange}
         onRoastChange={handleRoastChange}
         onTasteChange={handleTasteChange}
-        onReset={handleReset}
+        onStart={handleStart}
       />
     )
   }
