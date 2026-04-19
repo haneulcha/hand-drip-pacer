@@ -6,6 +6,7 @@ import {
   type Feeling,
 } from "@/domain/session";
 import { cx } from "@/ui/cx";
+import { Footer } from "@/ui/Footer";
 import { formatBrewedAt, formatGrindHint, formatTime } from "@/ui/format";
 import { FeelingGlyph } from "./FeelingGlyph";
 
@@ -32,7 +33,7 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
   };
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-lg flex-col bg-surface px-6 pb-10 pt-16 text-text-primary">
+    <div className="mx-auto flex min-h-screen max-w-lg flex-col bg-surface px-6 pb-4 pt-16 text-text-primary">
       {/* quiet header */}
       <header className="flex flex-col items-center gap-1">
         <span className="text-[11px] font-semibold uppercase tracking-widest text-pour-bloom">
@@ -123,6 +124,8 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
           처음으로
         </button>
       </div>
+
+      <Footer />
     </div>
   );
 }
