@@ -19,6 +19,7 @@
 ## Fidelity
 
 **Low-fidelity wireframe.**
+
 - 레이아웃, 위계, 카피, 플로우: **그대로 구현**.
 - 비주얼 스타일: 기존 앱의 디자인 시스템 사용.
 - 스케치 글리프(드리퍼 SVG, feeling glyph 등)는 최종 아트웍이 아닌 **위치/크기 표시용 플레이스홀더**입니다.
@@ -38,6 +39,7 @@
 **Purpose:** 앱을 열었을 때 첫 화면. "선반에서 도구를 집어든다"는 은유.
 
 **Layout:**
+
 - 배경: 벽 텍스처 (`#ede5d5`, 가로 banding 약간).
 - **상단 (~40pt 아래):** 브랜드 마크 `뜸` 큼직하게 (44pt weight 500), 그 아래 필기체 `오늘 한 잔` (16pt, soft).
 - **중앙 빈 공간** (breathing room).
@@ -49,6 +51,7 @@
 - **최하단 (40pt 위):** 텍스트 링크 `레시피 먼저 보기 ›` — 작고 희미한 escape hatch.
 
 **Interaction:**
+
 - 드리퍼 탭 → Recipe 화면으로 전이 (morph 애니메이션: 드리퍼가 상단 앵커로 날아감, 벽이 페이드, 종이 캔버스가 아래에서 올라옴).
 - 비선택 드리퍼 탭 시 그 드리퍼가 선택된 상태로 Recipe 진입.
 - `레시피 먼저 보기 ›` 탭 → 기존 앱의 recipe 목록 화면 (이 핸드오프 범위 밖).
@@ -95,6 +98,7 @@
    - 내용: play 삼각형 아이콘 + `시작` (18pt weight 500).
 
 **Interaction:**
+
 - `바꾸기 ›` 탭 → 드리퍼 변경 popover (아래 참고).
 - Stepper +/−: `커피`는 ±1g.
 - Segmented control: 탭으로 선택 변경, 변경 시 **푸어 스케줄이 실시간으로 재계산**되어야 함 (기존 앱 로직 그대로 사용).
@@ -111,6 +115,7 @@
 **Purpose:** Recipe 화면을 벗어나지 않고 V60 / Kalita 전환.
 
 **Layout:**
+
 - Recipe 화면 전체를 **opacity 0.45로 dim** (상호작용 차단).
 - Popover 앵커: top bar의 `바꾸기 ›` 위치 (top ~82, right 16).
 - Popover box: `min-width 150pt`, radius 12, paper 배경, 1px faint ink 테두리, shadow `0 8 24 rgba(42,36,30,0.18)`.
@@ -152,6 +157,7 @@
    - 한 줄: `다음` (10pt, faint, weight 600) + `1:30` 시간 (13pt, soft) + flex spacer + `180` `g` 무게 (18pt).
 
 **Interaction:**
+
 - 타이머는 기존 앱 로직 그대로 (`requestAnimationFrame`, 위 snapshot-to-state 패턴 권장).
 - Step 자동 진행: 현재 step의 duration이 끝나면 다음 step으로.
 - `중단` 탭 → Stop confirm dialog.
@@ -166,13 +172,14 @@
 **Purpose:** 브루잉 중단 확인.
 
 **Layout:**
+
 - Brewing 화면 뒤에 opacity 0.4로 보임, 그 위 `rgba(42,36,30,0.45)` scrim.
 - 중앙 다이얼로그 (width − 56, radius 14, padding 26 22 18):
   - `브루잉을 중단할까요?` (18pt weight 500).
   - 필기체 부가: `기록은 남지 않습니다.` (13pt, soft).
   - 하단 버튼 2개 (gap 10, 각 44pt tall):
     - 좌 (보조): `중단` 13pt soft — faint stroke.
-    - 우 (강조): `처음으로` 14pt weight 500 — 진한 stroke, 연한 fill. *(주의: label 배치가 살짝 반직관적 — 실제 구현에선 "중단하기" = 확정 행동, "계속하기" = 취소로 label 재검토 권장. 디자이너와 확인 필요.)*
+    - 우 (강조): `처음으로` 14pt weight 500 — 진한 stroke, 연한 fill. _(주의: label 배치가 살짝 반직관적 — 실제 구현에선 "중단하기" = 확정 행동, "계속하기" = 취소로 label 재검토 권장. 디자이너와 확인 필요.)_
 - 배경 scrim 탭 → dialog 닫힘 (계속 브루잉).
 
 ---
@@ -205,9 +212,9 @@
 4. **감정 기록** (margin-top 28):
    - 헤더 필기체: `오늘의 시간은 어땠나요?` (13pt, soft, 중앙).
    - 3개 버튼 가로 배열 (gap 8, 각 1fr, 78pt tall, radius 10):
-     - `고요했다` — calm glyph (정지한 원).
-     - `잘 몰라` — neutral glyph (수평선 + tick).
-     - `어수선했다` — wave glyph (두 개의 물결).
+     - `만족스러워요` — calm glyph (정지한 원).
+     - `글쎄요` — neutral glyph (수평선 + tick).
+     - `아쉬워요` — wave glyph (두 개의 물결).
    - 선택된 것만 진한 stroke + 연한 fill + 라벨 weight 600.
 
 5. **하단 버튼 행** (flex-1로 상단과 분리):
@@ -215,6 +222,7 @@
    - 우 (60pt, 52pt tall): 공유 아이콘 버튼 — faint stroke. **공유 카드 시트** 열기.
 
 **Interaction:**
+
 - 감정 버튼: 단일 선택. 한 번 더 탭하면 해제.
 - `처음으로` → Wall 화면.
 - 공유 아이콘 → 공유 카드 시트 (아래 참고).
@@ -228,16 +236,19 @@
 두 가지 포맷:
 
 **Square (1:1, 피드용, 기본 1080×1080):**
+
 - 상단: `뜸` 워드마크 (좌) + 날짜 (우).
 - 중앙: 드리퍼 글리프 + `V60 · Kasuya 4:6` + 거대 시간 (`3:28`) + 필기체 부제.
 - 하단: 4열 레시피 스트립 (원두 / 물 / 온도 / 분쇄), 위아래 hairline.
 
 **Story (9:16, 스토리용, 기본 1080×1920):**
+
 - 동일 정보, 세로 breathing room 많이.
 - 중앙에 드리퍼 + 시간. 그 아래 **세로 푸어 스케줄** 포함 (square에는 없음).
 - 벽 banding 배경 faint.
 
 **Interaction:**
+
 - Complete 화면 공유 아이콘 탭 → 네이티브 공유 시트 (플랫폼 공유 API). 카드 이미지는 미리 렌더링된 PNG로 전달.
 - 정확한 export 치수: Instagram 피드 1080×1080, 스토리 1080×1920.
 
@@ -247,19 +258,20 @@
 
 스케치 레퍼런스가 사용하는 값 — **기존 앱의 토큰으로 치환하세요**.
 
-| Token | Value | Role |
-|---|---|---|
-| INK | `#2a241e` | primary text / strokes |
-| INK_SOFT | `rgba(42,36,30,0.55)` | secondary text |
-| INK_FAINT | `rgba(42,36,30,0.18)` | hairlines / faint labels |
-| PAPER | `#fbf7ef` | Recipe/Brewing/Complete 배경 |
-| PAPER_SUBTLE | `#f5efe4` | 카드 / inactive fill |
-| WALL | `#ede5d5` | Wall 화면 배경 |
-| OCHRE | `#b8843f` | 유일한 accent — 현재 step, bloom marker, `완료` 라벨 |
+| Token        | Value                 | Role                                                 |
+| ------------ | --------------------- | ---------------------------------------------------- |
+| INK          | `#2a241e`             | primary text / strokes                               |
+| INK_SOFT     | `rgba(42,36,30,0.55)` | secondary text                                       |
+| INK_FAINT    | `rgba(42,36,30,0.18)` | hairlines / faint labels                             |
+| PAPER        | `#fbf7ef`             | Recipe/Brewing/Complete 배경                         |
+| PAPER_SUBTLE | `#f5efe4`             | 카드 / inactive fill                                 |
+| WALL         | `#ede5d5`             | Wall 화면 배경                                       |
+| OCHRE        | `#b8843f`             | 유일한 accent — 현재 step, bloom marker, `완료` 라벨 |
 
 **원칙:** two-tone (ink on paper) + single ochre accent. 다색 사용 금지.
 
 **Typography (reference):**
+
 - UI 바디: `Pretendard Variable` (이미 앱에서 사용 중이면 그대로).
 - 숫자 (타이머, 무게): 같은 패밀리의 **tabular lining** 또는 display weight. 자릿수가 움직이지 않아야 함.
 - 필기체 힌트 (Caveat 등): **프로덕션에는 넣지 마세요.** 대신 작은 italic 또는 soft eyebrow로 대체.
