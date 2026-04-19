@@ -1,12 +1,12 @@
-import type { Pour } from '@/domain/types'
-import { formatTime } from '@/ui/format'
+import type { Pour } from "@/domain/types";
+import { formatTime } from "@/ui/format";
 
 type Props = {
-  readonly pours: readonly Pour[]
-  readonly totalTimeSec: number
-  readonly width?: number
-  readonly height?: number
-}
+  readonly pours: readonly Pour[];
+  readonly totalTimeSec: number;
+  readonly width?: number;
+  readonly height?: number;
+};
 
 export function PourVerticalPreview({
   pours,
@@ -14,18 +14,18 @@ export function PourVerticalPreview({
   width = 340,
   height = 230,
 }: Props) {
-  if (pours.length === 0 || totalTimeSec <= 0) return null
+  if (pours.length === 0 || totalTimeSec <= 0) return null;
 
-  const padT = 10
-  const padB = 10
-  const axisX = 44
-  const nodeR = 3.5
-  const rightLabelWidth = 70
-  const barMaxW = width - axisX - 16 - rightLabelWidth
+  const padT = 10;
+  const padB = 10;
+  const axisX = 44;
+  const nodeR = 3.5;
+  const rightLabelWidth = 70;
+  const barMaxW = width - axisX - 16 - rightLabelWidth;
 
-  const maxDelta = Math.max(...pours.map((p) => p.pourAmount))
+  const maxDelta = Math.max(...pours.map((p) => p.pourAmount));
   const ty = (t: number): number =>
-    padT + (t / totalTimeSec) * (height - padT - padB)
+    padT + (t / totalTimeSec) * (height - padT - padB);
 
   return (
     <svg
@@ -40,9 +40,9 @@ export function PourVerticalPreview({
         {pours
           .map(
             (p) =>
-              `${formatTime(p.atSec)} +${p.pourAmount}그램${p.label === 'bloom' ? ' (bloom)' : ''}`,
+              `${formatTime(p.atSec)} +${p.pourAmount}그램${p.label === "bloom" ? " (bloom)" : ""}`,
           )
-          .join(', ')}
+          .join(", ")}
       </desc>
 
       <line
@@ -55,11 +55,13 @@ export function PourVerticalPreview({
       />
 
       {pours.map((p) => {
-        const y = ty(p.atSec)
-        const barW = (p.pourAmount / maxDelta) * barMaxW
-        const barStart = axisX + nodeR + 4
-        const bloom = p.label === 'bloom'
-        const color = bloom ? 'var(--color-pour-bloom)' : 'var(--color-pour-main)'
+        const y = ty(p.atSec);
+        const barW = (p.pourAmount / maxDelta) * barMaxW;
+        const barStart = axisX + nodeR + 4;
+        const bloom = p.label === "bloom";
+        const color = bloom
+          ? "var(--color-pour-bloom)"
+          : "var(--color-pour-main)";
 
         return (
           <g key={p.index}>
@@ -108,8 +110,8 @@ export function PourVerticalPreview({
               </text>
             )}
           </g>
-        )
+        );
       })}
     </svg>
-  )
+  );
 }

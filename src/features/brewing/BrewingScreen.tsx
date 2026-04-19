@@ -1,39 +1,35 @@
-import { useEffect, useRef, useState } from 'react'
-import {
-  activeStepIdx,
-  nextStepIdx,
-  type BrewSession,
-} from '@/domain/session'
-import { formatTime } from '@/ui/format'
-import { cx } from '@/ui/cx'
-import { StopConfirmDialog } from './StopConfirmDialog'
-import { useElapsed } from './useElapsed'
+import { useEffect, useRef, useState } from "react";
+import { activeStepIdx, nextStepIdx, type BrewSession } from "@/domain/session";
+import { formatTime } from "@/ui/format";
+import { cx } from "@/ui/cx";
+import { StopConfirmDialog } from "./StopConfirmDialog";
+import { useElapsed } from "./useElapsed";
 
 type Props = {
-  readonly session: BrewSession
-  readonly onExit: () => void
-  readonly onComplete: () => void
-}
+  readonly session: BrewSession;
+  readonly onExit: () => void;
+  readonly onComplete: () => void;
+};
 
 export function BrewingScreen({ session, onExit, onComplete }: Props) {
-  const elapsed = useElapsed(session)
-  const [stopDialogOpen, setStopDialogOpen] = useState(false)
-  const completedRef = useRef(false)
+  const elapsed = useElapsed(session);
+  const [stopDialogOpen, setStopDialogOpen] = useState(false);
+  const completedRef = useRef(false);
 
-  const { recipe } = session
-  const { pours, totalTimeSec } = recipe
-  const activeIdx = activeStepIdx(pours, elapsed)
-  const active = pours[activeIdx]!
-  const nextIdx = nextStepIdx(pours, elapsed)
-  const next = nextIdx !== null ? pours[nextIdx]! : null
-  const done = elapsed >= totalTimeSec
+  const { recipe } = session;
+  const { pours, totalTimeSec } = recipe;
+  const activeIdx = activeStepIdx(pours, elapsed);
+  const active = pours[activeIdx]!;
+  const nextIdx = nextStepIdx(pours, elapsed);
+  const next = nextIdx !== null ? pours[nextIdx]! : null;
+  const done = elapsed >= totalTimeSec;
 
   useEffect(() => {
     if (done && !completedRef.current) {
-      completedRef.current = true
-      onComplete()
+      completedRef.current = true;
+      onComplete();
     }
-  }, [done, onComplete])
+  }, [done, onComplete]);
 
   return (
     <div className="relative mx-auto flex min-h-screen max-w-lg flex-col bg-surface text-text-primary">
@@ -59,20 +55,29 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
       {/* Progress rail */}
       <div className="mt-6 flex items-center gap-1.5 px-5">
         {pours.map((p, i) => (
-          <div key={p.index} className="flex flex-1 flex-col items-center gap-1">
+          <div
+            key={p.index}
+            className="flex flex-1 flex-col items-center gap-1"
+          >
             <div
               className={cx(
-                'h-[3px] w-full rounded-pill',
-                i < activeIdx ? 'bg-text-primary' : i === activeIdx ? 'bg-pour-bloom' : 'bg-border',
+                "h-[3px] w-full rounded-pill",
+                i < activeIdx
+                  ? "bg-text-primary"
+                  : i === activeIdx
+                    ? "bg-pour-bloom"
+                    : "bg-border",
               )}
             />
             <span
               className={cx(
-                'text-[9px]',
-                i === activeIdx ? 'font-semibold text-text-primary' : 'text-text-muted',
+                "text-[9px]",
+                i === activeIdx
+                  ? "font-semibold text-text-primary"
+                  : "text-text-muted",
               )}
             >
-              {p.label === 'bloom' ? 'bloom' : `${i}차`}
+              {p.label === "bloom" ? "bloom" : `${i}차`}
             </span>
           </div>
         ))}
@@ -112,7 +117,9 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
           <>
             <div className="mb-2.5 h-px bg-border" />
             <div className="flex items-center gap-2.5">
-              <span className="text-[10px] font-semibold text-text-muted">다음</span>
+              <span className="text-[10px] font-semibold text-text-muted">
+                다음
+              </span>
               <span className="text-[13px] text-text-secondary tabular-nums">
                 {formatTime(next.atSec)}
               </span>
@@ -133,26 +140,26 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
         />
       )}
     </div>
-  )
+  );
 }
 
 function AriaLiveStep({
   session,
   activeIdx,
 }: {
-  readonly session: BrewSession
-  readonly activeIdx: number
+  readonly session: BrewSession;
+  readonly activeIdx: number;
 }) {
-  const [announced, setAnnounced] = useState<string>('')
+  const [announced, setAnnounced] = useState<string>("");
   useEffect(() => {
-    const pour = session.recipe.pours[activeIdx]
-    if (!pour) return
-    const label = pour.label === 'bloom' ? 'bloom' : `${activeIdx}차`
-    setAnnounced(`${label}: ${pour.cumulativeWater}그램까지`)
-  }, [session, activeIdx])
+    const pour = session.recipe.pours[activeIdx];
+    if (!pour) return;
+    const label = pour.label === "bloom" ? "bloom" : `${activeIdx}차`;
+    setAnnounced(`${label}: ${pour.cumulativeWater}그램까지`);
+  }, [session, activeIdx]);
   return (
     <span className="sr-only" role="status" aria-live="polite">
       {announced}
     </span>
-  )
+  );
 }

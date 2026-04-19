@@ -1,19 +1,21 @@
-import { dripperList } from '@/domain/drippers'
-import type { DripperId } from '@/domain/types'
-import { cx } from '@/ui/cx'
-import { DripperIcon } from '@/ui/DripperIcon'
+import { dripperList } from "@/domain/drippers";
+import type { DripperId } from "@/domain/types";
+import { cx } from "@/ui/cx";
+import { DripperIcon } from "@/ui/DripperIcon";
 
 type Props = {
-  readonly selectedDripper: DripperId
-  readonly onPickDripper: (id: DripperId) => void
-}
+  readonly selectedDripper: DripperId;
+  readonly onPickDripper: (id: DripperId) => void;
+};
 
 export function WallScreen({ selectedDripper, onPickDripper }: Props) {
   return (
     <div className="mx-auto flex min-h-screen max-w-lg flex-col bg-wall text-text-primary">
       {/* 타이틀 zone */}
       <header className="flex flex-col items-center gap-2 px-5 pt-16">
-        <h1 className="text-2xl font-medium leading-none tracking-tight">핸드드립 계산기</h1>
+        <h1 className="text-2xl font-medium leading-none tracking-tight">
+          핸드드립 계산기
+        </h1>
         <p className="text-base italic text-text-secondary">오늘 한 잔</p>
       </header>
 
@@ -24,7 +26,7 @@ export function WallScreen({ selectedDripper, onPickDripper }: Props) {
       <section aria-label="드리퍼 선반" className="px-8 pb-16">
         <div className="flex items-end justify-around gap-4 pb-3">
           {dripperList.map((d) => {
-            const isSelected = d.id === selectedDripper
+            const isSelected = d.id === selectedDripper;
             return (
               <button
                 key={d.id}
@@ -38,14 +40,16 @@ export function WallScreen({ selectedDripper, onPickDripper }: Props) {
                 <DripperIcon type={d.id} size={96} selected={isSelected} />
                 <span
                   className={cx(
-                    'text-sm',
-                    isSelected ? 'font-medium text-text-primary' : 'text-text-secondary',
+                    "text-sm",
+                    isSelected
+                      ? "font-medium text-text-primary"
+                      : "text-text-secondary",
                   )}
                 >
                   {d.name}
                 </span>
               </button>
-            )
+            );
           })}
         </div>
         <div className="h-px bg-border" />
@@ -54,5 +58,5 @@ export function WallScreen({ selectedDripper, onPickDripper }: Props) {
         </p>
       </section>
     </div>
-  )
+  );
 }

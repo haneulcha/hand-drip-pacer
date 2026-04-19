@@ -22,7 +22,6 @@ bun run test:run     # Vitest 1회 실행 (CI용)
 
 설정 파일: `vite.config.ts` (앱/빌드), `vitest.config.ts` (테스트, 분리된 이유: vitest 2.x 타입 충돌 회피), `tailwind.config.ts`, `tsconfig.{json,app.json,node.json}`.
 
-
 ## Core Principles (불변)
 
 1. **Domain / UI 완전 분리**

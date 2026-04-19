@@ -45,21 +45,21 @@
 
 ### 신규 파일
 
-| 경로 | 책임 |
-|---|---|
-| `src/features/wall/WallScreen.tsx` | 벽 + 브랜드 마크 + shelf 레이아웃, `onPickDripper(id)` 콜백 노출 |
-| `src/features/wall/WallScreen.test.tsx` | 브랜드 마크·부제 렌더, 2 드리퍼 라벨, 탭 콜백 검증 |
+| 경로                                    | 책임                                                             |
+| --------------------------------------- | ---------------------------------------------------------------- |
+| `src/features/wall/WallScreen.tsx`      | 벽 + 브랜드 마크 + shelf 레이아웃, `onPickDripper(id)` 콜백 노출 |
+| `src/features/wall/WallScreen.test.tsx` | 브랜드 마크·부제 렌더, 2 드리퍼 라벨, 탭 콜백 검증               |
 
 ### 수정
 
-| 경로 | 변경 |
-|---|---|
-| `src/ui/tokens/semantic.css` | `:root` + `[data-theme='dark']`에 `--color-wall: var(--neutral-100)` 추가 (dark는 동일하게 상속 — 스켈레톤) |
-| `tailwind.config.ts` | `colors.wall: 'var(--color-wall)'` + `keyframes['slide-up']` + `animation['slide-up']` 추가 |
-| `src/features/app/state.ts` | `DEFAULT_STATE.screen`을 `'wall'`로 변경 |
-| `src/features/app/state.test.ts` | "DEFAULT_STATE has screen = 'recipe'" 테스트 → `'wall'`로 수정 |
-| `src/features/app/AppRoot.tsx` | `loadInitialState`에 URL 감지 시 `screen: 'recipe'` 강제, wall 브랜치 추가, `handleExit` → `'wall'`, `handlePickDripper` 추가 |
-| `src/features/recipe/RecipeScreen.tsx` | root container에 `animate-slide-up` 클래스 추가 (재진입마다 slide-up) |
+| 경로                                   | 변경                                                                                                                          |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/tokens/semantic.css`           | `:root` + `[data-theme='dark']`에 `--color-wall: var(--neutral-100)` 추가 (dark는 동일하게 상속 — 스켈레톤)                   |
+| `tailwind.config.ts`                   | `colors.wall: 'var(--color-wall)'` + `keyframes['slide-up']` + `animation['slide-up']` 추가                                   |
+| `src/features/app/state.ts`            | `DEFAULT_STATE.screen`을 `'wall'`로 변경                                                                                      |
+| `src/features/app/state.test.ts`       | "DEFAULT_STATE has screen = 'recipe'" 테스트 → `'wall'`로 수정                                                                |
+| `src/features/app/AppRoot.tsx`         | `loadInitialState`에 URL 감지 시 `screen: 'recipe'` 강제, wall 브랜치 추가, `handleExit` → `'wall'`, `handlePickDripper` 추가 |
+| `src/features/recipe/RecipeScreen.tsx` | root container에 `animate-slide-up` 클래스 추가 (재진입마다 slide-up)                                                         |
 
 ### 변경 없음
 
@@ -85,6 +85,7 @@
 ## Task 3.1: 시맨틱 토큰 `--color-wall` + Tailwind `wall` 유틸 + `slide-up` 애니메이션
 
 **Files:**
+
 - Modify: `src/ui/tokens/semantic.css`
 - Modify: `tailwind.config.ts`
 
@@ -95,24 +96,25 @@ File: `/Users/haneul/Projects/bloom-coffee/src/ui/tokens/semantic.css`
 `:root` 블록 안 `/* Surface */` 섹션 말미에 추가:
 
 ```css
-  --color-wall: var(--neutral-100);
+--color-wall: var(--neutral-100);
 ```
 
 `[data-theme='dark']` 블록 안 surface 섹션 말미에도 추가 (스켈레톤 — 실제 값은 Dark mode 확정 시 재평가):
 
 ```css
-  --color-wall: var(--neutral-800);
+--color-wall: var(--neutral-800);
 ```
 
 최종 `:root` 섹션 발췌 예:
+
 ```css
-  /* Surface */
-  --color-surface: var(--neutral-0);
-  --color-surface-subtle: var(--neutral-50);
-  --color-surface-inset: var(--neutral-100);
-  --color-border: var(--neutral-200);
-  --color-border-strong: var(--neutral-300);
-  --color-wall: var(--neutral-100);
+/* Surface */
+--color-surface: var(--neutral-0);
+--color-surface-subtle: var(--neutral-50);
+--color-surface-inset: var(--neutral-100);
+--color-border: var(--neutral-200);
+--color-border-strong: var(--neutral-300);
+--color-wall: var(--neutral-100);
 ```
 
 - [ ] **Step 2: `tailwind.config.ts`에 `wall` 유틸 + `slide-up` 애니메이션 등록**
@@ -124,66 +126,67 @@ File: `/Users/haneul/Projects/bloom-coffee/tailwind.config.ts`
 수정 후 전체 파일:
 
 ```ts
-import type { Config } from 'tailwindcss'
+import type { Config } from "tailwindcss";
 
 export default {
-  content: ['./index.html', './src/**/*.{ts,tsx}'],
+  content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
       transitionDuration: {
-        DEFAULT: 'var(--motion-duration-base)',
-        long: 'var(--motion-duration-long)',
+        DEFAULT: "var(--motion-duration-base)",
+        long: "var(--motion-duration-long)",
       },
       transitionTimingFunction: {
-        DEFAULT: 'var(--motion-easing)',
+        DEFAULT: "var(--motion-easing)",
       },
       keyframes: {
-        'slide-up': {
-          '0%': { transform: 'translateY(0.75rem)', opacity: '0' },
-          '100%': { transform: 'translateY(0)', opacity: '1' },
+        "slide-up": {
+          "0%": { transform: "translateY(0.75rem)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
         },
       },
       animation: {
-        'slide-up': 'slide-up var(--motion-duration-base) var(--motion-easing) both',
+        "slide-up":
+          "slide-up var(--motion-duration-base) var(--motion-easing) both",
       },
       colors: {
         surface: {
-          DEFAULT: 'var(--color-surface)',
-          subtle: 'var(--color-surface-subtle)',
-          inset: 'var(--color-surface-inset)',
+          DEFAULT: "var(--color-surface)",
+          subtle: "var(--color-surface-subtle)",
+          inset: "var(--color-surface-inset)",
         },
         border: {
-          DEFAULT: 'var(--color-border)',
-          strong: 'var(--color-border-strong)',
+          DEFAULT: "var(--color-border)",
+          strong: "var(--color-border-strong)",
         },
         text: {
-          primary: 'var(--color-text-primary)',
-          secondary: 'var(--color-text-secondary)',
-          muted: 'var(--color-text-muted)',
-          'on-accent': 'var(--color-text-on-accent)',
+          primary: "var(--color-text-primary)",
+          secondary: "var(--color-text-secondary)",
+          muted: "var(--color-text-muted)",
+          "on-accent": "var(--color-text-on-accent)",
         },
         accent: {
-          DEFAULT: 'var(--color-accent)',
-          hover: 'var(--color-accent-hover)',
-          active: 'var(--color-accent-active)',
+          DEFAULT: "var(--color-accent)",
+          hover: "var(--color-accent-hover)",
+          active: "var(--color-accent-active)",
         },
-        focus: 'var(--color-focus-ring)',
-        danger: 'var(--color-danger)',
-        warning: 'var(--color-warning)',
-        success: 'var(--color-success)',
+        focus: "var(--color-focus-ring)",
+        danger: "var(--color-danger)",
+        warning: "var(--color-warning)",
+        success: "var(--color-success)",
         pour: {
-          bloom: 'var(--color-pour-bloom)',
-          main: 'var(--color-pour-main)',
+          bloom: "var(--color-pour-bloom)",
+          main: "var(--color-pour-main)",
         },
         timeline: {
-          axis: 'var(--color-timeline-axis)',
-          grid: 'var(--color-timeline-grid)',
+          axis: "var(--color-timeline-axis)",
+          grid: "var(--color-timeline-grid)",
         },
-        wall: 'var(--color-wall)',
+        wall: "var(--color-wall)",
       },
     },
   },
-} satisfies Config
+} satisfies Config;
 ```
 
 주석: `animation-fill-mode: both`로 initial frame 적용 + end state 고정 — 재진입마다 flicker 없이 자연스럽게 presents.
@@ -198,6 +201,7 @@ Expected: PASS. 새 애니메이션 CSS가 output에 포함되는지 확인 (필
 ## Task 3.2: `WallScreen` 컴포넌트 + 테스트
 
 **Files:**
+
 - Create: `src/features/wall/WallScreen.tsx`
 - Create: `src/features/wall/WallScreen.test.tsx`
 
@@ -205,38 +209,44 @@ Expected: PASS. 새 애니메이션 CSS가 output에 포함되는지 확인 (필
 
 ```tsx
 // src/features/wall/WallScreen.test.tsx
-import { fireEvent, render, screen } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
-import { WallScreen } from './WallScreen'
+import { fireEvent, render, screen } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
+import { WallScreen } from "./WallScreen";
 
-describe('WallScreen', () => {
-  it('renders brand mark and subtitle', () => {
-    render(<WallScreen selectedDripper="v60" onPickDripper={vi.fn()} />)
-    expect(screen.getByRole('heading', { level: 1, name: '뜸' })).toBeInTheDocument()
-    expect(screen.getByText('오늘 한 잔')).toBeInTheDocument()
-  })
+describe("WallScreen", () => {
+  it("renders brand mark and subtitle", () => {
+    render(<WallScreen selectedDripper="v60" onPickDripper={vi.fn()} />);
+    expect(
+      screen.getByRole("heading", { level: 1, name: "뜸" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("오늘 한 잔")).toBeInTheDocument();
+  });
 
-  it('renders both dripper options with names', () => {
-    render(<WallScreen selectedDripper="v60" onPickDripper={vi.fn()} />)
-    expect(screen.getByRole('button', { name: /V60/ })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Kalita Wave/ })).toBeInTheDocument()
-  })
+  it("renders both dripper options with names", () => {
+    render(<WallScreen selectedDripper="v60" onPickDripper={vi.fn()} />);
+    expect(screen.getByRole("button", { name: /V60/ })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Kalita Wave/ }),
+    ).toBeInTheDocument();
+  });
 
-  it('calls onPickDripper with tapped dripper id', () => {
-    const onPickDripper = vi.fn()
-    render(<WallScreen selectedDripper="v60" onPickDripper={onPickDripper} />)
-    fireEvent.click(screen.getByRole('button', { name: /Kalita Wave/ }))
-    expect(onPickDripper).toHaveBeenCalledWith('kalita_wave')
-  })
+  it("calls onPickDripper with tapped dripper id", () => {
+    const onPickDripper = vi.fn();
+    render(<WallScreen selectedDripper="v60" onPickDripper={onPickDripper} />);
+    fireEvent.click(screen.getByRole("button", { name: /Kalita Wave/ }));
+    expect(onPickDripper).toHaveBeenCalledWith("kalita_wave");
+  });
 
-  it('marks the selected dripper with aria-pressed', () => {
-    render(<WallScreen selectedDripper="kalita_wave" onPickDripper={vi.fn()} />)
-    const v60 = screen.getByRole('button', { name: /V60/ })
-    const kalita = screen.getByRole('button', { name: /Kalita Wave/ })
-    expect(v60).toHaveAttribute('aria-pressed', 'false')
-    expect(kalita).toHaveAttribute('aria-pressed', 'true')
-  })
-})
+  it("marks the selected dripper with aria-pressed", () => {
+    render(
+      <WallScreen selectedDripper="kalita_wave" onPickDripper={vi.fn()} />,
+    );
+    const v60 = screen.getByRole("button", { name: /V60/ });
+    const kalita = screen.getByRole("button", { name: /Kalita Wave/ });
+    expect(v60).toHaveAttribute("aria-pressed", "false");
+    expect(kalita).toHaveAttribute("aria-pressed", "true");
+  });
+});
 ```
 
 - [ ] **Step 2: 실패 확인**
@@ -248,15 +258,15 @@ Expected: FAIL — module not found.
 
 ```tsx
 // src/features/wall/WallScreen.tsx
-import { dripperList } from '@/domain/drippers'
-import type { DripperId } from '@/domain/types'
-import { cx } from '@/ui/cx'
-import { DripperIcon } from '@/ui/DripperIcon'
+import { dripperList } from "@/domain/drippers";
+import type { DripperId } from "@/domain/types";
+import { cx } from "@/ui/cx";
+import { DripperIcon } from "@/ui/DripperIcon";
 
 type Props = {
-  readonly selectedDripper: DripperId
-  readonly onPickDripper: (id: DripperId) => void
-}
+  readonly selectedDripper: DripperId;
+  readonly onPickDripper: (id: DripperId) => void;
+};
 
 export function WallScreen({ selectedDripper, onPickDripper }: Props) {
   return (
@@ -274,7 +284,7 @@ export function WallScreen({ selectedDripper, onPickDripper }: Props) {
       <section aria-label="드리퍼 선반" className="px-8 pb-16">
         <div className="flex items-end justify-around gap-4 pb-3">
           {dripperList.map((d) => {
-            const isSelected = d.id === selectedDripper
+            const isSelected = d.id === selectedDripper;
             return (
               <button
                 key={d.id}
@@ -287,14 +297,16 @@ export function WallScreen({ selectedDripper, onPickDripper }: Props) {
                 <DripperIcon type={d.id} size={96} selected={isSelected} />
                 <span
                   className={cx(
-                    'text-sm',
-                    isSelected ? 'font-medium text-text-primary' : 'text-text-secondary',
+                    "text-sm",
+                    isSelected
+                      ? "font-medium text-text-primary"
+                      : "text-text-secondary",
                   )}
                 >
                   {d.name}
                 </span>
               </button>
-            )
+            );
           })}
         </div>
         <div className="h-px bg-border" />
@@ -303,11 +315,12 @@ export function WallScreen({ selectedDripper, onPickDripper }: Props) {
         </p>
       </section>
     </div>
-  )
+  );
 }
 ```
 
 주석:
+
 - `bg-wall` 유틸은 Task 3.1에서 등록됨.
 - `focus-visible:ring-focus` — 키보드 포커스 링. `--color-focus-ring` 이미 토큰 존재.
 - `aria-pressed`는 토글 버튼 패턴 (Phase 1 DripperPopover 수정 시 채택한 동일 방식).
@@ -328,6 +341,7 @@ Expected: PASS.
 ## Task 3.3: `AppState` DEFAULT 변경 + 기존 테스트 수정
 
 **Files:**
+
 - Modify: `src/features/app/state.ts`
 - Modify: `src/features/app/state.test.ts`
 
@@ -336,17 +350,19 @@ Expected: PASS.
 File: `/Users/haneul/Projects/bloom-coffee/src/features/app/state.test.ts`
 
 기존:
+
 ```ts
-  it('DEFAULT_STATE has screen = "recipe"', () => {
-    expect(DEFAULT_STATE.screen).toBe('recipe' satisfies Screen)
-  })
+it('DEFAULT_STATE has screen = "recipe"', () => {
+  expect(DEFAULT_STATE.screen).toBe("recipe" satisfies Screen);
+});
 ```
 
 교체:
+
 ```ts
-  it('DEFAULT_STATE has screen = "wall" (진입은 Wall부터)', () => {
-    expect(DEFAULT_STATE.screen).toBe('wall' satisfies Screen)
-  })
+it('DEFAULT_STATE has screen = "wall" (진입은 Wall부터)', () => {
+  expect(DEFAULT_STATE.screen).toBe("wall" satisfies Screen);
+});
 ```
 
 - [ ] **Step 2: 테스트 실행 — 아직 실패 확인 (DEFAULT_STATE가 여전히 'recipe')**
@@ -359,6 +375,7 @@ Expected: FAIL — `expected "recipe" to be "wall"`.
 File: `/Users/haneul/Projects/bloom-coffee/src/features/app/state.ts`
 
 기존:
+
 ```ts
 export const DEFAULT_STATE: AppState = {
   screen: 'recipe',
@@ -368,6 +385,7 @@ export const DEFAULT_STATE: AppState = {
 ```
 
 변경:
+
 ```ts
 export const DEFAULT_STATE: AppState = {
   screen: 'wall',
@@ -390,6 +408,7 @@ Expected: PASS — 4 tests.
 ## Task 3.4: `AppRoot` 통합 — initial entry + wall branch + handleExit + handlePickDripper
 
 **Files:**
+
 - Modify: `src/features/app/AppRoot.tsx`
 
 - [ ] **Step 1: `AppRoot.tsx` 전체 교체**
@@ -397,11 +416,13 @@ Expected: PASS — 4 tests.
 File: `/Users/haneul/Projects/bloom-coffee/src/features/app/AppRoot.tsx`
 
 현재 AppRoot (Phase 2 state):
+
 - `loadInitialState`에서 URL 있을 때 `mergeState(DEFAULT_STATE, fromUrl)`만 함 (screen은 DEFAULT의 'recipe' 유지).
 - `screen === 'brewing' && session`, `screen === 'recipe' || !session` 두 분기.
 - `handleExit`가 `patch({ screen: 'recipe' })`.
 
 변경:
+
 - `loadInitialState`에서 URL 있을 때 `screen: 'recipe'` 명시 패치 (DEFAULT가 'wall'이라 override 필요).
 - `screen === 'wall'` 분기 추가.
 - `handleExit`를 `patch({ screen: 'wall' })`로 변경.
@@ -411,50 +432,57 @@ File: `/Users/haneul/Projects/bloom-coffee/src/features/app/AppRoot.tsx`
 수정 후 전체 `AppRoot.tsx`:
 
 ```tsx
-import { useEffect, useMemo, useState } from 'react'
-import { brewMethods } from '@/domain/methods'
+import { useEffect, useMemo, useState } from "react";
+import { brewMethods } from "@/domain/methods";
 import type {
   BrewMethodId,
   DripperId,
   RecipeInput,
   RoastLevel,
   TasteProfile,
-} from '@/domain/types'
-import type { BrewSession } from '@/domain/session'
-import { g } from '@/domain/units'
-import { BrewingScreen } from '@/features/brewing/BrewingScreen'
-import { RecipeScreen } from '@/features/recipe/RecipeScreen'
-import { WallScreen } from '@/features/wall/WallScreen'
-import { loadParams, saveParams } from '@/features/share/storage'
-import { decodeState, encodeState } from '@/features/share/urlCodec'
-import { DEFAULT_STATE, mergeState, type AppState } from './state'
+} from "@/domain/types";
+import type { BrewSession } from "@/domain/session";
+import { g } from "@/domain/units";
+import { BrewingScreen } from "@/features/brewing/BrewingScreen";
+import { RecipeScreen } from "@/features/recipe/RecipeScreen";
+import { WallScreen } from "@/features/wall/WallScreen";
+import { loadParams, saveParams } from "@/features/share/storage";
+import { decodeState, encodeState } from "@/features/share/urlCodec";
+import { DEFAULT_STATE, mergeState, type AppState } from "./state";
 
 const loadInitialState = (): AppState => {
-  const fromUrl = decodeState(new URLSearchParams(window.location.search))
-  const hasUrl = Object.keys(fromUrl).length > 0
-  if (hasUrl) return mergeState(DEFAULT_STATE, { ...fromUrl, screen: 'recipe' })
-  const stored = loadParams()
-  if (stored) return mergeState(DEFAULT_STATE, decodeState(stored))
-  return DEFAULT_STATE
-}
+  const fromUrl = decodeState(new URLSearchParams(window.location.search));
+  const hasUrl = Object.keys(fromUrl).length > 0;
+  if (hasUrl)
+    return mergeState(DEFAULT_STATE, { ...fromUrl, screen: "recipe" });
+  const stored = loadParams();
+  if (stored) return mergeState(DEFAULT_STATE, decodeState(stored));
+  return DEFAULT_STATE;
+};
 
 export function AppRoot() {
-  const [state, setState] = useState<AppState>(loadInitialState)
-  const [session, setSession] = useState<BrewSession | null>(null)
+  const [state, setState] = useState<AppState>(loadInitialState);
+  const [session, setSession] = useState<BrewSession | null>(null);
 
   useEffect(() => {
-    const params = encodeState(state)
-    window.history.replaceState(null, '', `${window.location.pathname}?${params}`)
-    saveParams(params)
-  }, [state])
+    const params = encodeState(state);
+    window.history.replaceState(
+      null,
+      "",
+      `${window.location.pathname}?${params}`,
+    );
+    saveParams(params);
+  }, [state]);
 
-  const patch = (p: Partial<AppState>): void => setState((prev) => mergeState(prev, p))
+  const patch = (p: Partial<AppState>): void =>
+    setState((prev) => mergeState(prev, p));
 
-  const handleDripperChange = (dripper: DripperId): void => patch({ dripper })
-  const handleMethodChange = (method: BrewMethodId): void => patch({ method })
-  const handleRoastChange = (roast: RoastLevel): void => patch({ roast })
-  const handleTasteChange = (taste: TasteProfile): void => patch({ taste })
-  const handleCoffeeChange = (coffee: number): void => patch({ coffee: g(coffee) })
+  const handleDripperChange = (dripper: DripperId): void => patch({ dripper });
+  const handleMethodChange = (method: BrewMethodId): void => patch({ method });
+  const handleRoastChange = (roast: RoastLevel): void => patch({ roast });
+  const handleTasteChange = (taste: TasteProfile): void => patch({ taste });
+  const handleCoffeeChange = (coffee: number): void =>
+    patch({ coffee: g(coffee) });
 
   const recipe = useMemo(() => {
     const input: RecipeInput = {
@@ -463,30 +491,35 @@ export function AppRoot() {
       coffee: state.coffee,
       roast: state.roast,
       taste: state.taste,
-    }
-    return brewMethods[state.method].compute(input)
-  }, [state.method, state.dripper, state.coffee, state.roast, state.taste])
+    };
+    return brewMethods[state.method].compute(input);
+  }, [state.method, state.dripper, state.coffee, state.roast, state.taste]);
 
   const handleStart = (): void => {
-    setSession({ recipe, startedAt: Date.now() })
-    patch({ screen: 'brewing' })
-  }
+    setSession({ recipe, startedAt: Date.now() });
+    patch({ screen: "brewing" });
+  };
 
   const handleExit = (): void => {
-    setSession(null)
-    patch({ screen: 'wall' })
-  }
+    setSession(null);
+    patch({ screen: "wall" });
+  };
 
   const handlePickDripper = (dripper: DripperId): void => {
-    patch({ dripper, screen: 'recipe' })
+    patch({ dripper, screen: "recipe" });
+  };
+
+  if (state.screen === "wall") {
+    return (
+      <WallScreen
+        selectedDripper={state.dripper}
+        onPickDripper={handlePickDripper}
+      />
+    );
   }
 
-  if (state.screen === 'wall') {
-    return <WallScreen selectedDripper={state.dripper} onPickDripper={handlePickDripper} />
-  }
-
-  if (state.screen === 'brewing' && session) {
-    return <BrewingScreen session={session} onExit={handleExit} />
+  if (state.screen === "brewing" && session) {
+    return <BrewingScreen session={session} onExit={handleExit} />;
   }
 
   return (
@@ -504,11 +537,12 @@ export function AppRoot() {
       onTasteChange={handleTasteChange}
       onStart={handleStart}
     />
-  )
+  );
 }
 ```
 
 변경점 요약:
+
 1. `WallScreen` import 추가.
 2. `loadInitialState`의 URL 분기에 `screen: 'recipe'` 명시.
 3. `handleExit`: `'recipe'` → `'wall'`.
@@ -533,6 +567,7 @@ Expected: PASS. 예상 테스트 수: 99 + 4 (WallScreen) = **103**. state 테�
 ## Task 3.5: `RecipeScreen`에 slide-up 애니메이션 적용 + 최종 wrap-up
 
 **Files:**
+
 - Modify: `src/features/recipe/RecipeScreen.tsx`
 
 - [ ] **Step 1: `RecipeScreen` root container에 `animate-slide-up` 추가**
@@ -540,11 +575,13 @@ Expected: PASS. 예상 테스트 수: 99 + 4 (WallScreen) = **103**. state 테�
 File: `/Users/haneul/Projects/bloom-coffee/src/features/recipe/RecipeScreen.tsx`
 
 기존 root `<div>` className (Phase 1에서 설정한 값):
+
 ```tsx
 <div className="relative mx-auto flex min-h-screen max-w-lg flex-col bg-surface text-text-primary">
 ```
 
 변경:
+
 ```tsx
 <div className="relative mx-auto flex min-h-screen max-w-lg flex-col bg-surface text-text-primary animate-slide-up">
 ```
@@ -579,20 +616,24 @@ Run (background): `bun run dev`
 Playwright MCP로 확인할 플로우 (데스크톱 1200×900 + 모바일 390×844 각각):
 
 **최초 진입:**
+
 - [ ] URL 파라미터 없이 접속 → Wall 스크린 (벽 배경, `뜸` 마크, V60/Kalita Wave shelf)
 - [ ] V60 탭 → Recipe로 slide-up (translateY 12px → 0, opacity 0 → 1, 320ms)
 - [ ] Recipe에서 `시작` → Brewing 전이 (Phase 2 동작 그대로)
 - [ ] Brewing 중단 → Stop dialog → 처음으로 → Wall로 복귀 ✨ (Phase 2 땐 Recipe로 복귀했음, 지금은 Wall)
 
 **URL 공유 링크 시나리오:**
+
 - [ ] 쿼리 있는 URL (예: `?c=20&d=v60&m=kasuya_4_6&r=medium&sw=balanced&st=medium`)로 접속 → Recipe 바로 진입 (Wall 건너뜀)
 - [ ] Recipe → Brewing → 중단/완료 후 → Wall 복귀 (한 번 Wall 경험)
 
 **드리퍼 선택 재방문 시나리오:**
+
 - [ ] Wall에서 Kalita Wave 탭 → Recipe (method가 kalita_pulse로 자동 스위치, slide-up 재생)
 - [ ] 뒤로가기 없이 중단 → Wall → V60 탭 → Recipe (method kasuya_4_6로 복귀)
 
 **접근성:**
+
 - [ ] WallScreen 탭 순서: V60 → Kalita Wave (또는 DOM 순서)
 - [ ] 선택된 드리퍼가 `aria-pressed="true"`
 - [ ] 키보드 Tab + Enter로 드리퍼 선택 가능

@@ -42,20 +42,20 @@
 
 ### 신규 파일
 
-| 경로 | 책임 |
-|---|---|
-| `src/ui/viewTransition.ts` | `withViewTransition(update: () => void): void` 헬퍼. API 존재 여부 feature detect, 있으면 `flushSync` 래핑 후 `startViewTransition`에 전달, 없으면 update 직접 실행 |
-| `src/ui/viewTransition.test.ts` | API 있음/없음 두 경로 테스트 (stub) |
+| 경로                            | 책임                                                                                                                                                                |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/ui/viewTransition.ts`      | `withViewTransition(update: () => void): void` 헬퍼. API 존재 여부 feature detect, 있으면 `flushSync` 래핑 후 `startViewTransition`에 전달, 없으면 update 직접 실행 |
+| `src/ui/viewTransition.test.ts` | API 있음/없음 두 경로 테스트 (stub)                                                                                                                                 |
 
 ### 수정
 
-| 경로 | 변경 |
-|---|---|
-| `src/features/app/AppRoot.tsx` | `withViewTransition` import. `handleStart`, `handleComplete`, `handleExit`, `handlePickDripper` 4개 핸들러의 state-변경 코드를 헬퍼로 래핑 |
-| `src/features/wall/WallScreen.tsx` | 각 드리퍼 `<button>`에 `style={{ viewTransitionName: \`dripper-${d.id}\` }}` 부여 |
-| `src/features/recipe/RecipeScreen.tsx` | 상단 바의 `DripperIcon` 래퍼에 `style={{ viewTransitionName: \`dripper-${dripper}\` }}` 부여. root `<div>`에서 `animate-slide-up` 클래스 **제거** |
-| `src/ui/globals.css` | `::view-transition-group(root)` 기간·easing 토큰 매핑 추가. `prefers-reduced-motion` 블록에서 `.animate-slide-up` 참조 제거(유틸 자체가 없어지므로) |
-| `tailwind.config.ts` | `keyframes['slide-up']` + `animation['slide-up']` 엔트리 제거 (사용처 없어짐) |
+| 경로                                   | 변경                                                                                                                                                |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/features/app/AppRoot.tsx`         | `withViewTransition` import. `handleStart`, `handleComplete`, `handleExit`, `handlePickDripper` 4개 핸들러의 state-변경 코드를 헬퍼로 래핑          |
+| `src/features/wall/WallScreen.tsx`     | 각 드리퍼 `<button>`에 `style={{ viewTransitionName: \`dripper-${d.id}\` }}` 부여                                                                   |
+| `src/features/recipe/RecipeScreen.tsx` | 상단 바의 `DripperIcon` 래퍼에 `style={{ viewTransitionName: \`dripper-${dripper}\` }}`부여. root`<div>`에서 `animate-slide-up` 클래스 **제거**     |
+| `src/ui/globals.css`                   | `::view-transition-group(root)` 기간·easing 토큰 매핑 추가. `prefers-reduced-motion` 블록에서 `.animate-slide-up` 참조 제거(유틸 자체가 없어지므로) |
+| `tailwind.config.ts`                   | `keyframes['slide-up']` + `animation['slide-up']` 엔트리 제거 (사용처 없어짐)                                                                       |
 
 ### 변경 없음
 
@@ -79,6 +79,7 @@
 ## Task VT.1: `withViewTransition` 헬퍼 + 테스트
 
 **Files:**
+
 - Create: `src/ui/viewTransition.ts`
 - Create: `src/ui/viewTransition.test.ts`
 
@@ -86,58 +87,58 @@
 
 ```ts
 // src/ui/viewTransition.test.ts
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { withViewTransition } from './viewTransition'
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { withViewTransition } from "./viewTransition";
 
 type DocWithVT = Document & {
-  startViewTransition?: (cb: () => void) => unknown
-}
+  startViewTransition?: (cb: () => void) => unknown;
+};
 
-describe('withViewTransition', () => {
-  let originalStartVT: DocWithVT['startViewTransition']
+describe("withViewTransition", () => {
+  let originalStartVT: DocWithVT["startViewTransition"];
 
   beforeEach(() => {
-    originalStartVT = (document as DocWithVT).startViewTransition
-  })
+    originalStartVT = (document as DocWithVT).startViewTransition;
+  });
 
   afterEach(() => {
     if (originalStartVT !== undefined) {
-      ;(document as DocWithVT).startViewTransition = originalStartVT
+      (document as DocWithVT).startViewTransition = originalStartVT;
     } else {
-      delete (document as DocWithVT).startViewTransition
+      delete (document as DocWithVT).startViewTransition;
     }
-  })
+  });
 
-  it('runs update directly when startViewTransition is not available', () => {
-    delete (document as DocWithVT).startViewTransition
-    const update = vi.fn()
-    withViewTransition(update)
-    expect(update).toHaveBeenCalledTimes(1)
-  })
+  it("runs update directly when startViewTransition is not available", () => {
+    delete (document as DocWithVT).startViewTransition;
+    const update = vi.fn();
+    withViewTransition(update);
+    expect(update).toHaveBeenCalledTimes(1);
+  });
 
-  it('delegates to startViewTransition when available', () => {
-    const update = vi.fn()
+  it("delegates to startViewTransition when available", () => {
+    const update = vi.fn();
     const fakeStart = vi.fn((cb: () => void) => {
-      cb()
-      return {}
-    })
-    ;(document as DocWithVT).startViewTransition = fakeStart
-    withViewTransition(update)
-    expect(fakeStart).toHaveBeenCalledTimes(1)
-    expect(update).toHaveBeenCalledTimes(1)
-  })
+      cb();
+      return {};
+    });
+    (document as DocWithVT).startViewTransition = fakeStart;
+    withViewTransition(update);
+    expect(fakeStart).toHaveBeenCalledTimes(1);
+    expect(update).toHaveBeenCalledTimes(1);
+  });
 
-  it('does not invoke update twice when both paths would execute', () => {
+  it("does not invoke update twice when both paths would execute", () => {
     // Safety: ensure we don't call update() outside AND inside startViewTransition
-    const update = vi.fn()
-    ;(document as DocWithVT).startViewTransition = (cb) => {
-      cb()
-      return {}
-    }
-    withViewTransition(update)
-    expect(update).toHaveBeenCalledTimes(1)
-  })
-})
+    const update = vi.fn();
+    (document as DocWithVT).startViewTransition = (cb) => {
+      cb();
+      return {};
+    };
+    withViewTransition(update);
+    expect(update).toHaveBeenCalledTimes(1);
+  });
+});
 ```
 
 - [ ] **Step 2: 실패 확인**
@@ -149,25 +150,25 @@ Expected: FAIL — module not found.
 
 ```ts
 // src/ui/viewTransition.ts
-import { flushSync } from 'react-dom'
+import { flushSync } from "react-dom";
 
 type DocWithVT = Document & {
-  startViewTransition?: (cb: () => void) => unknown
-}
+  startViewTransition?: (cb: () => void) => unknown;
+};
 
 export const withViewTransition = (update: () => void): void => {
-  const doc = document as DocWithVT
-  if (typeof doc.startViewTransition === 'function') {
+  const doc = document as DocWithVT;
+  if (typeof doc.startViewTransition === "function") {
     doc.startViewTransition(() => {
       // flushSync ensures React commits synchronously before the "after"
       // snapshot is captured. Without it, React 18/19 may batch across the
       // callback boundary and produce a stale snapshot.
-      flushSync(update)
-    })
+      flushSync(update);
+    });
   } else {
-    update()
+    update();
   }
-}
+};
 ```
 
 - [ ] **Step 4: 테스트 통과 확인**
@@ -187,6 +188,7 @@ Expected: PASS.
 ## Task VT.2: AppRoot — 스크린 전이 핸들러 4개 래핑
 
 **Files:**
+
 - Modify: `src/features/app/AppRoot.tsx`
 
 - [ ] **Step 1: `withViewTransition` import 추가**
@@ -194,28 +196,31 @@ Expected: PASS.
 File: `/Users/haneul/Projects/bloom-coffee/src/features/app/AppRoot.tsx`
 
 기존 import 섹션에 추가:
+
 ```ts
-import { withViewTransition } from '@/ui/viewTransition'
+import { withViewTransition } from "@/ui/viewTransition";
 ```
 
 - [ ] **Step 2: `handleStart` 래핑**
 
 기존:
+
 ```ts
-  const handleStart = (): void => {
-    setSession({ recipe, startedAt: Date.now() })
-    patch({ screen: 'brewing' })
-  }
+const handleStart = (): void => {
+  setSession({ recipe, startedAt: Date.now() });
+  patch({ screen: "brewing" });
+};
 ```
 
 변경:
+
 ```ts
-  const handleStart = (): void => {
-    withViewTransition(() => {
-      setSession({ recipe, startedAt: Date.now() })
-      setState((prev) => mergeState(prev, { screen: 'brewing' }))
-    })
-  }
+const handleStart = (): void => {
+  withViewTransition(() => {
+    setSession({ recipe, startedAt: Date.now() });
+    setState((prev) => mergeState(prev, { screen: "brewing" }));
+  });
+};
 ```
 
 주석: `patch(...)` 대신 `setState((prev) => mergeState(prev, ...))` 직접 사용해 헬퍼 안에서 모든 state 업데이트가 동기 배치되도록.
@@ -223,43 +228,47 @@ import { withViewTransition } from '@/ui/viewTransition'
 - [ ] **Step 3: `handleComplete` 래핑 (이미 useCallback)**
 
 기존:
+
 ```ts
-  const handleComplete = useCallback((): void => {
-    setSession((prev) => (prev ? { ...prev, completedAt: Date.now() } : null))
-    setState((prev) => mergeState(prev, { screen: 'complete' }))
-  }, [])
+const handleComplete = useCallback((): void => {
+  setSession((prev) => (prev ? { ...prev, completedAt: Date.now() } : null));
+  setState((prev) => mergeState(prev, { screen: "complete" }));
+}, []);
 ```
 
 변경:
+
 ```ts
-  const handleComplete = useCallback((): void => {
-    withViewTransition(() => {
-      setSession((prev) => (prev ? { ...prev, completedAt: Date.now() } : null))
-      setState((prev) => mergeState(prev, { screen: 'complete' }))
-    })
-  }, [])
+const handleComplete = useCallback((): void => {
+  withViewTransition(() => {
+    setSession((prev) => (prev ? { ...prev, completedAt: Date.now() } : null));
+    setState((prev) => mergeState(prev, { screen: "complete" }));
+  });
+}, []);
 ```
 
 - [ ] **Step 4: `handleExit` 래핑**
 
 기존:
+
 ```ts
-  const handleExit = (): void => {
-    if (session) saveSession(session)
-    setSession(null)
-    patch({ screen: 'wall' })
-  }
+const handleExit = (): void => {
+  if (session) saveSession(session);
+  setSession(null);
+  patch({ screen: "wall" });
+};
 ```
 
 변경:
+
 ```ts
-  const handleExit = (): void => {
-    if (session) saveSession(session)
-    withViewTransition(() => {
-      setSession(null)
-      setState((prev) => mergeState(prev, { screen: 'wall' }))
-    })
-  }
+const handleExit = (): void => {
+  if (session) saveSession(session);
+  withViewTransition(() => {
+    setSession(null);
+    setState((prev) => mergeState(prev, { screen: "wall" }));
+  });
+};
 ```
 
 주석: `saveSession`은 동기 localStorage write이고 DOM 전이와 무관하므로 헬퍼 바깥에서 먼저 호출. 안전.
@@ -267,19 +276,21 @@ import { withViewTransition } from '@/ui/viewTransition'
 - [ ] **Step 5: `handlePickDripper` 래핑**
 
 기존:
+
 ```ts
-  const handlePickDripper = (dripper: DripperId): void => {
-    patch({ dripper, screen: 'recipe' })
-  }
+const handlePickDripper = (dripper: DripperId): void => {
+  patch({ dripper, screen: "recipe" });
+};
 ```
 
 변경:
+
 ```ts
-  const handlePickDripper = (dripper: DripperId): void => {
-    withViewTransition(() => {
-      setState((prev) => mergeState(prev, { dripper, screen: 'recipe' }))
-    })
-  }
+const handlePickDripper = (dripper: DripperId): void => {
+  withViewTransition(() => {
+    setState((prev) => mergeState(prev, { dripper, screen: "recipe" }));
+  });
+};
 ```
 
 - [ ] **Step 6: 타입체크**
@@ -297,6 +308,7 @@ Expected: PASS — 이전 123 + viewTransition 3 = **126 tests**. 회귀 없음.
 ## Task VT.3: 공유 요소 — Wall + Recipe 드리퍼에 `view-transition-name`
 
 **Files:**
+
 - Modify: `src/features/wall/WallScreen.tsx`
 - Modify: `src/features/recipe/RecipeScreen.tsx`
 
@@ -305,11 +317,13 @@ Expected: PASS — 이전 123 + viewTransition 3 = **126 tests**. 회귀 없음.
 - [ ] **Step 1: `viewTransitionName` React 타입 확인**
 
 Run:
+
 ```bash
 grep -r "viewTransitionName" node_modules/@types/react/index.d.ts 2>/dev/null || echo "NOT_FOUND"
 ```
 
 Expected behaviors:
+
 - 매치 **있음** (React 19): 타입 augmentation 불필요, 바로 Step 2로.
 - 매치 **없음**: Step 1b에서 타입 augmentation 추가.
 
@@ -320,11 +334,11 @@ Expected behaviors:
 Create: `/Users/haneul/Projects/bloom-coffee/src/types/view-transitions.d.ts`
 
 ```ts
-import 'react'
+import "react";
 
-declare module 'react' {
+declare module "react" {
   interface CSSProperties {
-    viewTransitionName?: string
+    viewTransitionName?: string;
   }
 }
 ```
@@ -343,48 +357,48 @@ File: `/Users/haneul/Projects/bloom-coffee/src/features/wall/WallScreen.tsx`
 기존 shelf 드리퍼 버튼 매핑(대략 line 28~46):
 
 ```tsx
-          {dripperList.map((d) => {
-            const isSelected = d.id === selectedDripper
-            return (
-              <button
-                key={d.id}
-                type="button"
-                onClick={() => onPickDripper(d.id)}
-                aria-pressed={isSelected}
-                aria-label={d.name}
-                className="..."
-              >
-                <DripperIcon type={d.id} size={96} selected={isSelected} />
-                <span className="...">
-                  {d.name}
-                </span>
-              </button>
-            )
-          })}
+{
+  dripperList.map((d) => {
+    const isSelected = d.id === selectedDripper;
+    return (
+      <button
+        key={d.id}
+        type="button"
+        onClick={() => onPickDripper(d.id)}
+        aria-pressed={isSelected}
+        aria-label={d.name}
+        className="..."
+      >
+        <DripperIcon type={d.id} size={96} selected={isSelected} />
+        <span className="...">{d.name}</span>
+      </button>
+    );
+  });
+}
 ```
 
 `<button>`에 `style={{ viewTransitionName: \`dripper-${d.id}\` }}` 추가:
 
 ```tsx
-          {dripperList.map((d) => {
-            const isSelected = d.id === selectedDripper
-            return (
-              <button
-                key={d.id}
-                type="button"
-                onClick={() => onPickDripper(d.id)}
-                aria-pressed={isSelected}
-                aria-label={d.name}
-                style={{ viewTransitionName: `dripper-${d.id}` }}
-                className="..."
-              >
-                <DripperIcon type={d.id} size={96} selected={isSelected} />
-                <span className="...">
-                  {d.name}
-                </span>
-              </button>
-            )
-          })}
+{
+  dripperList.map((d) => {
+    const isSelected = d.id === selectedDripper;
+    return (
+      <button
+        key={d.id}
+        type="button"
+        onClick={() => onPickDripper(d.id)}
+        aria-pressed={isSelected}
+        aria-label={d.name}
+        style={{ viewTransitionName: `dripper-${d.id}` }}
+        className="..."
+      >
+        <DripperIcon type={d.id} size={96} selected={isSelected} />
+        <span className="...">{d.name}</span>
+      </button>
+    );
+  });
+}
 ```
 
 (기존 className 그대로 유지. 바뀌는 것은 `style` prop 추가뿐.)
@@ -420,11 +434,13 @@ File: `/Users/haneul/Projects/bloom-coffee/src/features/recipe/RecipeScreen.tsx`
 File: `/Users/haneul/Projects/bloom-coffee/src/features/recipe/RecipeScreen.tsx`
 
 Phase 3에서 추가된 root `<div>` className (line 70-ish):
+
 ```tsx
     <div className="relative mx-auto flex min-h-screen max-w-lg flex-col bg-surface text-text-primary animate-slide-up">
 ```
 
 `animate-slide-up` 제거:
+
 ```tsx
     <div className="relative mx-auto flex min-h-screen max-w-lg flex-col bg-surface text-text-primary">
 ```
@@ -439,6 +455,7 @@ Expected: PASS.
 ## Task VT.4: CSS 커스터마이즈 + `slide-up` 리소스 정리
 
 **Files:**
+
 - Modify: `src/ui/globals.css`
 - Modify: `tailwind.config.ts`
 
@@ -447,6 +464,7 @@ Expected: PASS.
 File: `/Users/haneul/Projects/bloom-coffee/src/ui/globals.css`
 
 현재 파일 끝부분에 있는 Phase 3 reduce-motion 블록:
+
 ```css
 @media (prefers-reduced-motion: reduce) {
   .animate-slide-up {
@@ -479,6 +497,7 @@ File: `/Users/haneul/Projects/bloom-coffee/src/ui/globals.css`
 ```
 
 주석:
+
 - `::view-transition-group(*)`는 모든 transition group(root + shared elements)에 일관된 duration/easing 적용.
 - `prefers-reduced-motion` 가드는 브라우저 기본 동작을 보강 (브라우저 구현에 따라 기본이 미동작 가능).
 
@@ -487,6 +506,7 @@ File: `/Users/haneul/Projects/bloom-coffee/src/ui/globals.css`
 File: `/Users/haneul/Projects/bloom-coffee/tailwind.config.ts`
 
 현재 `extend` 내부:
+
 ```ts
       keyframes: {
         'slide-up': {
@@ -500,6 +520,7 @@ File: `/Users/haneul/Projects/bloom-coffee/tailwind.config.ts`
 ```
 
 두 블록 제거. 결과:
+
 ```ts
     extend: {
       transitionDuration: {
@@ -523,15 +544,19 @@ Run: `bun run build`
 Expected: PASS.
 
 Run:
+
 ```bash
 grep -c "animate-slide-up" dist/assets/*.css
 ```
+
 Expected: `0` (no longer used — tree-shaken).
 
 Run:
+
 ```bash
 grep -c "view-transition-group" dist/assets/*.css
 ```
+
 Expected: `≥1`.
 
 ---
@@ -560,24 +585,29 @@ Run (background): `bun run dev`
 체크리스트 (데스크톱 1200×900 + 모바일 390×844, **Chromium 기반 브라우저 권장** — View Transitions 완전 지원):
 
 **기본 cross-fade 전이:**
+
 - [ ] Wall → V60 탭 → Recipe: 화면 전체가 부드러운 cross-fade로 전환 (Phase 3의 translate 위주 slide-up과 다르게 cross-fade 위주)
 - [ ] Recipe → 시작 → Brewing: cross-fade
 - [ ] Brewing → 완료(자동 전이) → Complete: cross-fade
 - [ ] Complete → 처음으로 → Wall: cross-fade
 
 **공유 요소 morph:**
+
 - [ ] Wall에서 V60 탭 → Recipe 진입 시 V60 드리퍼 아이콘이 shelf 위치(화면 하단) → top bar 위치(화면 상단)로 이동·축소하며 morph
 - [ ] Kalita Wave 탭 시 동일하게 morph
 - [ ] Complete → 처음으로 → Wall: 반대 방향 (top bar → shelf)
 
 **접근성:**
+
 - [ ] 시스템에서 "동작 감소" 설정 on → 모든 전이가 즉시(애니메이션 없이) 발생
 - [ ] DevTools Rendering 탭에서 `prefers-reduced-motion: reduce` emulate 가능
 
 **폴백:**
+
 - [ ] Safari 구버전 등 미지원 브라우저(수동 테스트 가능하면): 전이 없이 즉시 교체, 에러 없음. 불가능하면 코드 레벨에서 `delete document.startViewTransition` 후 확인 — optional.
 
 **회귀 방지:**
+
 - [ ] URL 공유 링크 직접 진입 → Recipe 바로 진입 (전이 없음, 정상)
 - [ ] Brewing 중 중단 → Stop dialog → 처음으로 → Wall 복귀 + cross-fade
 - [ ] 루트 URL 접속 → Wall 기본 진입

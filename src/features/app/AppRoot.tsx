@@ -1,53 +1,60 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { brewMethods } from '@/domain/methods'
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { brewMethods } from "@/domain/methods";
 import type {
   BrewMethodId,
   DripperId,
   RecipeInput,
   RoastLevel,
   TasteProfile,
-} from '@/domain/types'
-import type { BrewSession, Feeling } from '@/domain/session'
-import { g } from '@/domain/units'
-import { BrewingScreen } from '@/features/brewing/BrewingScreen'
-import { CompleteScreen } from '@/features/complete/CompleteScreen'
-import { RecipeScreen } from '@/features/recipe/RecipeScreen'
-import { WallScreen } from '@/features/wall/WallScreen'
-import { loadParams, saveParams, saveSession } from '@/features/share/storage'
-import { decodeState, encodeState } from '@/features/share/urlCodec'
-import { withViewTransition } from '@/ui/viewTransition'
-import { DEFAULT_STATE, mergeState, type AppState } from './state'
+} from "@/domain/types";
+import type { BrewSession, Feeling } from "@/domain/session";
+import { g } from "@/domain/units";
+import { BrewingScreen } from "@/features/brewing/BrewingScreen";
+import { CompleteScreen } from "@/features/complete/CompleteScreen";
+import { RecipeScreen } from "@/features/recipe/RecipeScreen";
+import { WallScreen } from "@/features/wall/WallScreen";
+import { loadParams, saveParams, saveSession } from "@/features/share/storage";
+import { decodeState, encodeState } from "@/features/share/urlCodec";
+import { withViewTransition } from "@/ui/viewTransition";
+import { DEFAULT_STATE, mergeState, type AppState } from "./state";
 
 const loadInitialState = (): AppState => {
-  const fromUrl = decodeState(new URLSearchParams(window.location.search))
-  const hasUrl = Object.keys(fromUrl).length > 0
-  if (hasUrl) return mergeState(DEFAULT_STATE, { ...fromUrl, screen: 'recipe' })
-  const stored = loadParams()
-  if (stored) return mergeState(DEFAULT_STATE, decodeState(stored))
-  return DEFAULT_STATE
-}
+  const fromUrl = decodeState(new URLSearchParams(window.location.search));
+  const hasUrl = Object.keys(fromUrl).length > 0;
+  if (hasUrl)
+    return mergeState(DEFAULT_STATE, { ...fromUrl, screen: "recipe" });
+  const stored = loadParams();
+  if (stored) return mergeState(DEFAULT_STATE, decodeState(stored));
+  return DEFAULT_STATE;
+};
 
 export function AppRoot() {
-  const [state, setState] = useState<AppState>(loadInitialState)
-  const [session, setSession] = useState<BrewSession | null>(null)
+  const [state, setState] = useState<AppState>(loadInitialState);
+  const [session, setSession] = useState<BrewSession | null>(null);
 
   useEffect(() => {
-    const params = encodeState(state)
-    if (state.screen === 'wall') {
-      window.history.replaceState(null, '', window.location.pathname)
+    const params = encodeState(state);
+    if (state.screen === "wall") {
+      window.history.replaceState(null, "", window.location.pathname);
     } else {
-      window.history.replaceState(null, '', `${window.location.pathname}?${params}`)
+      window.history.replaceState(
+        null,
+        "",
+        `${window.location.pathname}?${params}`,
+      );
     }
-    saveParams(params)
-  }, [state])
+    saveParams(params);
+  }, [state]);
 
-  const patch = (p: Partial<AppState>): void => setState((prev) => mergeState(prev, p))
+  const patch = (p: Partial<AppState>): void =>
+    setState((prev) => mergeState(prev, p));
 
-  const handleDripperChange = (dripper: DripperId): void => patch({ dripper })
-  const handleMethodChange = (method: BrewMethodId): void => patch({ method })
-  const handleRoastChange = (roast: RoastLevel): void => patch({ roast })
-  const handleTasteChange = (taste: TasteProfile): void => patch({ taste })
-  const handleCoffeeChange = (coffee: number): void => patch({ coffee: g(coffee) })
+  const handleDripperChange = (dripper: DripperId): void => patch({ dripper });
+  const handleMethodChange = (method: BrewMethodId): void => patch({ method });
+  const handleRoastChange = (roast: RoastLevel): void => patch({ roast });
+  const handleTasteChange = (taste: TasteProfile): void => patch({ taste });
+  const handleCoffeeChange = (coffee: number): void =>
+    patch({ coffee: g(coffee) });
 
   const recipe = useMemo(() => {
     const input: RecipeInput = {
@@ -56,59 +63,74 @@ export function AppRoot() {
       coffee: state.coffee,
       roast: state.roast,
       taste: state.taste,
-    }
-    return brewMethods[state.method].compute(input)
-  }, [state.method, state.dripper, state.coffee, state.roast, state.taste])
+    };
+    return brewMethods[state.method].compute(input);
+  }, [state.method, state.dripper, state.coffee, state.roast, state.taste]);
 
   const handleStart = (): void => {
     withViewTransition(() => {
-      setSession({ recipe, startedAt: Date.now() })
-      setState((prev) => mergeState(prev, { screen: 'brewing' }))
-    })
-  }
+      setSession({ recipe, startedAt: Date.now() });
+      setState((prev) => mergeState(prev, { screen: "brewing" }));
+    });
+  };
 
   const handleComplete = useCallback((): void => {
     withViewTransition(() => {
-      setSession((prev) => (prev ? { ...prev, completedAt: Date.now() } : null))
-      setState((prev) => mergeState(prev, { screen: 'complete' }))
-    })
-  }, [])
+      setSession((prev) =>
+        prev ? { ...prev, completedAt: Date.now() } : null,
+      );
+      setState((prev) => mergeState(prev, { screen: "complete" }));
+    });
+  }, []);
 
   const handleFeeling = (feeling: Feeling | null): void => {
     setSession((prev) => {
-      if (!prev) return null
-      return { ...prev, feeling: feeling ?? undefined }
-    })
-  }
+      if (!prev) return null;
+      return { ...prev, feeling: feeling ?? undefined };
+    });
+  };
 
   const handleExit = (): void => {
-    if (session) saveSession(session)
+    if (session) saveSession(session);
     withViewTransition(() => {
-      setSession(null)
-      setState((prev) => mergeState(prev, { screen: 'wall' }))
-    })
-  }
+      setSession(null);
+      setState((prev) => mergeState(prev, { screen: "wall" }));
+    });
+  };
 
   const handlePickDripper = (dripper: DripperId): void => {
     withViewTransition(() => {
-      setState((prev) => mergeState(prev, { dripper, screen: 'recipe' }))
-    })
-  }
+      setState((prev) => mergeState(prev, { dripper, screen: "recipe" }));
+    });
+  };
 
-  if (state.screen === 'wall') {
-    return <WallScreen selectedDripper={state.dripper} onPickDripper={handlePickDripper} />
-  }
-
-  if (state.screen === 'brewing' && session) {
+  if (state.screen === "wall") {
     return (
-      <BrewingScreen session={session} onExit={handleExit} onComplete={handleComplete} />
-    )
+      <WallScreen
+        selectedDripper={state.dripper}
+        onPickDripper={handlePickDripper}
+      />
+    );
   }
 
-  if (state.screen === 'complete' && session) {
+  if (state.screen === "brewing" && session) {
     return (
-      <CompleteScreen session={session} onFeelingChange={handleFeeling} onExit={handleExit} />
-    )
+      <BrewingScreen
+        session={session}
+        onExit={handleExit}
+        onComplete={handleComplete}
+      />
+    );
+  }
+
+  if (state.screen === "complete" && session) {
+    return (
+      <CompleteScreen
+        session={session}
+        onFeelingChange={handleFeeling}
+        onExit={handleExit}
+      />
+    );
   }
 
   return (
@@ -126,5 +148,5 @@ export function AppRoot() {
       onTasteChange={handleTasteChange}
       onStart={handleStart}
     />
-  )
+  );
 }

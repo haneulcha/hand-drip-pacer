@@ -1,42 +1,50 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from "react";
 
 type Props = {
-  readonly label: string
-  readonly value: number
-  readonly onChange: (value: number) => void
-  readonly min: number
-  readonly max: number
-  readonly step?: number
-  readonly suffix?: string
-}
+  readonly label: string;
+  readonly value: number;
+  readonly onChange: (value: number) => void;
+  readonly min: number;
+  readonly max: number;
+  readonly step?: number;
+  readonly suffix?: string;
+};
 
-export function Slider({ label, value, onChange, min, max, step = 1, suffix }: Props) {
-  const [raw, setRaw] = useState<string>(String(value))
-  const focusedRef = useRef(false)
+export function Slider({
+  label,
+  value,
+  onChange,
+  min,
+  max,
+  step = 1,
+  suffix,
+}: Props) {
+  const [raw, setRaw] = useState<string>(String(value));
+  const focusedRef = useRef(false);
 
   // Only sync from prop when user isn't actively editing the number input;
   // otherwise in-progress typing ('2' on way to '25') gets clobbered.
   useEffect(() => {
-    if (!focusedRef.current) setRaw(String(value))
-  }, [value])
+    if (!focusedRef.current) setRaw(String(value));
+  }, [value]);
 
   const clamp = (n: number): number =>
-    Math.max(min, Math.min(max, Math.round(n)))
+    Math.max(min, Math.min(max, Math.round(n)));
 
   const commitRaw = (): void => {
-    if (raw === '') {
-      setRaw(String(value))
-      return
+    if (raw === "") {
+      setRaw(String(value));
+      return;
     }
-    const n = Number(raw)
+    const n = Number(raw);
     if (!Number.isFinite(n)) {
-      setRaw(String(value))
-      return
+      setRaw(String(value));
+      return;
     }
-    const clamped = clamp(n)
-    setRaw(String(clamped))
-    if (clamped !== value) onChange(clamped)
-  }
+    const clamped = clamp(n);
+    setRaw(String(clamped));
+    if (clamped !== value) onChange(clamped);
+  };
 
   return (
     <div className="flex items-center gap-3">
@@ -59,18 +67,18 @@ export function Slider({ label, value, onChange, min, max, step = 1, suffix }: P
         value={raw}
         onChange={(e) => setRaw(e.target.value)}
         onFocus={() => {
-          focusedRef.current = true
+          focusedRef.current = true;
         }}
         onBlur={() => {
-          focusedRef.current = false
-          commitRaw()
+          focusedRef.current = false;
+          commitRaw();
         }}
         onKeyDown={(e) => {
-          if (e.key === 'Enter') (e.target as HTMLInputElement).blur()
+          if (e.key === "Enter") (e.target as HTMLInputElement).blur();
         }}
         className="w-16 rounded-control-compact border border-border bg-surface px-2 py-1 text-right text-sm font-medium tabular-nums"
       />
       {suffix && <span className="text-sm text-text-muted">{suffix}</span>}
     </div>
-  )
+  );
 }

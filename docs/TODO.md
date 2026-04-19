@@ -12,16 +12,16 @@
 
 ### 주요 커밋 그룹 (최신 → 과거)
 
-| 그룹 | 대표 커밋 | 내용 |
-|---|---|---|
-| 브랜드 정리 | `bebe82d`, `8b9e75f`, `8b475ca` | '뜸' 브랜드 드롭 + screen 모션 토큰 분리 + font-smoothing |
-| A1 View Transitions | `391baa9`, `6625fbb`, `de548e1` | fix + impl + plan |
-| Phase 4 Complete | `da9eede`, `993f0b9`, `2f237a3` | fix + impl + plan |
-| Phase 3 Wall | `e875317`, `e7f55cd`, `f5bbada`, `0cbbf51` | fix + impl + plan + followups 추가 |
-| Phase 2 Brewing+Timer | `b76b6b4` 등 | fix + impl + plan (D1 타이머 본체) |
-| Phase 0~1 | `5485c96` 등 | AppRoot + Recipe 재설계 |
-| Brand 2차 | `b897f29` | UI 라벨 한국어 로컬라이즈 |
-| Brand 1차 + v1 | `5080a5f`, `198e3e8` | 토큰 + 최초 앱 |
+| 그룹                  | 대표 커밋                                  | 내용                                                      |
+| --------------------- | ------------------------------------------ | --------------------------------------------------------- |
+| 브랜드 정리           | `bebe82d`, `8b9e75f`, `8b475ca`            | '뜸' 브랜드 드롭 + screen 모션 토큰 분리 + font-smoothing |
+| A1 View Transitions   | `391baa9`, `6625fbb`, `de548e1`            | fix + impl + plan                                         |
+| Phase 4 Complete      | `da9eede`, `993f0b9`, `2f237a3`            | fix + impl + plan                                         |
+| Phase 3 Wall          | `e875317`, `e7f55cd`, `f5bbada`, `0cbbf51` | fix + impl + plan + followups 추가                        |
+| Phase 2 Brewing+Timer | `b76b6b4` 등                               | fix + impl + plan (D1 타이머 본체)                        |
+| Phase 0~1             | `5485c96` 등                               | AppRoot + Recipe 재설계                                   |
+| Brand 2차             | `b897f29`                                  | UI 라벨 한국어 로컬라이즈                                 |
+| Brand 1차 + v1        | `5080a5f`, `198e3e8`                       | 토큰 + 최초 앱                                            |
 
 ### 관련 문서
 
@@ -92,7 +92,7 @@
 
 **D4. 새 메서드 추가** — `src/domain/methods/` 플러그인 패턴 그대로. 예: April V60, Tetsu 6-pour 등. UI 변경 없음.
 
-*(D1 실시간 타이머는 Phase 2에서 완성 — `BrewingScreen`)*
+_(D1 실시간 타이머는 Phase 2에서 완성 — `BrewingScreen`)_
 
 ---
 
