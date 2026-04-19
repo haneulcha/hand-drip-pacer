@@ -2,6 +2,7 @@ import { dripperList } from "@/domain/drippers";
 import type { DripperId } from "@/domain/types";
 import { cx } from "@/ui/cx";
 import { DripperIcon } from "@/ui/DripperIcon";
+import { Footer } from "@/ui/Footer";
 
 type Props = {
   readonly selectedDripper: DripperId;
@@ -25,7 +26,7 @@ export function WallScreen({ selectedDripper, onPickDripper }: Props) {
       <div className="flex-1" />
 
       {/* shelf */}
-      <section aria-label="드리퍼 선반" className="px-8 pb-16">
+      <section aria-label="드리퍼 선반" className="px-8 pb-10">
         <div className="flex items-end justify-around gap-4 pb-3">
           {dripperList.map((d) => {
             const isSelected = d.id === selectedDripper;
@@ -59,6 +60,8 @@ export function WallScreen({ selectedDripper, onPickDripper }: Props) {
           커피 내릴 드리퍼를 들어볼까요?
         </p>
       </section>
+
+      <Footer />
     </div>
   );
 }
