@@ -24,3 +24,14 @@ export const clearParams = (): void => {
     // noop
   }
 }
+
+const SESSION_KEY = 'bloom-coffee:session:v1'
+
+// Phase 4: write-only. Future history feature reads this.
+export const saveSession = (session: unknown): void => {
+  try {
+    localStorage.setItem(SESSION_KEY, JSON.stringify(session))
+  } catch {
+    // storage unavailable — drop silently.
+  }
+}

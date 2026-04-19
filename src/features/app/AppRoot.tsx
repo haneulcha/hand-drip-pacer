@@ -7,12 +7,13 @@ import type {
   RoastLevel,
   TasteProfile,
 } from '@/domain/types'
-import type { BrewSession } from '@/domain/session'
+import type { BrewSession, Feeling } from '@/domain/session'
 import { g } from '@/domain/units'
 import { BrewingScreen } from '@/features/brewing/BrewingScreen'
+import { CompleteScreen } from '@/features/complete/CompleteScreen'
 import { RecipeScreen } from '@/features/recipe/RecipeScreen'
 import { WallScreen } from '@/features/wall/WallScreen'
-import { loadParams, saveParams } from '@/features/share/storage'
+import { loadParams, saveParams, saveSession } from '@/features/share/storage'
 import { decodeState, encodeState } from '@/features/share/urlCodec'
 import { DEFAULT_STATE, mergeState, type AppState } from './state'
 
@@ -63,7 +64,20 @@ export function AppRoot() {
     patch({ screen: 'brewing' })
   }
 
+  const handleComplete = (): void => {
+    setSession((prev) => (prev ? { ...prev, completedAt: Date.now() } : null))
+    patch({ screen: 'complete' })
+  }
+
+  const handleFeeling = (feeling: Feeling | null): void => {
+    setSession((prev) => {
+      if (!prev) return null
+      return { ...prev, feeling: feeling ?? undefined }
+    })
+  }
+
   const handleExit = (): void => {
+    if (session) saveSession(session)
     setSession(null)
     patch({ screen: 'wall' })
   }
@@ -77,7 +91,15 @@ export function AppRoot() {
   }
 
   if (state.screen === 'brewing' && session) {
-    return <BrewingScreen session={session} onExit={handleExit} />
+    return (
+      <BrewingScreen session={session} onExit={handleExit} onComplete={handleComplete} />
+    )
+  }
+
+  if (state.screen === 'complete' && session) {
+    return (
+      <CompleteScreen session={session} onFeelingChange={handleFeeling} onExit={handleExit} />
+    )
   }
 
   return (

@@ -44,26 +44,17 @@ describe('BrewingScreen', () => {
   it('shows hero weight of active step (bloom at elapsed=0)', () => {
     vi.setSystemTime(new Date(1_000_000_000_000))
     const session = makeSession(1_000_000_000_000)
-    render(<BrewingScreen session={session} onExit={vi.fn()} />)
+    render(<BrewingScreen session={session} onExit={vi.fn()} onComplete={vi.fn()} />)
     // bloom pour cumulativeWater = 30
     expect(screen.getByTestId('hero-weight')).toHaveTextContent('30')
     // label for active step in progress rail
     expect(screen.getByText('뜸')).toBeInTheDocument()
   })
 
-  it('shows done state when elapsed >= totalTime', () => {
-    vi.setSystemTime(new Date(1_000_000_000_000))
-    const session = makeSession(1_000_000_000_000 - 300_000) // 300s elapsed
-    render(<BrewingScreen session={session} onExit={vi.fn()} />)
-    expect(screen.getByText('완료')).toBeInTheDocument()
-    // totalWater shown as final target
-    expect(screen.getByTestId('hero-weight')).toHaveTextContent('250')
-  })
-
   it('opens stop dialog when 중단 tapped', () => {
     vi.setSystemTime(new Date(1_000_000_000_000))
     const session = makeSession(1_000_000_000_000)
-    render(<BrewingScreen session={session} onExit={vi.fn()} />)
+    render(<BrewingScreen session={session} onExit={vi.fn()} onComplete={vi.fn()} />)
     fireEvent.click(screen.getByRole('button', { name: '중단' }))
     expect(screen.getByText('브루잉을 중단할까요?')).toBeInTheDocument()
   })
@@ -72,25 +63,32 @@ describe('BrewingScreen', () => {
     vi.setSystemTime(new Date(1_000_000_000_000))
     const session = makeSession(1_000_000_000_000)
     const onExit = vi.fn()
-    render(<BrewingScreen session={session} onExit={onExit} />)
+    render(<BrewingScreen session={session} onExit={onExit} onComplete={vi.fn()} />)
     fireEvent.click(screen.getByRole('button', { name: '중단' }))
     fireEvent.click(screen.getByRole('button', { name: '처음으로' }))
     expect(onExit).toHaveBeenCalledTimes(1)
   })
 
-  it('shows 처음으로 button when done', () => {
+  it('fires onComplete once when elapsed >= totalTimeSec', () => {
     vi.setSystemTime(new Date(1_000_000_000_000))
-    const session = makeSession(1_000_000_000_000 - 300_000)
-    const onExit = vi.fn()
-    render(<BrewingScreen session={session} onExit={onExit} />)
-    fireEvent.click(screen.getByRole('button', { name: '처음으로' }))
-    expect(onExit).toHaveBeenCalledTimes(1)
+    const session = makeSession(1_000_000_000_000 - 300_000) // 300s ago, > totalTime 210
+    const onComplete = vi.fn()
+    render(<BrewingScreen session={session} onExit={vi.fn()} onComplete={onComplete} />)
+    expect(onComplete).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not fire onComplete while running', () => {
+    vi.setSystemTime(new Date(1_000_000_000_000))
+    const session = makeSession(1_000_000_000_000)
+    const onComplete = vi.fn()
+    render(<BrewingScreen session={session} onExit={vi.fn()} onComplete={onComplete} />)
+    expect(onComplete).not.toHaveBeenCalled()
   })
 
   it('advances active step when elapsed crosses next pour boundary', () => {
     vi.setSystemTime(new Date(1_000_000_000_000))
     const session = makeSession(1_000_000_000_000)
-    render(<BrewingScreen session={session} onExit={vi.fn()} />)
+    render(<BrewingScreen session={session} onExit={vi.fn()} onComplete={vi.fn()} />)
 
     // At elapsed=0: bloom step, cumulativeWater=30
     expect(screen.getByTestId('hero-weight')).toHaveTextContent('30')

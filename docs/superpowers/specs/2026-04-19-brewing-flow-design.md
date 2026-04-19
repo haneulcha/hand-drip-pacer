@@ -132,7 +132,7 @@ export type BrewSession = {
 - 핸드오프대로.
 - 감정 버튼 3-way (`calm` / `neutral` / `wave`). 단일 선택, 재탭 시 해제. 선택 시 `session.feeling` 업데이트.
 - `처음으로` → `wall`. `공유` 버튼은 **disabled** 상태로 표시 (Phase 5 전까지).
-- 세션 저장: `처음으로` 탭 시점에 `localStorage['tteum-last-session']`에 `JSON.stringify(session)`. 읽는 곳은 Phase 4엔 없음.
+- 세션 저장: `처음으로` 탭 시점에 `localStorage['bloom-coffee:session:v1']`에 `JSON.stringify(session)`. 읽는 곳은 Phase 4엔 없음 (미래 히스토리 훅).
 
 ## Testing
 

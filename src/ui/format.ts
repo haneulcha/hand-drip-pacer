@@ -15,3 +15,15 @@ const GRIND_HINT_LABEL: Record<GrindHint, string> = {
 }
 
 export const formatGrindHint = (hint: GrindHint): string => GRIND_HINT_LABEL[hint]
+
+export const formatBrewedAt = (epochMs: number): string => {
+  const d = new Date(epochMs)
+  const year = d.getFullYear()
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  const hours24 = d.getHours()
+  const hour12 = hours24 === 0 ? 12 : hours24 > 12 ? hours24 - 12 : hours24
+  const minute = String(d.getMinutes()).padStart(2, '0')
+  const ampm = hours24 < 12 ? '오전' : '오후'
+  return `${year} · ${month} · ${day} · ${ampm} ${hour12}:${minute}`
+}
