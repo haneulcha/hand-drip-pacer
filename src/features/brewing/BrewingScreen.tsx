@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { activeStepIdx, nextStepIdx, type BrewSession } from "@/domain/session";
+import { activeStepIdx, type BrewSession } from "@/domain/session";
 import { formatTime } from "@/ui/format";
 import { cx } from "@/ui/cx";
 import { StopConfirmDialog } from "./StopConfirmDialog";
@@ -14,15 +14,24 @@ type Props = {
 export function BrewingScreen({ session, onExit, onComplete }: Props) {
   const elapsed = useElapsed(session);
   const [stopDialogOpen, setStopDialogOpen] = useState(false);
+  const [manualStepFloor, setManualStepFloor] = useState(0);
   const completedRef = useRef(false);
 
   const { recipe } = session;
   const { pours, totalTimeSec } = recipe;
-  const activeIdx = activeStepIdx(pours, elapsed);
+  const clockIdx = activeStepIdx(pours, elapsed);
+  const activeIdx = Math.min(
+    pours.length - 1,
+    Math.max(clockIdx, manualStepFloor),
+  );
   const active = pours[activeIdx]!;
-  const nextIdx = nextStepIdx(pours, elapsed);
-  const next = nextIdx !== null ? pours[nextIdx]! : null;
-  const done = elapsed >= totalTimeSec;
+  const nextLocalIdx = activeIdx + 1 < pours.length ? activeIdx + 1 : null;
+  const next = nextLocalIdx !== null ? pours[nextLocalIdx]! : null;
+  const done = elapsed >= totalTimeSec || manualStepFloor >= pours.length;
+
+  const handleSkip = () => {
+    setManualStepFloor((prev) => Math.max(prev, clockIdx) + 1);
+  };
 
   useEffect(() => {
     if (done && !completedRef.current) {
@@ -110,6 +119,20 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
           {formatTime(active.atSec)}
         </div>
       </div>
+
+      {/* Skip */}
+      {manualStepFloor < pours.length && (
+        <div className="mt-4 flex justify-center">
+          <button
+            type="button"
+            onClick={handleSkip}
+            aria-label="다음 스텝으로 건너뛰기"
+            className="px-5 py-3 text-[13px] text-text-secondary hover:text-text-primary"
+          >
+            건너뛰기 <span aria-hidden>›</span>
+          </button>
+        </div>
+      )}
 
       {/* Bottom: next preview */}
       <div className="mt-auto px-5 pb-8">

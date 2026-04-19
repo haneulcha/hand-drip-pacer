@@ -132,4 +132,102 @@ describe("BrewingScreen", () => {
     const status = screen.getByRole("status");
     expect(status).toHaveTextContent("1차: 150그램까지");
   });
+
+  it("tapping 건너뛰기 advances hero weight to next pour", () => {
+    vi.setSystemTime(new Date(1_000_000_000_000));
+    const session = makeSession(1_000_000_000_000);
+    render(
+      <BrewingScreen session={session} onExit={vi.fn()} onComplete={vi.fn()} />,
+    );
+
+    // At elapsed=0, bloom pour (cumulativeWater=30)
+    expect(screen.getByTestId("hero-weight")).toHaveTextContent("30");
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "다음 스텝으로 건너뛰기" }),
+    );
+
+    // Advanced to pour 1 (cumulativeWater=150)
+    expect(screen.getByTestId("hero-weight")).toHaveTextContent("150");
+    // aria-live announces new step
+    expect(screen.getByRole("status")).toHaveTextContent("1차: 150그램까지");
+  });
+
+  it("keeps skipped step ahead of the clock", () => {
+    vi.setSystemTime(new Date(1_000_000_000_000));
+    const session = makeSession(1_000_000_000_000);
+    render(
+      <BrewingScreen session={session} onExit={vi.fn()} onComplete={vi.fn()} />,
+    );
+
+    // Skip from bloom (idx 0) → pour 1 at elapsed=0
+    fireEvent.click(
+      screen.getByRole("button", { name: "다음 스텝으로 건너뛰기" }),
+    );
+    expect(screen.getByTestId("hero-weight")).toHaveTextContent("150");
+
+    // Advance clock to 10s — still before pour 1's atSec=45, clockIdx=0.
+    // manualFloor=1 → activeIdx stays 1.
+    act(() => {
+      vi.setSystemTime(new Date(1_000_000_010_000));
+      vi.advanceTimersByTime(500);
+    });
+    expect(screen.getByTestId("hero-weight")).toHaveTextContent("150");
+  });
+
+  it("fires onComplete when skip tapped on last step", () => {
+    vi.setSystemTime(new Date(1_000_000_000_000));
+    // startedAt 80s ago → elapsed=80, past pour 2's atSec=75 (last pour idx=2)
+    const session = makeSession(1_000_000_000_000 - 80_000);
+    const onComplete = vi.fn();
+    render(
+      <BrewingScreen
+        session={session}
+        onExit={vi.fn()}
+        onComplete={onComplete}
+      />,
+    );
+
+    // Hero on last pour (cumulativeWater=250)
+    expect(screen.getByTestId("hero-weight")).toHaveTextContent("250");
+    expect(onComplete).not.toHaveBeenCalled();
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "다음 스텝으로 건너뛰기" }),
+    );
+    expect(onComplete).toHaveBeenCalledTimes(1);
+  });
+
+  it("advances exactly one step per consecutive skip tap", () => {
+    vi.setSystemTime(new Date(1_000_000_000_000));
+    const session = makeSession(1_000_000_000_000);
+    const onComplete = vi.fn();
+    render(
+      <BrewingScreen
+        session={session}
+        onExit={vi.fn()}
+        onComplete={onComplete}
+      />,
+    );
+
+    expect(screen.getByTestId("hero-weight")).toHaveTextContent("30");
+
+    // Skip 1 → pour 1 (150)
+    fireEvent.click(
+      screen.getByRole("button", { name: "다음 스텝으로 건너뛰기" }),
+    );
+    expect(screen.getByTestId("hero-weight")).toHaveTextContent("150");
+
+    // Skip 2 → pour 2 (250)
+    fireEvent.click(
+      screen.getByRole("button", { name: "다음 스텝으로 건너뛰기" }),
+    );
+    expect(screen.getByTestId("hero-weight")).toHaveTextContent("250");
+
+    // Skip 3 → complete (button still visible on last step, triggers onComplete)
+    fireEvent.click(
+      screen.getByRole("button", { name: "다음 스텝으로 건너뛰기" }),
+    );
+    expect(onComplete).toHaveBeenCalledTimes(1);
+  });
 });
