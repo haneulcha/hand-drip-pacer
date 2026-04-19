@@ -35,8 +35,7 @@ export function DripperPopover({ options, selected, onSelect, onClose }: Props) 
             <button
               key={opt.id}
               type="button"
-              role="button"
-              aria-checked={isSelected}
+              aria-pressed={isSelected}
               aria-label={opt.name}
               onClick={() => onSelect(opt.id)}
               className={cx(

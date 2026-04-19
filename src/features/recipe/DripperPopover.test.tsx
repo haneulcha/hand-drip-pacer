@@ -20,7 +20,7 @@ describe('DripperPopover', () => {
     expect(screen.getByRole('button', { name: /V60/ })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Kalita Wave/ })).toBeInTheDocument()
     const v60Option = screen.getByRole('button', { name: /V60/ })
-    expect(v60Option).toHaveAttribute('aria-checked', 'true')
+    expect(v60Option).toHaveAttribute('aria-pressed', 'true')
   })
 
   it('calls onSelect when option tapped', () => {

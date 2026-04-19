@@ -40,7 +40,7 @@ export function PourVerticalPreview({
         {pours
           .map(
             (p) =>
-              `${formatTime(p.atSec)} +${p.pourAmount}그램${p.label === 'bloom' ? ' (뜸)' : ''}`,
+              `${formatTime(p.atSec)} +${p.pourAmount}그램${p.label === 'bloom' ? ' (bloom)' : ''}`,
           )
           .join(', ')}
       </desc>
