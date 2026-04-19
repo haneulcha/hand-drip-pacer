@@ -26,15 +26,15 @@
   }
 }
 
-/* View Transitions — brand motion tokens */
+/* View Transitions — 전용 screen motion 토큰 사용 */
 ::view-transition-group(root) {
-  animation-duration: var(--motion-duration-base);
-  animation-timing-function: var(--motion-easing);
+  animation-duration: var(--motion-duration-screen);
+  animation-timing-function: var(--motion-easing-screen);
 }
 
 ::view-transition-group(*) {
-  animation-duration: var(--motion-duration-base);
-  animation-timing-function: var(--motion-easing);
+  animation-duration: var(--motion-duration-screen);
+  animation-timing-function: var(--motion-easing-screen);
 }
 
 @media (prefers-reduced-motion: reduce) {
