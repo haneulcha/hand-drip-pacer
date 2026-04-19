@@ -53,6 +53,8 @@ type BrewingState =
   | { kind: 'done'; session: BrewSession }  // 'complete' 화면 전환 직전 잠깐
 ```
 
+> **구현 주석 (Phase 2)**: `BrewingState` union은 개념 모델 — 실제 구현은 `stopDialogOpen: boolean` 로컬 상태 + `done = elapsed >= totalTimeSec` 파생값으로 간소화. `running`/`done` 상태는 `done` 플래그로, `confirm-stop`는 `stopDialogOpen`으로 표현.
+
 현재 step 인덱스·elapsed는 `Date.now() - session.startedAt`에서 계산 (파생값, 저장 X). `requestAnimationFrame` 루프로 초당 ~1회 리렌더.
 
 ### URL sync

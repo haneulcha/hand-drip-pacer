@@ -7,7 +7,9 @@ import type {
   RoastLevel,
   TasteProfile,
 } from '@/domain/types'
+import type { BrewSession } from '@/domain/session'
 import { g } from '@/domain/units'
+import { BrewingScreen } from '@/features/brewing/BrewingScreen'
 import { RecipeScreen } from '@/features/recipe/RecipeScreen'
 import { loadParams, saveParams } from '@/features/share/storage'
 import { decodeState, encodeState } from '@/features/share/urlCodec'
@@ -24,6 +26,7 @@ const loadInitialState = (): AppState => {
 
 export function AppRoot() {
   const [state, setState] = useState<AppState>(loadInitialState)
+  const [session, setSession] = useState<BrewSession | null>(null)
 
   useEffect(() => {
     const params = encodeState(state)
@@ -39,13 +42,6 @@ export function AppRoot() {
   const handleTasteChange = (taste: TasteProfile): void => patch({ taste })
   const handleCoffeeChange = (coffee: number): void => patch({ coffee: g(coffee) })
 
-  const handleStart = (): void => {
-    // Phase 2: patch({ screen: 'brewing', startedAt: Date.now() })
-    // Phase 1: placeholder
-    // eslint-disable-next-line no-console
-    console.log('[Phase 1] 시작 tapped — Brewing 화면은 Phase 2에서.')
-  }
-
   const recipe = useMemo(() => {
     const input: RecipeInput = {
       method: state.method,
@@ -57,7 +53,22 @@ export function AppRoot() {
     return brewMethods[state.method].compute(input)
   }, [state.method, state.dripper, state.coffee, state.roast, state.taste])
 
-  if (state.screen === 'recipe') {
+  const handleStart = (): void => {
+    setSession({ recipe, startedAt: Date.now() })
+    patch({ screen: 'brewing' })
+  }
+
+  const handleExit = (): void => {
+    setSession(null)
+    // Phase 2: return to recipe. Phase 3 will change to 'wall'.
+    patch({ screen: 'recipe' })
+  }
+
+  if (state.screen === 'brewing' && session) {
+    return <BrewingScreen session={session} onExit={handleExit} />
+  }
+
+  if (state.screen === 'recipe' || !session) {
     return (
       <RecipeScreen
         coffee={state.coffee}
