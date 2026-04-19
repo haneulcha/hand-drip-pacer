@@ -1,5 +1,5 @@
-import { CalculatorPage } from '@/features/calculator/CalculatorPage'
+import { AppRoot } from '@/features/app/AppRoot'
 
 export default function App() {
-  return <CalculatorPage />
+  return <AppRoot />
 }

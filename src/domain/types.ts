@@ -51,10 +51,6 @@ export type RecipeInput = {
   readonly taste: TasteProfile
 }
 
-export type InputMode =
-  | { readonly kind: 'by-coffee'; readonly coffee: Grams }
-  | { readonly kind: 'by-servings'; readonly servings: number }
-
 export type BrewMethod = {
   readonly id: BrewMethodId
   readonly name: string

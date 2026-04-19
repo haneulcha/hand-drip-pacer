@@ -2,14 +2,17 @@ import { methodsForDripper } from '@/domain/methods'
 import type {
   BrewMethodId,
   DripperId,
-  InputMode,
+  Grams,
   RoastLevel,
   TasteProfile,
 } from '@/domain/types'
 import { g } from '@/domain/units'
 
+export type Screen = 'wall' | 'recipe' | 'brewing' | 'complete'
+
 export type AppState = {
-  readonly inputMode: InputMode
+  readonly screen: Screen
+  readonly coffee: Grams
   readonly dripper: DripperId
   readonly method: BrewMethodId
   readonly roast: RoastLevel
@@ -17,14 +20,14 @@ export type AppState = {
 }
 
 export const DEFAULT_STATE: AppState = {
-  inputMode: { kind: 'by-coffee', coffee: g(20) },
+  screen: 'recipe',
+  coffee: g(20),
   dripper: 'v60',
   method: 'kasuya_4_6',
   roast: 'medium',
   taste: { sweetness: 'balanced', strength: 'medium' },
 }
 
-// Merge a partial patch onto base and auto-correct dripper/method incompatibility.
 export const mergeState = (base: AppState, patch: Partial<AppState>): AppState => {
   const merged = { ...base, ...patch }
   const compat = methodsForDripper(merged.dripper)
