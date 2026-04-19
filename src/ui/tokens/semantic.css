@@ -29,9 +29,17 @@
   --color-pour-main: var(--accent-500);
   --color-timeline-axis: var(--neutral-300);
   --color-timeline-grid: var(--neutral-100);
+
+  /* Radius — 역할 기반 별칭 */
+  --radius-control-compact: var(--radius-xs);
+  --radius-control: var(--radius-sm);
+  --radius-control-group: var(--radius-md);
+  --radius-button: var(--radius-md);
+  --radius-card: var(--radius-md);
+  --radius-surface: var(--radius-xl);
 }
 
-[data-theme='dark'] {
+[data-theme="dark"] {
   /* 뼈대. 실제 값은 UI 디벨롭 시 확정. */
   --color-surface: var(--neutral-900);
   --color-surface-subtle: var(--neutral-800);

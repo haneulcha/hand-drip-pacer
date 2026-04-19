@@ -11,6 +11,23 @@ export default {
       transitionTimingFunction: {
         DEFAULT: 'var(--motion-easing)',
       },
+      borderRadius: {
+        none: '0',
+        xs: 'var(--radius-xs)',
+        sm: 'var(--radius-sm)',
+        DEFAULT: 'var(--radius-control)',
+        md: 'var(--radius-md)',
+        lg: 'var(--radius-lg)',
+        xl: 'var(--radius-xl)',
+        full: 'var(--radius-pill)',
+        'control-compact': 'var(--radius-control-compact)',
+        control: 'var(--radius-control)',
+        'control-group': 'var(--radius-control-group)',
+        button: 'var(--radius-button)',
+        card: 'var(--radius-card)',
+        surface: 'var(--radius-surface)',
+        pill: 'var(--radius-pill)',
+      },
       colors: {
         surface: {
           DEFAULT: 'var(--color-surface)',

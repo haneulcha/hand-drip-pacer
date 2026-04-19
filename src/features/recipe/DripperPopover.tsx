@@ -27,7 +27,7 @@ export function DripperPopover({ options, selected, onSelect, onClose }: Props) 
       <div
         role="dialog"
         aria-label="드리퍼 선택"
-        className="absolute right-4 top-[72px] min-w-[180px] rounded-xl border border-border bg-surface p-1 shadow-lg"
+        className="absolute right-4 top-[72px] min-w-[180px] rounded-card border border-border bg-surface p-1 shadow-lg"
       >
         {options.map((opt) => {
           const isSelected = opt.id === selected
@@ -39,7 +39,7 @@ export function DripperPopover({ options, selected, onSelect, onClose }: Props) 
               aria-label={opt.name}
               onClick={() => onSelect(opt.id)}
               className={cx(
-                'flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left transition-colors',
+                'flex w-full items-center gap-3 rounded-control-group px-2 py-2 text-left transition-colors',
                 isSelected ? 'bg-surface-inset' : 'hover:bg-surface-inset/60',
               )}
             >

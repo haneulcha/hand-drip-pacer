@@ -68,7 +68,7 @@ export function Slider({ label, value, onChange, min, max, step = 1, suffix }: P
         onKeyDown={(e) => {
           if (e.key === 'Enter') (e.target as HTMLInputElement).blur()
         }}
-        className="w-16 rounded border border-border bg-surface px-2 py-1 text-right text-sm font-medium tabular-nums"
+        className="w-16 rounded-control-compact border border-border bg-surface px-2 py-1 text-right text-sm font-medium tabular-nums"
       />
       {suffix && <span className="text-sm text-text-muted">{suffix}</span>}
     </div>

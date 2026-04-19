@@ -62,7 +62,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
           <div key={p.index} className="flex flex-1 flex-col items-center gap-1">
             <div
               className={cx(
-                'h-[3px] w-full rounded-full',
+                'h-[3px] w-full rounded-pill',
                 i < activeIdx ? 'bg-text-primary' : i === activeIdx ? 'bg-pour-bloom' : 'bg-border',
               )}
             />

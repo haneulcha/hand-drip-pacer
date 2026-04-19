@@ -1,7 +1,7 @@
 type Props = {
-  readonly onCancel: () => void
-  readonly onConfirm: () => void
-}
+  readonly onCancel: () => void;
+  readonly onConfirm: () => void;
+};
 
 export function StopConfirmDialog({ onCancel, onConfirm }: Props) {
   return (
@@ -16,7 +16,7 @@ export function StopConfirmDialog({ onCancel, onConfirm }: Props) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="stop-dialog-title"
-        className="absolute left-1/2 top-1/2 w-[calc(100%-56px)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-surface p-6 shadow-xl"
+        className="absolute left-1/2 top-1/2 w-[calc(100%-56px)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-surface bg-surface p-6 shadow-xl"
       >
         <h2 id="stop-dialog-title" className="text-lg font-medium">
           브루잉을 중단할까요?
@@ -26,19 +26,19 @@ export function StopConfirmDialog({ onCancel, onConfirm }: Props) {
           <button
             type="button"
             onClick={onCancel}
-            className="h-11 flex-1 rounded-xl border border-border text-sm text-text-secondary transition-colors hover:bg-surface-inset"
+            className="h-11 flex-1 rounded-button border border-border text-sm text-text-secondary transition-colors hover:bg-surface-inset"
           >
             계속하기
           </button>
           <button
             type="button"
             onClick={onConfirm}
-            className="h-11 flex-1 rounded-xl border-[1.4px] border-text-primary bg-surface-subtle text-sm font-medium transition-colors hover:bg-surface-inset"
+            className="h-11 flex-1 rounded-button border border-text-primary bg-surface-subtle text-sm font-medium transition-colors hover:bg-surface-inset"
           >
             처음으로
           </button>
         </div>
       </div>
     </div>
-  )
+  );
 }

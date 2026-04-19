@@ -30,6 +30,14 @@
   --amber-500: #d49a3c;
   --green-500: #6b9360;
 
+  /* Radius — 브랜드 톤(따뜻하고 후한 곡률) */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-pill: 9999px;
+
   /* Motion */
   --motion-duration-base: 320ms;
   --motion-duration-long: 450ms;
