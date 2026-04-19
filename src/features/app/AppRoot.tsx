@@ -16,7 +16,7 @@ import { DEFAULT_STATE, mergeState, type AppState } from './state'
 const loadInitialState = (): AppState => {
   const fromUrl = decodeState(new URLSearchParams(window.location.search))
   const hasUrl = Object.keys(fromUrl).length > 0
-  if (hasUrl) return mergeState({ ...DEFAULT_STATE, screen: 'recipe' }, fromUrl)
+  if (hasUrl) return mergeState(DEFAULT_STATE, fromUrl)
   const stored = loadParams()
   if (stored) return mergeState(DEFAULT_STATE, decodeState(stored))
   return DEFAULT_STATE

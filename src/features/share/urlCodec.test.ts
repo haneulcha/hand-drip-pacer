@@ -60,4 +60,24 @@ describe('urlCodec', () => {
     const p = encodeState(fullState)
     expect(p.has('screen')).toBe(false)
   })
+
+  it('rejects invalid enum values for dripper / method / roast', () => {
+    const p = new URLSearchParams('d=espresso&m=aeropress&r=burnt')
+    const decoded = decodeState(p)
+    expect(decoded.dripper).toBeUndefined()
+    expect(decoded.method).toBeUndefined()
+    expect(decoded.roast).toBeUndefined()
+  })
+
+  it('ignores unknown params', () => {
+    const p = new URLSearchParams('foo=bar&d=v60')
+    const decoded = decodeState(p)
+    expect(decoded).toEqual({ dripper: 'v60' })
+  })
+
+  it('requires BOTH sweetness and strength for taste patch', () => {
+    const p = new URLSearchParams('sw=sweet')
+    const decoded = decodeState(p)
+    expect(decoded.taste).toBeUndefined()
+  })
 })
