@@ -39,3 +39,10 @@ export const nextStepIdx = (
 
 export const isComplete = (session: BrewSession, now: number): boolean =>
   elapsedSec(session, now) >= session.recipe.totalTimeSec;
+
+// Actual duration of a completed session in seconds. Falls back to the
+// recipe's planned total when completedAt isn't set.
+export const sessionDurationSec = (session: BrewSession): number =>
+  session.completedAt != null
+    ? Math.max(0, Math.floor((session.completedAt - session.startedAt) / 1000))
+    : session.recipe.totalTimeSec;

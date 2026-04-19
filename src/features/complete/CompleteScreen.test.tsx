@@ -37,10 +37,12 @@ const recipe: Recipe = {
   notes: [],
 };
 
+// Actual duration 180s (3:00); recipe.totalTimeSec is 208 (3:28) to prove the
+// hero uses the real elapsed time rather than the planned time.
 const baseSession: BrewSession = {
   recipe,
   startedAt: new Date(2026, 2, 14, 7, 42).getTime(),
-  completedAt: new Date(2026, 2, 14, 7, 42).getTime() + 208_000,
+  completedAt: new Date(2026, 2, 14, 7, 42).getTime() + 180_000,
 };
 
 describe("CompleteScreen", () => {
@@ -56,7 +58,7 @@ describe("CompleteScreen", () => {
     expect(screen.getByText("2026 · 03 · 14 · 오전 7:42")).toBeInTheDocument();
   });
 
-  it("renders hero total time", () => {
+  it("renders hero with actual brew duration (not recipe.totalTimeSec)", () => {
     render(
       <CompleteScreen
         session={baseSession}
@@ -64,9 +66,11 @@ describe("CompleteScreen", () => {
         onExit={vi.fn()}
       />,
     );
-    expect(screen.getByText("오늘의 한 잔")).toBeInTheDocument();
-    expect(screen.getByText("3:28")).toBeInTheDocument();
-    expect(screen.getByText("잘 내렸습니다.")).toBeInTheDocument();
+    expect(screen.getByText("오늘의 커피")).toBeInTheDocument();
+    // Actual 180s, not planned 208s.
+    expect(screen.getByText("3:00")).toBeInTheDocument();
+    expect(screen.queryByText("3:28")).not.toBeInTheDocument();
+    expect(screen.getByText("이제 음미해보세요.")).toBeInTheDocument();
   });
 
   it("renders recipe summary fields", () => {

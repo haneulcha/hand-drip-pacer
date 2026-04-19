@@ -1,6 +1,10 @@
 import { brewMethods } from "@/domain/methods";
 import { drippers } from "@/domain/drippers";
-import type { BrewSession, Feeling } from "@/domain/session";
+import {
+  sessionDurationSec,
+  type BrewSession,
+  type Feeling,
+} from "@/domain/session";
 import { cx } from "@/ui/cx";
 import { formatBrewedAt, formatGrindHint, formatTime } from "@/ui/format";
 import { FeelingGlyph } from "./FeelingGlyph";
@@ -43,7 +47,7 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
       <section aria-label="총 시간" className="mt-6 flex flex-col items-center">
         <span className="text-[11px] text-text-muted">오늘의 커피</span>
         <span className="mt-1 text-[72px] font-medium leading-none tabular-nums">
-          {formatTime(recipe.totalTimeSec)}
+          {formatTime(sessionDurationSec(session))}
         </span>
         <span className="mt-2 text-sm italic text-text-secondary">
           이제 음미해보세요.

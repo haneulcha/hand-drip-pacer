@@ -6,6 +6,7 @@ import {
   elapsedSec,
   isComplete,
   nextStepIdx,
+  sessionDurationSec,
   type BrewSession,
 } from "./session";
 
@@ -87,6 +88,39 @@ describe("nextStepIdx", () => {
   it("returns null when no next pour", () => {
     expect(nextStepIdx(recipe.pours, 75)).toBeNull();
     expect(nextStepIdx(recipe.pours, 999)).toBeNull();
+  });
+});
+
+describe("sessionDurationSec", () => {
+  it("returns elapsed seconds between startedAt and completedAt", () => {
+    const completed: BrewSession = {
+      recipe,
+      startedAt: 1_000_000,
+      completedAt: 1_180_000,
+    };
+    expect(sessionDurationSec(completed)).toBe(180);
+  });
+
+  it("floors to integer seconds", () => {
+    const completed: BrewSession = {
+      recipe,
+      startedAt: 1_000_000,
+      completedAt: 1_180_750,
+    };
+    expect(sessionDurationSec(completed)).toBe(180);
+  });
+
+  it("falls back to recipe.totalTimeSec when completedAt missing", () => {
+    expect(sessionDurationSec(session)).toBe(210);
+  });
+
+  it("clamps negative to 0", () => {
+    const weird: BrewSession = {
+      recipe,
+      startedAt: 1_000_000,
+      completedAt: 999_000,
+    };
+    expect(sessionDurationSec(weird)).toBe(0);
   });
 });
 
