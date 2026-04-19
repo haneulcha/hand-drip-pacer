@@ -35,7 +35,7 @@ describe('withViewTransition', () => {
     const update = vi.fn()
     const fakeStart = vi.fn((cb: () => void) => {
       cb()
-      return {}
+      return { finished: Promise.resolve() }
     })
     docAny.startViewTransition = fakeStart
     withViewTransition(update)
@@ -48,7 +48,7 @@ describe('withViewTransition', () => {
     const update = vi.fn()
     docAny.startViewTransition = (cb: () => void) => {
       cb()
-      return {}
+      return { finished: Promise.resolve() }
     }
     withViewTransition(update)
     expect(update).toHaveBeenCalledTimes(1)
