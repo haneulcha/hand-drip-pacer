@@ -31,7 +31,11 @@ export function AppRoot() {
 
   useEffect(() => {
     const params = encodeState(state)
-    window.history.replaceState(null, '', `${window.location.pathname}?${params}`)
+    if (state.screen === 'wall') {
+      window.history.replaceState(null, '', window.location.pathname)
+    } else {
+      window.history.replaceState(null, '', `${window.location.pathname}?${params}`)
+    }
     saveParams(params)
   }, [state])
 

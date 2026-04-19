@@ -10,7 +10,7 @@ type Props = {
 
 export function WallScreen({ selectedDripper, onPickDripper }: Props) {
   return (
-    <div className="flex min-h-screen flex-col bg-wall text-text-primary">
+    <div className="mx-auto flex min-h-screen max-w-lg flex-col bg-wall text-text-primary">
       {/* 브랜드 마크 zone */}
       <header className="flex flex-col items-center gap-2 px-5 pt-16">
         <h1 className="text-5xl font-medium leading-none tracking-tight">뜸</h1>

@@ -25,3 +25,9 @@
     outline-offset: 2px;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-slide-up {
+    animation: none;
+  }
+}
