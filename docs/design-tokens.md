@@ -36,18 +36,18 @@ src/ui/
 ### Neutral scale (ivory → espresso)
 
 ```css
---neutral-0: #fbf7ef; /* brand bg 밝은 한계 */
---neutral-50: #f5efe4; /* brand bg 어두운 한계 */
---neutral-100: #ede5d5;
---neutral-200: #ddd2bd;
---neutral-300: #c4b59d;
---neutral-400: #a3927c;
---neutral-500: #7d6f5e;
---neutral-600: #5d5244;
---neutral-700: #4a4036;
---neutral-800: #3a2f26; /* brand ink 밝은 한계 */
---neutral-900: #2a241e; /* brand ink 어두운 한계 */
---neutral-950: #1c1914;
+--neutral-0: #fbfaf6; /* brand bg 밝은 한계 */
+--neutral-50: #f5f2ec; /* brand bg 어두운 한계 */
+--neutral-100: #ece7dd;
+--neutral-200: #dbd4c6;
+--neutral-300: #c1b7a7;
+--neutral-400: #a19586;
+--neutral-500: #7d7266;
+--neutral-600: #5d554b;
+--neutral-700: #4b443c;
+--neutral-800: #3b332c; /* brand ink 밝은 한계 */
+--neutral-900: #2c2823; /* brand ink 어두운 한계 */
+--neutral-950: #1f1d19;
 ```
 
 ### Accent scale (muted ochre)
