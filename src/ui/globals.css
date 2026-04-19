@@ -1,5 +1,5 @@
-@import './tokens/primitives.css';
-@import './tokens/semantic.css';
+@import "./tokens/primitives.css";
+@import "./tokens/semantic.css";
 
 @tailwind base;
 @tailwind components;
@@ -10,14 +10,24 @@
   body,
   #root {
     height: 100%;
+    font-smooth: always;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
     @apply bg-surface text-text-primary antialiased;
     font-family:
-      'Pretendard Variable', 'Pretendard', 'Inter', -apple-system, BlinkMacSystemFont,
-      system-ui, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
-    font-feature-settings: 'ss01', 'ss02';
+      "Pretendard Variable",
+      "Pretendard",
+      "Inter",
+      -apple-system,
+      BlinkMacSystemFont,
+      system-ui,
+      "Apple SD Gothic Neo",
+      "Malgun Gothic",
+      sans-serif;
+    font-feature-settings: "ss01", "ss02";
   }
 
   *:focus-visible {
