@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { brewMethods } from '@/domain/methods'
 import type {
   BrewMethodId,
@@ -64,10 +64,10 @@ export function AppRoot() {
     patch({ screen: 'brewing' })
   }
 
-  const handleComplete = (): void => {
+  const handleComplete = useCallback((): void => {
     setSession((prev) => (prev ? { ...prev, completedAt: Date.now() } : null))
-    patch({ screen: 'complete' })
-  }
+    setState((prev) => mergeState(prev, { screen: 'complete' }))
+  }, [])
 
   const handleFeeling = (feeling: Feeling | null): void => {
     setSession((prev) => {

@@ -22,6 +22,11 @@ describe('formatBrewedAt', () => {
     expect(formatBrewedAt(d.getTime())).toBe('2026 · 03 · 14 · 오후 12:00')
   })
 
+  it('formats late evening', () => {
+    const d = new Date(2026, 2, 14, 23, 30)
+    expect(formatBrewedAt(d.getTime())).toBe('2026 · 03 · 14 · 오후 11:30')
+  })
+
   it('pads minute with leading zero', () => {
     const d = new Date(2026, 0, 1, 9, 5)
     expect(formatBrewedAt(d.getTime())).toBe('2026 · 01 · 01 · 오전 9:05')
