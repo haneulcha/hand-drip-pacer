@@ -324,7 +324,7 @@ function WallScreen({ width = 375, height = 812 }) {
         </Num>
         <div style={{ marginTop: 8 }}>
           <Hand size={16} color={INK_SOFT}>
-            오늘 한 잔
+            저만 믿고 따라오세요
           </Hand>
         </div>
       </div>
@@ -394,7 +394,7 @@ function WallScreen({ width = 375, height = 812 }) {
           }}
         >
           <Hand size={13} color={INK_FAINT}>
-            도구를 집어듭니다.
+            커피 내릴 드리퍼를 들어볼까요?
           </Hand>
         </div>
       </div>

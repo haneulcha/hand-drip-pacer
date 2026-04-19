@@ -16,7 +16,9 @@ export function WallScreen({ selectedDripper, onPickDripper }: Props) {
         <h1 className="text-2xl font-medium leading-none tracking-tight">
           핸드드립 계산기
         </h1>
-        <p className="text-base italic text-text-secondary">오늘 한 잔</p>
+        <p className="text-base italic text-text-secondary">
+          저만 믿고 따라오세요
+        </p>
       </header>
 
       {/* breathing room */}
@@ -54,7 +56,7 @@ export function WallScreen({ selectedDripper, onPickDripper }: Props) {
         </div>
         <div className="h-px bg-border" />
         <p className="mt-4 text-center text-xs italic text-text-muted">
-          도구를 집어듭니다.
+          커피 내릴 드리퍼를 들어볼까요?
         </p>
       </section>
     </div>

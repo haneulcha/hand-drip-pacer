@@ -18,7 +18,7 @@
 
 ### Phase 3 대상 (Included)
 
-- `WallScreen` 컴포넌트 — 브랜드 마크 `뜸` + 부제 `오늘 한 잔` + 하단 2-드리퍼 shelf + 희미한 힌트 `도구를 집어듭니다.`
+- `WallScreen` 컴포넌트 — 브랜드 마크 `뜸` + 부제 `저만 믿고 따라오세요` + 하단 2-드리퍼 shelf + 희미한 힌트 `커피 내릴 드리퍼를 들어볼까요?`
 - `AppRoot` 초기 진입 로직 변경: URL 쿼리 → recipe, 없으면 wall. `DEFAULT_STATE.screen` → `'wall'`.
 - `handleExit` 목적지 wall로 교체 (Phase 2의 `recipe` 복귀 경로 수정).
 - `handlePickDripper` 추가: dripper 갱신 + screen recipe 전이.
@@ -35,7 +35,7 @@
 
 ### 스펙 해석
 
-- 핸드오프의 `필기체 오늘 한 잔 (16pt, soft)` / `필기체 도구를 집어듭니다. (very faint)` — 브랜드 2차 원칙에 따라 **필기체는 프로덕션에 넣지 않고** `italic` + `text-text-secondary` / `text-text-muted`로 대체.
+- 핸드오프의 `필기체 저만 믿고 따라오세요 (16pt, soft)` / `필기체 커피 내릴 드리퍼를 들어볼까요? (very faint)` — 브랜드 2차 원칙에 따라 **필기체는 프로덕션에 넣지 않고** `italic` + `text-text-secondary` / `text-text-muted`로 대체.
 - 핸드오프의 `벽 banding` 장식 — Phase 3에선 스킵 (단색 배경). 필요 시 Phase 5 visual polish에서 노이즈 레이어나 subtle bg pattern으로 재검토.
 - 핸드오프의 morph 전이는 "구현 난이도 높으면 slide-up으로 대체 가능" 명시됨 — slide-up으로 구현.
 
@@ -75,7 +75,7 @@
 - TDD: 도메인·컴포넌트 behavior는 실패 테스트 먼저.
 - 커밋 단위: Phase 3 = 단일 커밋 (Task 3.5에서).
 - 토큰 단일 출처: Tailwind semantic utility(`bg-wall`, `text-text-primary`). 하드코딩 색 금지.
-- 브랜드 카피: `뜸`, `오늘 한 잔`, `V60`, `Kalita Wave`, `도구를 집어듭니다.` — brand.md 준수.
+- 브랜드 카피: `뜸`, `저만 믿고 따라오세요`, `V60`, `Kalita Wave`, `커피 내릴 드리퍼를 들어볼까요?` — brand.md 준수.
 - Path alias: `@/domain/...`, `@/features/...`, `@/ui/...`.
 
 ---
@@ -219,7 +219,7 @@ describe("WallScreen", () => {
     expect(
       screen.getByRole("heading", { level: 1, name: "뜸" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("오늘 한 잔")).toBeInTheDocument();
+    expect(screen.getByText("저만 믿고 따라오세요")).toBeInTheDocument();
   });
 
   it("renders both dripper options with names", () => {
@@ -274,7 +274,9 @@ export function WallScreen({ selectedDripper, onPickDripper }: Props) {
       {/* 브랜드 마크 zone */}
       <header className="flex flex-col items-center gap-2 px-5 pt-16">
         <h1 className="text-5xl font-medium leading-none tracking-tight">뜸</h1>
-        <p className="text-base italic text-text-secondary">오늘 한 잔</p>
+        <p className="text-base italic text-text-secondary">
+          저만 믿고 따라오세요
+        </p>
       </header>
 
       {/* breathing room */}
@@ -311,7 +313,7 @@ export function WallScreen({ selectedDripper, onPickDripper }: Props) {
         </div>
         <div className="h-px bg-border" />
         <p className="mt-4 text-center text-xs italic text-text-muted">
-          도구를 집어듭니다.
+          커피 내릴 드리퍼를 들어볼까요?
         </p>
       </section>
     </div>
@@ -647,7 +649,7 @@ git add -A
 git commit -m "$(cat <<'EOF'
 feat: Wall 스크린 + 진입 플로우 (Phase 3)
 
-- features/wall/WallScreen.tsx: 브랜드 마크 뜸 + 부제 오늘 한 잔 +
+- features/wall/WallScreen.tsx: 브랜드 마크 뜸 + 부제 저만 믿고 따라오세요 +
   하단 shelf 2-드리퍼 + 힌트. DripperIcon 재사용, aria-pressed
   토글 패턴.
 - AppRoot: 초기 진입 로직 — URL 쿼리 → recipe, 없으면 wall.

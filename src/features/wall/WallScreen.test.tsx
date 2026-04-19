@@ -8,7 +8,7 @@ describe("WallScreen", () => {
     expect(
       screen.getByRole("heading", { level: 1, name: "핸드드립 계산기" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("오늘 한 잔")).toBeInTheDocument();
+    expect(screen.getByText("저만 믿고 따라오세요")).toBeInTheDocument();
   });
 
   it("renders both dripper options with names", () => {
