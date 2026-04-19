@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest'
 import { DEFAULT_STATE, mergeState, type AppState, type Screen } from './state'
 
 describe('AppState', () => {
-  it('DEFAULT_STATE has screen = "recipe"', () => {
-    expect(DEFAULT_STATE.screen).toBe('recipe' satisfies Screen)
+  it('DEFAULT_STATE has screen = "wall" (진입은 Wall부터)', () => {
+    expect(DEFAULT_STATE.screen).toBe('wall' satisfies Screen)
   })
 
   it('mergeState auto-corrects method when dripper changes to incompatible', () => {

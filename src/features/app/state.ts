@@ -20,7 +20,7 @@ export type AppState = {
 }
 
 export const DEFAULT_STATE: AppState = {
-  screen: 'recipe',
+  screen: 'wall',
   coffee: g(20),
   dripper: 'v60',
   method: 'kasuya_4_6',

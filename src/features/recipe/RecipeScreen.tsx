@@ -67,7 +67,7 @@ export function RecipeScreen({
   })
 
   return (
-    <div className="relative mx-auto flex min-h-screen max-w-lg flex-col bg-surface text-text-primary">
+    <div className="relative mx-auto flex min-h-screen max-w-lg flex-col bg-surface text-text-primary animate-slide-up">
       {/* top bar */}
       <header className="flex items-center gap-3 px-5 pt-12">
         <DripperIcon type={dripper} size={56} selected />
