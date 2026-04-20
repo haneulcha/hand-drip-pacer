@@ -58,7 +58,7 @@ export function DripperPopover({
                 >
                   {opt.name}
                 </div>
-                <div className="text-[10px] text-text-muted">
+                <div className="text-2xs text-text-muted">
                   {opt.methodSubtitle}
                 </div>
               </div>

@@ -16,7 +16,7 @@ export function WallScreen({ selectedDripper, onPickDripper }: Props) {
         <h1 className="text-2xl font-medium leading-none tracking-tight">
           핸드드립 계산기
         </h1>
-        <p className="text-base italic text-text-secondary">
+        <p className="text-md italic text-text-secondary">
           저만 믿고 따라오세요
         </p>
       </header>
