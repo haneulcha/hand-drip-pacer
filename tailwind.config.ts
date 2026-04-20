@@ -50,6 +50,7 @@ export default {
         widest: "var(--letter-spacing-widest)",
       },
       boxShadow: {
+        raised: "var(--shadow-control-raised)",
         popover: "var(--shadow-popover)",
         dialog: "var(--shadow-dialog)",
       },
@@ -58,6 +59,7 @@ export default {
         dialog: "var(--z-dialog)",
       },
       opacity: {
+        disabled: "var(--opacity-disabled)",
         dim: "var(--opacity-dim)",
         muted: "var(--opacity-muted)",
       },

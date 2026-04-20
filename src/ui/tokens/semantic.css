@@ -39,6 +39,7 @@
   --radius-surface: var(--radius-xl);
 
   /* Shadow — 부상 레이어 전용 */
+  --shadow-control-raised: var(--shadow-hairline);
   --shadow-popover: var(--shadow-soft);
   --shadow-dialog: var(--shadow-lift);
 
@@ -47,6 +48,7 @@
   --z-dialog: 30;
 
   /* Opacity — 의미 있는 감쇠 값 */
+  --opacity-disabled: 0.4;
   --opacity-dim: 0.6;
   --opacity-muted: 0.88;
 
@@ -83,6 +85,7 @@
   --color-timeline-grid: var(--neutral-800);
 
   /* Shadow — dark는 배경이 어두우므로 더 진한 그림자 */
+  --shadow-control-raised: 0 1px 2px rgba(0, 0, 0, 0.35);
   --shadow-popover: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.4);
   --shadow-dialog: 0 2px 8px rgba(0, 0, 0, 0.5), 0 6px 16px rgba(0, 0, 0, 0.5);
 

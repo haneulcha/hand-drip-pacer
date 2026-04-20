@@ -70,7 +70,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
           >
             <div
               className={cx(
-                "h-[3px] w-full rounded-pill",
+                "h-progress-rail w-full rounded-pill",
                 i < activeIdx
                   ? "bg-text-primary"
                   : i === activeIdx

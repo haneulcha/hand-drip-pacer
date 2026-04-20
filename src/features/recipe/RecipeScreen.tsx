@@ -223,7 +223,7 @@ function Row({
   readonly children: React.ReactNode;
 }) {
   return (
-    <div className="grid grid-cols-[44px_1fr] items-center gap-3">
+    <div className="grid grid-cols-[2.75rem_1fr] items-center gap-3">
       <span className="text-xs text-text-secondary">{label}</span>
       <div>{children}</div>
     </div>

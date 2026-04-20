@@ -5,18 +5,18 @@ type Props = {
 
 export function StopConfirmDialog({ onCancel, onConfirm }: Props) {
   return (
-    <div className="fixed inset-0 z-30">
+    <div className="fixed inset-0 z-dialog">
       <button
         type="button"
         aria-label="다이얼로그 닫기"
         onClick={onCancel}
-        className="absolute inset-0 bg-[rgba(42,36,30,0.45)]"
+        className="absolute inset-0 bg-overlay-scrim"
       />
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="stop-dialog-title"
-        className="absolute left-1/2 top-1/2 w-[calc(100%-56px)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-surface bg-surface p-6 shadow-xl"
+        className="absolute left-1/2 top-1/2 w-[calc(100%-3.5rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-surface bg-surface p-6 shadow-dialog"
       >
         <h2 id="stop-dialog-title" className="text-lg font-medium">
           브루잉을 중단할까요?

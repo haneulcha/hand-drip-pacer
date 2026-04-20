@@ -111,7 +111,7 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
           type="button"
           disabled
           aria-label="공유"
-          className="w-16 rounded-button border border-border py-3.5 text-text-muted opacity-40"
+          className="w-16 rounded-button border border-border py-3.5 text-text-muted opacity-disabled"
         >
           공유
         </button>

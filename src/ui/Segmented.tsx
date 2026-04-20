@@ -35,9 +35,9 @@ export function Segmented<T extends string>({
             className={cx(
               "relative cursor-pointer select-none rounded-control px-3 py-1.5 text-sm font-medium transition-colors",
               selected
-                ? "bg-surface text-text-primary shadow-sm"
+                ? "bg-surface text-text-primary shadow-raised"
                 : "text-text-muted hover:text-text-secondary",
-              opt.disabled && "cursor-not-allowed opacity-40",
+              opt.disabled && "cursor-not-allowed opacity-disabled",
             )}
           >
             <input
