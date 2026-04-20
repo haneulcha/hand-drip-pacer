@@ -95,9 +95,61 @@ Tailwind에서 `theme.transitionDuration.DEFAULT` / `transitionTimingFunction.DE
 - `index.html`의 `<link rel="stylesheet">` 로 로드, `globals.css`의 `body { font-family }`에서 Pretendard → Inter → system 스택 지정
 - 숫자는 `tabular-nums` 필수 (값 변경 시 레이아웃 흔들림 방지)
 
-### Spacing / shadow
+### Typography scale
 
-Tailwind 기본 스케일 사용. shadow는 지양. 필요 시 `tailwind.config.ts`의 `theme.extend`에서 확장.
+폰트 크기 스케일은 일관된 배수 기반 7단계(`2xs`~`2xl`) + 히어로 전용 2단계(`hero-sm`, `hero-lg`)로 구성. Semantic alias 없이 size-based naming을 Tailwind에 그대로 노출한다.
+
+```css
+--font-size-2xs: 10px;
+--font-size-xs: 12px;
+--font-size-sm: 14px;
+--font-size-md: 16px;
+--font-size-lg: 20px;
+--font-size-xl: 22px;
+--font-size-2xl: 24px;
+--font-size-hero-sm: 72px; /* Complete 히어로 */
+--font-size-hero-lg: 96px; /* Brewing 타이머 */
+
+--line-height-tight: 1;
+--line-height-snug: 1.2;
+--line-height-base: 1.5;
+
+--letter-spacing-wide: 0.04em;
+--letter-spacing-wider: 0.08em;
+--letter-spacing-widest: 0.12em;
+```
+
+Tailwind 클래스: `text-2xs` / `text-xs` / `text-sm` / `text-md` / `text-lg` / `text-xl` / `text-2xl` / `text-hero-sm` / `text-hero-lg`, `leading-tight/snug/base`, `tracking-wide/wider/widest`.
+
+**금지**: `text-[Npx]` arbitrary, Tailwind 기본 `text-base`(우리 체계에서 16은 `text-md`), `leading-[...]` / `tracking-[...]` arbitrary.
+
+### Spacing
+
+Tailwind 기본 스케일 사용. Semantic 별칭은 꼭 필요한 layout size(예: `--size-popover-min`, `--size-progress-rail`)에 한해 추가한다.
+
+### Shadow
+
+부상 레이어(control/popover/dialog)에 한해 **매우 옅은** 그림자를 허용한다. 일반 UI 요소(버튼, 카드, 입력)는 그림자를 쓰지 않고 톤 차이로 경계를 낸다.
+
+**Primitives** (`tokens/primitives.css`)
+
+```css
+--shadow-hairline: 0 1px 2px rgba(0, 0, 0, 0.05);
+--shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.04);
+--shadow-lift: 0 2px 8px rgba(0, 0, 0, 0.06), 0 6px 16px rgba(0, 0, 0, 0.06);
+```
+
+**Semantic** (`tokens/semantic.css`)
+
+| 별칭                     | 매핑     | 용도                               |
+| ------------------------ | -------- | ---------------------------------- |
+| `--shadow-control-raised`| hairline | 세그먼트 선택 pill 등 미세 부상    |
+| `--shadow-popover`       | soft     | 드롭다운/팝오버                    |
+| `--shadow-dialog`        | lift     | 모달 다이얼로그                    |
+
+Tailwind 클래스: `shadow-raised`, `shadow-popover`, `shadow-dialog`.
+
+**금지**: Tailwind 기본 `shadow-sm/md/lg/xl/2xl/inner`, `shadow-[...]` arbitrary.
 
 ### Radius
 
@@ -168,16 +220,58 @@ Tailwind 기본 스케일 사용. shadow는 지양. 필요 시 `tailwind.config.
 --color-timeline-grid: var(--neutral-100);
 ```
 
+### Z-index
+
+```css
+--z-popover: 20;
+--z-dialog: 30;
+```
+
+Tailwind: `z-popover`, `z-dialog`. **금지**: Tailwind 기본 `z-0/10/20/.../50/auto`, `z-[...]` arbitrary.
+
+### Opacity
+
+```css
+--opacity-disabled: 0.4;
+--opacity-dim: 0.6;
+--opacity-muted: 0.88;
+```
+
+Tailwind: `opacity-disabled`, `opacity-dim`, `opacity-muted`. Tailwind 기본 percent 클래스(`opacity-40` 등)는 해당 semantic alias가 있다면 alias를 우선. **금지**: `opacity-[...]` arbitrary.
+
+### Overlay
+
+```css
+--color-overlay-scrim: rgba(44, 40, 35, 0.45); /* neutral-900 @ 45% (light) */
+```
+
+Tailwind: `bg-overlay-scrim`.
+
+### Size (의미 있는 레이아웃 상수)
+
+```css
+--size-popover-min: 11rem; /* 176px */
+--size-progress-rail: 2px;
+```
+
+Tailwind: `min-w-popover`, `h-progress-rail`.
+
 ### Dark (`[data-theme="dark"]`)
 
-뼈대만 잡아두고 값은 UI 디벨롭 시 확정. 예시:
+Typography / z-index / opacity / size 토큰은 light/dark 공용이라 분기하지 않음. 색상·그림자·오버레이만 재지정한다.
 
 ```css
 [data-theme="dark"] {
   --color-surface: var(--neutral-900);
   --color-surface-subtle: var(--neutral-800);
   --color-text-primary: var(--neutral-50);
-  /* ... 나머지도 매핑 ... */
+  /* ... 나머지 색상 매핑 ... */
+
+  --shadow-control-raised: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-popover: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.4);
+  --shadow-dialog: 0 2px 8px rgba(0, 0, 0, 0.5), 0 6px 16px rgba(0, 0, 0, 0.5);
+
+  --color-overlay-scrim: rgba(0, 0, 0, 0.6);
 }
 ```
 
@@ -235,6 +329,26 @@ export default {
 
 ## Rules (enforcement)
 
-- 컴포넌트에서 raw hex, `rgb()`, `#...` 직접 사용 금지. 항상 Tailwind 토큰 클래스 또는 `var(--color-*)` 참조.
-- 새 색이 필요하면 먼저 semantic 토큰을 추가하고 컴포넌트에서 그걸 참조. 컴포넌트 파일에 semantic 정의 금지.
-- primitive 스케일은 semantic에서만 참조. 컴포넌트가 `--neutral-500` 직접 참조 금지.
+- 컴포넌트 스타일 값은 Tailwind 토큰 클래스 또는 `var(--color-*)` 등 semantic CSS 변수 참조를 통해서만 표현한다.
+- Primitive 스케일은 `semantic.css`와 `tailwind.config.ts`에서만 참조한다. 컴포넌트에서 `var(--neutral-*)`나 `var(--accent-*)` 직접 참조 금지.
+- 새 디자인 값이 필요하면 먼저 semantic 토큰을 추가하고 컴포넌트에서 그걸 참조한다.
+
+### Lint 자동 차단
+
+ESLint 규칙(`eslint.config.js`의 `no-restricted-syntax`)이 JSX `className` 문자열에서 다음을 차단한다:
+
+- `text-[Npx]`, `text-base`, `leading-[...]`, `tracking-[...]`
+- `bg-[#...]` / `bg-[rgb...]` / `bg-[hsl...]` (color arbitrary with raw value)
+- `rounded-(xs|sm|md|lg|xl|2xl|3xl|full)`, `rounded-[...]`
+- `shadow-(sm|md|lg|xl|2xl|inner)`, `shadow-[...]`
+- `z-(0|10|20|30|40|50|auto)`, `z-[...]`
+- `opacity-[...]`
+- 픽셀 단위 layout arbitrary: `(h|w|min-w|max-w|top|left|right|bottom)-[Npx]`, `grid-cols-[...Npx...]`
+
+rem 단위 arbitrary(예: `grid-cols-[2.75rem_1fr]`, `w-[calc(100%-3.5rem)]`)는 허용.
+
+Stylelint 규칙(`.stylelintrc.json`)이 CSS에서 raw hex 색상을 금지한다. `src/ui/tokens/primitives.css`만 예외.
+
+SVG stroke width / text fontSize 등 SVG 내부 속성은 각 컴포넌트의 로컬 `STROKE` 상수로만 관리하고 토큰화하지 않는다.
+
+실행: `bun run lint` (ESLint + Stylelint 동시 실행).

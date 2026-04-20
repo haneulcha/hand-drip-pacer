@@ -1,6 +1,12 @@
 import type { DripperId } from "@/domain/types";
 import { cx } from "./cx";
 
+const STROKE = {
+  hairline: 0.8,
+  thin: 1.2,
+  base: 1.6,
+} as const;
+
 type Props = {
   readonly type: DripperId;
   readonly size?: number;
@@ -14,7 +20,7 @@ export function DripperIcon({
   selected = false,
   className,
 }: Props) {
-  const strokeWidth = selected ? 1.6 : 1.2;
+  const strokeWidth = selected ? STROKE.base : STROKE.thin;
   const opacity = selected ? 1 : 0.55;
 
   if (type === "v60") {
@@ -43,7 +49,7 @@ export function DripperIcon({
           x2={70}
           y2={26}
           stroke="currentColor"
-          strokeWidth={0.8}
+          strokeWidth={STROKE.hairline}
           opacity={opacity * 0.5}
         />
       </svg>
@@ -77,7 +83,7 @@ export function DripperIcon({
           d={`M ${20 + i * 4} ${30 + i * 10} Q 45 ${26 + i * 10}, ${70 - i * 4} ${30 + i * 10}`}
           fill="none"
           stroke="currentColor"
-          strokeWidth={0.8}
+          strokeWidth={STROKE.hairline}
           opacity={opacity * 0.5}
         />
       ))}

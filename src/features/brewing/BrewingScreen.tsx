@@ -47,15 +47,15 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
       {/* Top bar */}
       <header className="flex items-start justify-between px-5 pt-14">
         <div>
-          <div className="text-[10px] text-text-muted">경과</div>
-          <div className="mt-0.5 text-[26px] font-medium tabular-nums">
+          <div className="text-2xs text-text-muted">경과</div>
+          <div className="mt-0.5 text-2xl font-medium tabular-nums">
             {formatTime(elapsed)}
           </div>
         </div>
         <button
           type="button"
           onClick={() => setStopDialogOpen(true)}
-          className="pt-2 text-[11px] text-text-muted hover:text-text-secondary"
+          className="pt-2 text-xs text-text-muted hover:text-text-secondary"
         >
           중단
         </button>
@@ -70,7 +70,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
           >
             <div
               className={cx(
-                "h-[3px] w-full rounded-pill",
+                "h-progress-rail w-full rounded-pill",
                 i < activeIdx
                   ? "bg-text-primary"
                   : i === activeIdx
@@ -80,7 +80,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
             />
             <span
               className={cx(
-                "text-[9px]",
+                "text-2xs",
                 i === activeIdx
                   ? "font-semibold text-text-primary"
                   : "text-text-muted",
@@ -94,28 +94,28 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
 
       {/* Hero */}
       <div className="mt-12 flex flex-col items-center px-5 text-center">
-        <span className="text-[11px] font-semibold uppercase tracking-widest text-pour-bloom">
+        <span className="text-xs font-semibold uppercase tracking-widest text-pour-bloom">
           지금
         </span>
-        <span className="mt-2 text-[11px] text-text-muted">저울 목표</span>
+        <span className="mt-2 text-xs text-text-muted">저울 목표</span>
         <div className="mt-1 flex items-baseline gap-1">
           <span
             data-testid="hero-weight"
-            className="text-[96px] font-medium leading-none tabular-nums"
+            className="text-hero-lg font-medium leading-none tabular-nums"
           >
             {active.cumulativeWater}
           </span>
-          <span className="text-3xl text-text-muted">g</span>
+          <span className="text-2xl text-text-muted">g</span>
         </div>
-        <div className="mt-2 text-base italic text-text-secondary">
+        <div className="mt-2 text-md italic text-text-secondary">
           +{active.pourAmount}g 붓기
         </div>
       </div>
 
       {/* Time marker */}
       <div className="mt-4 text-center">
-        <div className="text-[10px] text-text-muted">시점</div>
-        <div className="text-[22px] text-text-secondary tabular-nums">
+        <div className="text-2xs text-text-muted">시점</div>
+        <div className="text-xl text-text-secondary tabular-nums">
           {formatTime(active.atSec)}
         </div>
       </div>
@@ -127,7 +127,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
             type="button"
             onClick={handleSkip}
             aria-label="다음 스텝으로 건너뛰기"
-            className="px-5 py-3 text-[13px] text-text-secondary hover:text-text-primary"
+            className="px-5 py-3 text-sm text-text-secondary hover:text-text-primary"
           >
             건너뛰기 <span aria-hidden>›</span>
           </button>
@@ -140,16 +140,16 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
           <>
             <div className="mb-2.5 h-px bg-border" />
             <div className="flex items-center gap-2.5">
-              <span className="text-[10px] font-semibold text-text-muted">
+              <span className="text-2xs font-semibold text-text-muted">
                 다음
               </span>
-              <span className="text-[13px] text-text-secondary tabular-nums">
+              <span className="text-sm text-text-secondary tabular-nums">
                 {formatTime(next.atSec)}
               </span>
               <div className="flex-1" />
               <span className="text-lg font-medium tabular-nums">
                 {next.cumulativeWater}
-                <span className="ml-0.5 text-[11px] text-text-muted">g</span>
+                <span className="ml-0.5 text-xs text-text-muted">g</span>
               </span>
             </div>
           </>

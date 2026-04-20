@@ -77,12 +77,12 @@ export function RecipeScreen({
           <div className="text-lg font-medium">
             {dripperList.find((d) => d.id === dripper)?.name}
           </div>
-          <div className="text-[11px] text-text-muted">{methodMeta.name}</div>
+          <div className="text-xs text-text-muted">{methodMeta.name}</div>
         </div>
         <button
           type="button"
           onClick={() => setPopoverOpen(true)}
-          className="whitespace-nowrap text-[11px] text-text-muted hover:text-text-secondary"
+          className="whitespace-nowrap text-xs text-text-muted hover:text-text-secondary"
         >
           바꾸기 ›
         </button>
@@ -156,7 +156,7 @@ export function RecipeScreen({
         </Row>
 
         {/* recommended row */}
-        <div className="mt-1 flex items-center gap-2 text-[10px] text-text-muted">
+        <div className="mt-1 flex items-center gap-2 text-2xs text-text-muted">
           <span className="whitespace-nowrap">권장</span>
           <span className="flex-1 tabular-nums">{recommendedLine}</span>
         </div>
@@ -169,7 +169,7 @@ export function RecipeScreen({
           aria-label="푸어 스케줄"
         >
           <div className="flex items-baseline justify-between">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">
+            <span className="text-xs font-semibold uppercase tracking-wider text-text-muted">
               푸어 스케줄
             </span>
             <span className="text-xs text-text-muted tabular-nums">
@@ -223,8 +223,8 @@ function Row({
   readonly children: React.ReactNode;
 }) {
   return (
-    <div className="grid grid-cols-[44px_1fr] items-center gap-3">
-      <span className="text-[11px] text-text-secondary">{label}</span>
+    <div className="grid grid-cols-[2.75rem_1fr] items-center gap-3">
+      <span className="text-xs text-text-secondary">{label}</span>
       <div>{children}</div>
     </div>
   );

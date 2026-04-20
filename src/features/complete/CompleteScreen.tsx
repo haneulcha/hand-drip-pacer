@@ -36,18 +36,18 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
     <div className="mx-auto flex min-h-screen max-w-lg flex-col bg-surface px-6 pb-4 pt-16 text-text-primary">
       {/* quiet header */}
       <header className="flex flex-col items-center gap-1">
-        <span className="text-[11px] font-semibold uppercase tracking-widest text-pour-bloom">
+        <span className="text-xs font-semibold uppercase tracking-widest text-pour-bloom">
           완료
         </span>
-        <span className="text-[11px] text-text-muted tabular-nums">
+        <span className="text-xs text-text-muted tabular-nums">
           {dateText}
         </span>
       </header>
 
       {/* hero */}
       <section aria-label="총 시간" className="mt-6 flex flex-col items-center">
-        <span className="text-[11px] text-text-muted">오늘의 커피</span>
-        <span className="mt-1 text-[72px] font-medium leading-none tabular-nums">
+        <span className="text-xs text-text-muted">오늘의 커피</span>
+        <span className="mt-1 text-hero-sm font-medium leading-none tabular-nums">
           {formatTime(sessionDurationSec(session))}
         </span>
         <span className="mt-2 text-sm italic text-text-secondary">
@@ -112,7 +112,7 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
           type="button"
           disabled
           aria-label="공유"
-          className="w-16 rounded-button border border-border py-3.5 text-text-muted opacity-40"
+          className="w-16 rounded-button border border-border py-3.5 text-text-muted opacity-disabled"
         >
           공유
         </button>
@@ -141,13 +141,13 @@ function SummaryCell({
 }) {
   return (
     <div className="flex flex-col gap-0.5">
-      <span className="text-[10px] uppercase tracking-wider text-text-muted">
+      <span className="text-2xs uppercase tracking-wider text-text-muted">
         {label}
       </span>
       <span
         className={cx(
           "tabular-nums",
-          small ? "text-[13px] text-text-secondary" : "text-base",
+          small ? "text-sm text-text-secondary" : "text-md",
         )}
       >
         {value}

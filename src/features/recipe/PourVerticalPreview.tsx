@@ -1,6 +1,12 @@
 import type { Pour } from "@/domain/types";
 import { formatTime } from "@/ui/format";
 
+const STROKE = {
+  hairline: 0.8,
+  base: 2,
+  bold: 2.2,
+} as const;
+
 type Props = {
   readonly pours: readonly Pour[];
   readonly totalTimeSec: number;
@@ -51,7 +57,7 @@ export function PourVerticalPreview({
         x2={axisX}
         y2={height - padB}
         stroke="var(--color-border)"
-        strokeWidth={0.8}
+        strokeWidth={STROKE.hairline}
       />
 
       {pours.map((p) => {
@@ -82,7 +88,7 @@ export function PourVerticalPreview({
               x2={barStart + barW}
               y2={y}
               stroke={color}
-              strokeWidth={bloom ? 2.2 : 2}
+              strokeWidth={bloom ? STROKE.bold : STROKE.base}
               strokeLinecap="round"
               opacity={bloom ? 1 : 0.88}
             />

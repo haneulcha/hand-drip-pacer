@@ -28,6 +28,47 @@ export default {
         surface: "var(--radius-surface)",
         pill: "var(--radius-pill)",
       },
+      fontSize: {
+        "2xs": ["var(--font-size-2xs)", { lineHeight: "var(--line-height-base)" }],
+        xs: ["var(--font-size-xs)", { lineHeight: "var(--line-height-base)" }],
+        sm: ["var(--font-size-sm)", { lineHeight: "var(--line-height-base)" }],
+        md: ["var(--font-size-md)", { lineHeight: "var(--line-height-base)" }],
+        lg: ["var(--font-size-lg)", { lineHeight: "var(--line-height-snug)" }],
+        xl: ["var(--font-size-xl)", { lineHeight: "var(--line-height-snug)" }],
+        "2xl": ["var(--font-size-2xl)", { lineHeight: "var(--line-height-snug)" }],
+        "hero-sm": ["var(--font-size-hero-sm)", { lineHeight: "var(--line-height-tight)" }],
+        "hero-lg": ["var(--font-size-hero-lg)", { lineHeight: "var(--line-height-tight)" }],
+      },
+      lineHeight: {
+        tight: "var(--line-height-tight)",
+        snug: "var(--line-height-snug)",
+        base: "var(--line-height-base)",
+      },
+      letterSpacing: {
+        wide: "var(--letter-spacing-wide)",
+        wider: "var(--letter-spacing-wider)",
+        widest: "var(--letter-spacing-widest)",
+      },
+      boxShadow: {
+        raised: "var(--shadow-control-raised)",
+        popover: "var(--shadow-popover)",
+        dialog: "var(--shadow-dialog)",
+      },
+      zIndex: {
+        popover: "var(--z-popover)",
+        dialog: "var(--z-dialog)",
+      },
+      opacity: {
+        disabled: "var(--opacity-disabled)",
+        dim: "var(--opacity-dim)",
+        muted: "var(--opacity-muted)",
+      },
+      minWidth: {
+        popover: "var(--size-popover-min)",
+      },
+      height: {
+        "progress-rail": "var(--size-progress-rail)",
+      },
       colors: {
         surface: {
           DEFAULT: "var(--color-surface)",
@@ -62,6 +103,9 @@ export default {
           grid: "var(--color-timeline-grid)",
         },
         wall: "var(--color-wall)",
+        overlay: {
+          scrim: "var(--color-overlay-scrim)",
+        },
       },
     },
   },
