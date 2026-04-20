@@ -114,11 +114,22 @@ design.md(기능 스펙)와 짝을 이룸. 기능을 어떻게 만들지는 desi
 - 숫자 표시: **tabular figures** 필수 (`font-variant-numeric: tabular-nums`). 값 변경 시 레이아웃이 흔들리지 않게.
 - 브랜드 / 일부 강조: JetBrains Mono 또는 IBM Plex Mono를 **한 끗만** 사용. 제목 전체를 mono나 serif로 채우지 않음.
 
-**스케일** (예시):
+**스케일** (구현 기준 — 실제 토큰: `docs/design-tokens.md` § Typography scale):
 
-- 레시피 숫자 (main metric): 28~36px, medium weight
-- 본문: 14~16px, regular
-- 라벨: 12~13px, medium, 약간의 letter-spacing
+| Role              | 클래스          | 값    | 용도                                     |
+| ----------------- | --------------- | ----- | ---------------------------------------- |
+| Meta              | `text-2xs`      | 10px  | 유닛·인디케이터·아주 작은 캡션           |
+| Label (narrow)    | `text-xs`       | 12px  | 좁은 라벨·세그먼트                       |
+| Label / Body      | `text-sm`       | 14px  | 표준 라벨·본문·버튼 내부                 |
+| Body (emphasis)   | `text-md`       | 16px  | 강조 본문·다이얼로그 타이틀 보조         |
+| Title             | `text-lg`       | 20px  | 섹션 헤더                                |
+| Metric (small)    | `text-xl`       | 22px  | 시점·다음 푸어 프리뷰                    |
+| Metric (medium)   | `text-2xl`      | 24px  | 경과 타이머·Wall 타이틀                  |
+| Hero (complete)   | `text-hero-sm`  | 72px  | Complete 화면 총 시간                    |
+| Hero (timer)      | `text-hero-lg`  | 96px  | Brewing 화면 저울 목표                   |
+
+- `tabular-nums` 필수 (값 변경 시 레이아웃 흔들림 방지)
+- 글꼴: Pretendard Variable → Inter → system sans
 
 **금지**:
 
@@ -156,7 +167,7 @@ design.md(기능 스펙)와 짝을 이룸. 기능을 어떻게 만들지는 desi
 ### 질감과 디테일
 
 - **모서리**: `border-radius: 8~12px`. 과도하게 둥글게 하지 않음 (현대 앱 트렌드의 과한 radius는 장난감 느낌).
-- **그림자**: 아주 옅게, 혹은 쓰지 않음. 경계는 배경 톤 차이로.
+- **그림자**: 일반 UI 요소(버튼, 카드, 입력, 세그먼트)는 그림자를 쓰지 않음. 경계는 배경 톤 차이(`bg-surface-inset` 등)로. 부상 레이어(세그먼트 선택 pill, popover, dialog)에 한해 매우 옅은 그림자를 허용하며 `shadow-raised` / `shadow-popover` / `shadow-dialog` semantic 토큰만 사용.
 - **선**: 얇게 (`1px`), 먹색을 살짝 옅게 한 것(`opacity: 0.1~0.15`).
 - **종이 질감**: 선택적. 도입한다면 **거의 보이지 않을 만큼 옅게**. 배경 이미지로는 쓰지 않고, 아주 낮은 opacity의 노이즈 레이어 정도.
 
