@@ -128,6 +128,7 @@ type InputMode =
 type BrewMethod = {
   readonly id: BrewMethodId;
   readonly name: string;
+  readonly shortName?: string;
   readonly description: string;
   readonly supportedDrippers: readonly DripperId[];
   readonly defaultRatio: Ratio;
@@ -139,7 +140,7 @@ export const brewMethods: Record<BrewMethodId, BrewMethod> = {
   hoffmann_v60: hoffmannV60,
   scott_rao: scottRao,
   april: april,
-  kurasu_kyoto: karasuKyoto,
+  kurasu_kyoto: kurasuKyoto,
   frothy_monkey: frothyMonkey,
   standard_3_stage: standard3Stage,
   caffe_luxxe: caffeLuxxe,
