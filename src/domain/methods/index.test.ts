@@ -4,6 +4,7 @@ import { brewMethods, methodList, methodsForDripper } from "./index";
 describe("brew method registry", () => {
   it("includes all v1 methods", () => {
     expect(Object.keys(brewMethods).sort()).toEqual([
+      "april",
       "hoffmann_v60",
       "kalita_pulse",
       "kasuya_4_6",
@@ -18,8 +19,9 @@ describe("brew method registry", () => {
   });
 
   it("methodList mirrors registry values", () => {
-    expect(methodList).toHaveLength(4);
+    expect(methodList).toHaveLength(5);
     expect(methodList.map((m) => m.id).sort()).toEqual([
+      "april",
       "hoffmann_v60",
       "kalita_pulse",
       "kasuya_4_6",
@@ -36,10 +38,12 @@ describe("brew method registry", () => {
       ).toEqual(["hoffmann_v60", "kasuya_4_6", "scott_rao"]);
     });
 
-    it("kalita_wave → kalita_pulse only", () => {
-      expect(methodsForDripper("kalita_wave").map((m) => m.id)).toEqual([
-        "kalita_pulse",
-      ]);
+    it("kalita_wave → kalita_pulse + april", () => {
+      expect(
+        methodsForDripper("kalita_wave")
+          .map((m) => m.id)
+          .sort(),
+      ).toEqual(["april", "kalita_pulse"]);
     });
   });
 });
