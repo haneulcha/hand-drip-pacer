@@ -2,6 +2,7 @@ import type { BrewMethod, BrewMethodId, DripperId } from "../types";
 import { april } from "./april";
 import { caffeLuxxe } from "./caffe-luxxe";
 import { frothyMonkey } from "./frothy-monkey";
+import { fuglenTokyo } from "./fuglen-tokyo";
 import { hoffmannV60 } from "./hoffmann-v60";
 import { kalitaPulse } from "./kalita-pulse";
 import { kasuya46 } from "./kasuya-4-6";
@@ -19,6 +20,7 @@ export const brewMethods: Record<BrewMethodId, BrewMethod> = {
   frothy_monkey: frothyMonkey,
   standard_3_stage: standard3Stage,
   caffe_luxxe: caffeLuxxe,
+  fuglen_tokyo: fuglenTokyo,
 };
 
 export const methodList: readonly BrewMethod[] = Object.values(brewMethods);

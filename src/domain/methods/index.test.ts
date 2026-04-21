@@ -7,6 +7,7 @@ describe("brew method registry", () => {
       "april",
       "caffe_luxxe",
       "frothy_monkey",
+      "fuglen_tokyo",
       "hoffmann_v60",
       "kalita_pulse",
       "kasuya_4_6",
@@ -23,11 +24,12 @@ describe("brew method registry", () => {
   });
 
   it("methodList mirrors registry values", () => {
-    expect(methodList).toHaveLength(9);
+    expect(methodList).toHaveLength(10);
     expect(methodList.map((m) => m.id).sort()).toEqual([
       "april",
       "caffe_luxxe",
       "frothy_monkey",
+      "fuglen_tokyo",
       "hoffmann_v60",
       "kalita_pulse",
       "kasuya_4_6",
@@ -54,12 +56,12 @@ describe("brew method registry", () => {
       ).toEqual(["april", "frothy_monkey", "kalita_pulse", "kurasu_kyoto"]);
     });
 
-    it("kalita_102 → standard_3_stage + caffe_luxxe", () => {
+    it("kalita_102 → standard_3_stage + caffe_luxxe + fuglen_tokyo", () => {
       expect(
         methodsForDripper("kalita_102")
           .map((m) => m.id)
           .sort(),
-      ).toEqual(["caffe_luxxe", "standard_3_stage"]);
+      ).toEqual(["caffe_luxxe", "fuglen_tokyo", "standard_3_stage"]);
     });
   });
 });
