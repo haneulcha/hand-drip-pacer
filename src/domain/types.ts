@@ -4,7 +4,11 @@ export type Seconds = number & { readonly __brand: "Seconds" };
 export type Ratio = number & { readonly __brand: "Ratio" };
 
 export type DripperId = "v60" | "kalita_wave";
-export type BrewMethodId = "kasuya_4_6" | "hoffmann_v60" | "kalita_pulse";
+export type BrewMethodId =
+  | "kasuya_4_6"
+  | "hoffmann_v60"
+  | "kalita_pulse"
+  | "scott_rao";
 export type RoastLevel = "light" | "medium" | "dark";
 
 export type GrindHint =
