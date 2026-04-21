@@ -8,6 +8,7 @@ describe("brew method registry", () => {
       "hoffmann_v60",
       "kalita_pulse",
       "kasuya_4_6",
+      "kurasu_kyoto",
       "scott_rao",
     ]);
   });
@@ -19,12 +20,13 @@ describe("brew method registry", () => {
   });
 
   it("methodList mirrors registry values", () => {
-    expect(methodList).toHaveLength(5);
+    expect(methodList).toHaveLength(6);
     expect(methodList.map((m) => m.id).sort()).toEqual([
       "april",
       "hoffmann_v60",
       "kalita_pulse",
       "kasuya_4_6",
+      "kurasu_kyoto",
       "scott_rao",
     ]);
   });
@@ -38,12 +40,12 @@ describe("brew method registry", () => {
       ).toEqual(["hoffmann_v60", "kasuya_4_6", "scott_rao"]);
     });
 
-    it("kalita_wave → kalita_pulse + april", () => {
+    it("kalita_wave → kalita_pulse + april + kurasu_kyoto", () => {
       expect(
         methodsForDripper("kalita_wave")
           .map((m) => m.id)
           .sort(),
-      ).toEqual(["april", "kalita_pulse"]);
+      ).toEqual(["april", "kalita_pulse", "kurasu_kyoto"]);
     });
   });
 });
