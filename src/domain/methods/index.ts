@@ -1,5 +1,6 @@
 import type { BrewMethod, BrewMethodId, DripperId } from "../types";
 import { april } from "./april";
+import { frothyMonkey } from "./frothy-monkey";
 import { hoffmannV60 } from "./hoffmann-v60";
 import { kalitaPulse } from "./kalita-pulse";
 import { kasuya46 } from "./kasuya-4-6";
@@ -13,6 +14,7 @@ export const brewMethods: Record<BrewMethodId, BrewMethod> = {
   scott_rao: scottRao,
   april,
   kurasu_kyoto: kurasuKyoto,
+  frothy_monkey: frothyMonkey,
 };
 
 export const methodList: readonly BrewMethod[] = Object.values(brewMethods);

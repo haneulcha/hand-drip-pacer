@@ -10,7 +10,8 @@ export type BrewMethodId =
   | "kalita_pulse"
   | "scott_rao"
   | "april"
-  | "kurasu_kyoto";
+  | "kurasu_kyoto"
+  | "frothy_monkey";
 export type RoastLevel = "light" | "medium" | "dark";
 
 export type GrindHint =
