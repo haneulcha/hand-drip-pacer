@@ -92,6 +92,7 @@ const compute = (input: RecipeInput): Recipe => {
 export const frothyMonkey: BrewMethod = {
   id: "frothy_monkey",
   name: "Frothy Monkey",
+  shortName: "Frothy",
   description:
     "바디감을 강조하는 펄스 푸어 방식. 절반까지 한 번에 채우고 짧은 펄스로 마무리.",
   supportedDrippers: ["kalita_wave"],

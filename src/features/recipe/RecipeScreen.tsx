@@ -137,7 +137,7 @@ export function RecipeScreen({
             label="방식"
             value={method}
             onChange={onMethodChange}
-            options={compatMethods.map((m) => ({ value: m.id, label: m.name }))}
+            options={compatMethods.map((m) => ({ value: m.id, label: m.shortName ?? m.name }))}
           />
         </Row>
 

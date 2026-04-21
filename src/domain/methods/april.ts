@@ -74,6 +74,7 @@ const compute = (input: RecipeInput): Recipe => {
 export const april: BrewMethod = {
   id: "april",
   name: "April",
+  shortName: "April",
   description:
     "Kalita Wave에 서클+센터 푸어를 결합한 4분할 추출. 유속과 클린 컵을 살림.",
   supportedDrippers: ["kalita_wave"],

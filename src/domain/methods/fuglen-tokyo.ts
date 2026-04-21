@@ -84,6 +84,7 @@ const compute = (input: RecipeInput): Recipe => {
 export const fuglenTokyo: BrewMethod = {
   id: "fuglen_tokyo",
   name: "Fuglen Tokyo",
+  shortName: "Fuglen",
   description:
     "빠른 연속 푸어로 마무리하는 Kalita 102 방식. 클린하고 균형 잡힌 컵.",
   supportedDrippers: ["kalita_102"],

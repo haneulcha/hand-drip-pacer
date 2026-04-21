@@ -86,6 +86,7 @@ const compute = (input: RecipeInput): Recipe => {
 export const kasuya46: BrewMethod = {
   id: "kasuya_4_6",
   name: "Kasuya 4:6",
+  shortName: "4:6",
   description:
     "맛 프로파일로 파라미터 매핑이 가장 풍부한 V60 메서드. 첫 40%는 단맛, 나머지 60%는 농도를 결정.",
   supportedDrippers: ["v60"],

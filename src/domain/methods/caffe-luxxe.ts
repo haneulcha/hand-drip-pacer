@@ -75,6 +75,7 @@ const compute = (input: RecipeInput): Recipe => {
 export const caffeLuxxe: BrewMethod = {
   id: "caffe_luxxe",
   name: "Caffe Luxxe",
+  shortName: "Luxxe",
   description:
     "고농도 추출을 노리는 Kalita 102 연속 푸어. 1:13.3 저비율로 바디감 극대화.",
   supportedDrippers: ["kalita_102"],

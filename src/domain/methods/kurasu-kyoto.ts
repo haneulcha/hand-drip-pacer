@@ -86,6 +86,7 @@ const compute = (input: RecipeInput): Recipe => {
 export const kurasuKyoto: BrewMethod = {
   id: "kurasu_kyoto",
   name: "Kurasu Kyoto",
+  shortName: "Kurasu",
   description:
     "클린 컵과 단맛을 강조하는 Kalita Wave 3분할 추출. 두 번째 푸어가 핵심.",
   supportedDrippers: ["kalita_wave"],

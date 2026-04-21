@@ -97,6 +97,7 @@ const compute = (input: RecipeInput): Recipe => {
 export const standard3Stage: BrewMethod = {
   id: "standard_3_stage",
   name: "Standard 3-Stage",
+  shortName: "3-Stage",
   description:
     "Kalita 102의 정통 3단 분할 추출. 바디감과 밸런스를 동시에 확보.",
   supportedDrippers: ["kalita_102"],

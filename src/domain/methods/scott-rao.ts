@@ -75,6 +75,7 @@ const compute = (input: RecipeInput): Recipe => {
 export const scottRao: BrewMethod = {
   id: "scott_rao",
   name: "Scott Rao",
+  shortName: "Scott Rao",
   description:
     "뜸 후 단일 연속 푸어로 추출 효율을 극대화하는 V60 스탠다드. 분쇄도와 뜸 시간으로 맛 조정.",
   supportedDrippers: ["v60"],

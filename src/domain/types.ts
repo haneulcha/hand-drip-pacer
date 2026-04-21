@@ -63,6 +63,7 @@ export type RecipeInput = {
 export type BrewMethod = {
   readonly id: BrewMethodId;
   readonly name: string;
+  readonly shortName?: string;
   readonly description: string;
   readonly supportedDrippers: readonly DripperId[];
   readonly defaultRatio: Ratio;
