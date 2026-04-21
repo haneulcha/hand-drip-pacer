@@ -5,6 +5,7 @@ describe("brew method registry", () => {
   it("includes all v1 methods", () => {
     expect(Object.keys(brewMethods).sort()).toEqual([
       "april",
+      "caffe_luxxe",
       "frothy_monkey",
       "hoffmann_v60",
       "kalita_pulse",
@@ -22,9 +23,10 @@ describe("brew method registry", () => {
   });
 
   it("methodList mirrors registry values", () => {
-    expect(methodList).toHaveLength(8);
+    expect(methodList).toHaveLength(9);
     expect(methodList.map((m) => m.id).sort()).toEqual([
       "april",
+      "caffe_luxxe",
       "frothy_monkey",
       "hoffmann_v60",
       "kalita_pulse",
@@ -52,12 +54,12 @@ describe("brew method registry", () => {
       ).toEqual(["april", "frothy_monkey", "kalita_pulse", "kurasu_kyoto"]);
     });
 
-    it("kalita_102 → standard_3_stage", () => {
+    it("kalita_102 → standard_3_stage + caffe_luxxe", () => {
       expect(
         methodsForDripper("kalita_102")
           .map((m) => m.id)
           .sort(),
-      ).toEqual(["standard_3_stage"]);
+      ).toEqual(["caffe_luxxe", "standard_3_stage"]);
     });
   });
 });

@@ -12,7 +12,8 @@ export type BrewMethodId =
   | "april"
   | "kurasu_kyoto"
   | "frothy_monkey"
-  | "standard_3_stage";
+  | "standard_3_stage"
+  | "caffe_luxxe";
 export type RoastLevel = "light" | "medium" | "dark";
 
 export type GrindHint =
