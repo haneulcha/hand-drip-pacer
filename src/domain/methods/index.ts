@@ -6,6 +6,7 @@ import { kalitaPulse } from "./kalita-pulse";
 import { kasuya46 } from "./kasuya-4-6";
 import { kurasuKyoto } from "./kurasu-kyoto";
 import { scottRao } from "./scott-rao";
+import { standard3Stage } from "./standard-3-stage";
 
 export const brewMethods: Record<BrewMethodId, BrewMethod> = {
   kasuya_4_6: kasuya46,
@@ -15,6 +16,7 @@ export const brewMethods: Record<BrewMethodId, BrewMethod> = {
   april,
   kurasu_kyoto: kurasuKyoto,
   frothy_monkey: frothyMonkey,
+  standard_3_stage: standard3Stage,
 };
 
 export const methodList: readonly BrewMethod[] = Object.values(brewMethods);

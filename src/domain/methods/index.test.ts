@@ -11,6 +11,7 @@ describe("brew method registry", () => {
       "kasuya_4_6",
       "kurasu_kyoto",
       "scott_rao",
+      "standard_3_stage",
     ]);
   });
 
@@ -21,7 +22,7 @@ describe("brew method registry", () => {
   });
 
   it("methodList mirrors registry values", () => {
-    expect(methodList).toHaveLength(7);
+    expect(methodList).toHaveLength(8);
     expect(methodList.map((m) => m.id).sort()).toEqual([
       "april",
       "frothy_monkey",
@@ -30,6 +31,7 @@ describe("brew method registry", () => {
       "kasuya_4_6",
       "kurasu_kyoto",
       "scott_rao",
+      "standard_3_stage",
     ]);
   });
 
@@ -48,6 +50,14 @@ describe("brew method registry", () => {
           .map((m) => m.id)
           .sort(),
       ).toEqual(["april", "frothy_monkey", "kalita_pulse", "kurasu_kyoto"]);
+    });
+
+    it("kalita_102 → standard_3_stage", () => {
+      expect(
+        methodsForDripper("kalita_102")
+          .map((m) => m.id)
+          .sort(),
+      ).toEqual(["standard_3_stage"]);
     });
   });
 });
