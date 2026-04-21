@@ -23,16 +23,16 @@ describe("urlCodec", () => {
     expect(p.get("st")).toBe("light");
   });
 
-  it("roundtrips state (method excluded: frothy_monkey not yet in METHOD_IDS whitelist)", () => {
+  it("roundtrips state", () => {
     const encoded = encodeState(fullState);
     const decoded = decodeState(encoded);
     expect(decoded).toMatchObject({
       coffee: 18,
       dripper: "kalita_wave",
+      method: "frothy_monkey",
       roast: "dark",
       taste: { sweetness: "bright", strength: "light" },
     });
-    expect(decoded.method).toBeUndefined();
   });
 
   it("returns partial when only some params present", () => {
@@ -79,5 +79,27 @@ describe("urlCodec", () => {
     const p = new URLSearchParams("sw=sweet");
     const decoded = decodeState(p);
     expect(decoded.taste).toBeUndefined();
+  });
+
+  it("ignores unknown method id (e.g. removed kalita_pulse) — caller falls back to default", () => {
+    const params = new URLSearchParams();
+    params.set("c", "20");
+    params.set("d", "kalita_wave");
+    params.set("m", "kalita_pulse"); // legacy id
+    params.set("r", "medium");
+    params.set("sw", "balanced");
+    params.set("st", "medium");
+    const decoded = decodeState(params);
+    expect(decoded.method).toBeUndefined();
+    expect(decoded.dripper).toBe("kalita_wave");
+  });
+
+  it("decodes kalita_102 dripper and its methods", () => {
+    const params = new URLSearchParams();
+    params.set("d", "kalita_102");
+    params.set("m", "standard_3_stage");
+    const decoded = decodeState(params);
+    expect(decoded.dripper).toBe("kalita_102");
+    expect(decoded.method).toBe("standard_3_stage");
   });
 });
