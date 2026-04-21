@@ -2,11 +2,12 @@ import { describe, expect, it } from "vitest";
 import { brewMethods, methodList, methodsForDripper } from "./index";
 
 describe("brew method registry", () => {
-  it("includes all three v1 methods", () => {
+  it("includes all v1 methods", () => {
     expect(Object.keys(brewMethods).sort()).toEqual([
       "hoffmann_v60",
       "kalita_pulse",
       "kasuya_4_6",
+      "scott_rao",
     ]);
   });
 
@@ -17,21 +18,22 @@ describe("brew method registry", () => {
   });
 
   it("methodList mirrors registry values", () => {
-    expect(methodList).toHaveLength(3);
+    expect(methodList).toHaveLength(4);
     expect(methodList.map((m) => m.id).sort()).toEqual([
       "hoffmann_v60",
       "kalita_pulse",
       "kasuya_4_6",
+      "scott_rao",
     ]);
   });
 
   describe("methodsForDripper", () => {
-    it("v60 → kasuya_4_6 + hoffmann_v60", () => {
+    it("v60 → kasuya_4_6 + hoffmann_v60 + scott_rao", () => {
       expect(
         methodsForDripper("v60")
           .map((m) => m.id)
           .sort(),
-      ).toEqual(["hoffmann_v60", "kasuya_4_6"]);
+      ).toEqual(["hoffmann_v60", "kasuya_4_6", "scott_rao"]);
     });
 
     it("kalita_wave → kalita_pulse only", () => {
