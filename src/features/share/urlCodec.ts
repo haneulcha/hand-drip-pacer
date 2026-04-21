@@ -11,7 +11,6 @@ import type { AppState } from "@/features/app/state";
 const METHOD_IDS: readonly BrewMethodId[] = [
   "kasuya_4_6",
   "hoffmann_v60",
-  "kalita_pulse",
 ];
 const DRIPPER_IDS: readonly DripperId[] = ["v60", "kalita_wave"];
 const ROAST_LEVELS: readonly RoastLevel[] = ["light", "medium", "dark"];

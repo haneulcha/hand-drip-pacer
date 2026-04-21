@@ -9,7 +9,7 @@ describe("AppState", () => {
   it("mergeState auto-corrects method when dripper changes to incompatible", () => {
     const base: AppState = { ...DEFAULT_STATE, method: "hoffmann_v60" };
     const result = mergeState(base, { dripper: "kalita_wave" });
-    expect(result.method).toBe("kalita_pulse");
+    expect(result.method).toBe("april");
     expect(result.dripper).toBe("kalita_wave");
   });
 

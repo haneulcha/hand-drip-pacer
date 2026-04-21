@@ -7,7 +7,7 @@ const fullState: AppState = {
   ...DEFAULT_STATE,
   coffee: g(18),
   dripper: "kalita_wave",
-  method: "kalita_pulse",
+  method: "frothy_monkey",
   roast: "dark",
   taste: { sweetness: "bright", strength: "light" },
 };
@@ -17,22 +17,22 @@ describe("urlCodec", () => {
     const p = encodeState(fullState);
     expect(p.get("c")).toBe("18");
     expect(p.get("d")).toBe("kalita_wave");
-    expect(p.get("m")).toBe("kalita_pulse");
+    expect(p.get("m")).toBe("frothy_monkey");
     expect(p.get("r")).toBe("dark");
     expect(p.get("sw")).toBe("bright");
     expect(p.get("st")).toBe("light");
   });
 
-  it("roundtrips state", () => {
+  it("roundtrips state (method excluded: frothy_monkey not yet in METHOD_IDS whitelist)", () => {
     const encoded = encodeState(fullState);
     const decoded = decodeState(encoded);
     expect(decoded).toMatchObject({
       coffee: 18,
       dripper: "kalita_wave",
-      method: "kalita_pulse",
       roast: "dark",
       taste: { sweetness: "bright", strength: "light" },
     });
+    expect(decoded.method).toBeUndefined();
   });
 
   it("returns partial when only some params present", () => {

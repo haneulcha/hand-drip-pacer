@@ -7,7 +7,6 @@ export type DripperId = "v60" | "kalita_wave" | "kalita_102";
 export type BrewMethodId =
   | "kasuya_4_6"
   | "hoffmann_v60"
-  | "kalita_pulse"
   | "scott_rao"
   | "april"
   | "kurasu_kyoto"
