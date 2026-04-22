@@ -55,7 +55,7 @@ export function RecipeScreen({
   const methodMeta = brewMethods[method];
 
   const ratioDisplay = `1:${Math.round(recipe.ratio)}`;
-  const recommendedLine = `${recipe.temperature}° · ${ratioDisplay} · ${formatTime(recipe.totalTimeSec)} · ${formatGrindHint(recipe.grindHint)}`;
+  const recommendedLine = `${recipe.temperature}° · ${ratioDisplay} 비율 · 총 ${formatTime(recipe.totalTimeSec)} 소요 · ${formatGrindHint(recipe.grindHint)}`;
 
   const popoverOptions = dripperList.map((d) => {
     const firstMethod = methodsForDripper(d.id)[0];
@@ -137,7 +137,10 @@ export function RecipeScreen({
             label="방식"
             value={method}
             onChange={onMethodChange}
-            options={compatMethods.map((m) => ({ value: m.id, label: m.shortName ?? m.name }))}
+            options={compatMethods.map((m) => ({
+              value: m.id,
+              label: m.shortName ?? m.name,
+            }))}
           />
         </Row>
 
@@ -156,9 +159,10 @@ export function RecipeScreen({
         </Row>
 
         {/* recommended row */}
-        <div className="mt-1 flex items-center gap-2 text-2xs text-text-muted">
-          <span className="whitespace-nowrap">권장</span>
-          <span className="flex-1 tabular-nums">{recommendedLine}</span>
+        <div className="text-center my-2">
+          <span className="flex-1 text-sm text-text-muted">
+            {recommendedLine}
+          </span>
         </div>
 
         <div className="h-px bg-border" />
@@ -191,7 +195,7 @@ export function RecipeScreen({
         <button
           type="button"
           onClick={onStart}
-          className="flex h-14 w-full items-center justify-center gap-3 rounded-button border border-text-primary bg-surface-subtle text-lg font-medium transition-colors hover:bg-surface-inset"
+          className="w-full flex items-center justify-center gap-3 rounded-button border border-text-primary bg-surface-subtle py-3.5 transition-colors hover:bg-surface-inset"
         >
           <svg width={14} height={16} viewBox="0 0 14 16" aria-hidden="true">
             <path d="M 2 2 L 12 8 L 2 14 Z" fill="currentColor" />
@@ -223,7 +227,7 @@ function Row({
   readonly children: React.ReactNode;
 }) {
   return (
-    <div className="grid grid-cols-[2.75rem_1fr] items-center gap-3">
+    <div className="grid grid-cols-[3.25rem_1fr] items-center gap-3">
       <span className="text-xs text-text-secondary">{label}</span>
       <div>{children}</div>
     </div>
