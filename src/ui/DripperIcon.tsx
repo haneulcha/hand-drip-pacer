@@ -56,6 +56,43 @@ export function DripperIcon({
     );
   }
 
+  if (type === "kalita_102") {
+    return (
+      <svg
+        width={size}
+        height={size}
+        viewBox="0 0 90 90"
+        className={cx("text-text-primary", className)}
+        aria-hidden="true"
+      >
+        <g
+          stroke="currentColor"
+          strokeWidth={strokeWidth}
+          opacity={opacity}
+          fill="none"
+          strokeLinejoin="round"
+        >
+          <path d="M 14 20 L 76 20 L 58 68 L 32 68 Z" />
+          <line x1={36} y1={68} x2={36} y2={75} />
+          <line x1={45} y1={68} x2={45} y2={75} />
+          <line x1={54} y1={68} x2={54} y2={75} />
+        </g>
+        {[0, 1, 2, 3].map((i) => (
+          <line
+            key={i}
+            x1={22 + i * 15}
+            y1={28}
+            x2={34 + i * 8}
+            y2={62}
+            stroke="currentColor"
+            strokeWidth={STROKE.hairline}
+            opacity={opacity * 0.5}
+          />
+        ))}
+      </svg>
+    );
+  }
+
   // kalita_wave
   return (
     <svg

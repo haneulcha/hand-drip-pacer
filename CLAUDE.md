@@ -52,15 +52,11 @@ bun run test:run     # Vitest 1회 실행 (CI용)
 ## Testing
 
 - **Vitest**. 도메인 레이어 위주.
-- 각 메서드의 `docs/design.md` 스펙 예시 테이블을 **Vitest 스냅샷으로 고정** → 리팩토링 safety net.
-  - Kasuya: `20g / 300g / roast=medium / sweetness=balanced / strength=medium`
-  - Hoffmann: `15g / 250g / roast=medium`
-  - Kalita: `20g / 320g / roast=medium / strength=medium`
-- Invariant 테스트:
-  - `totalWater === sum(pours.pourAmount)`
-  - `cumulativeWater[i] === cumulativeWater[i-1] + pourAmount[i]`
-  - `pours[0].atSec === 0`
-- 엣지 케이스: 최소 커피량(5g), 최대(50g), sweetness/strength 각 극단값.
+- **필수**: 메서드당 1 스냅샷 + `src/domain/methods/invariants.test.ts`의 공유 invariant 스위프.
+  - 스냅샷은 각 메서드의 리서치 기본 케이스(권장 coffee/roast/balanced taste)로 고정.
+  - 스위프가 `totalWater === sum(pourAmount)`, `cumulativeWater` 누적, `pours[0].atSec === 0`을 모든 메서드에 대해 커버.
+- **선택**: 메서드별 엣지 케이스(5g/50g, taste 극단)는 해당 메서드 compute에 특수 분기가 있을 때만 추가.
+- 기존 Kasuya/Hoffmann 테스트에 포함된 풍부한 invariants는 유지 (리팩토링 시 추가 safety net).
 
 ## v1 범위 외 (구현 금지)
 

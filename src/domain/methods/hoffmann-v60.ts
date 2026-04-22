@@ -96,6 +96,7 @@ const compute = (input: RecipeInput): Recipe => {
 export const hoffmannV60: BrewMethod = {
   id: "hoffmann_v60",
   name: "Hoffmann V60",
+  shortName: "Hoffmann",
   description:
     "한 레시피로 모든 맛을 대응하는 V60 메서드. 비율·시간은 고정이고 맛 조정은 분쇄도로.",
   supportedDrippers: ["v60"],

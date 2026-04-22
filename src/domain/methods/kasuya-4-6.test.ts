@@ -27,7 +27,7 @@ describe("Kasuya 4:6", () => {
         {
           "coffee": 20,
           "dripper": "v60",
-          "grindHint": "medium-coarse",
+          "grindHint": "coarse",
           "method": "kasuya_4_6",
           "notes": [
             "주전자를 천천히, 중심부터 나선형으로.",
@@ -60,7 +60,7 @@ describe("Kasuya 4:6", () => {
             },
           ],
           "ratio": 15,
-          "temperature": 90,
+          "temperature": 88,
           "totalTimeSec": 165,
           "totalWater": 300,
         }
@@ -76,7 +76,7 @@ describe("Kasuya 4:6", () => {
         {
           "coffee": 20,
           "dripper": "v60",
-          "grindHint": "medium-coarse",
+          "grindHint": "coarse",
           "method": "kasuya_4_6",
           "notes": [
             "주전자를 천천히, 중심부터 나선형으로.",
@@ -115,7 +115,7 @@ describe("Kasuya 4:6", () => {
             },
           ],
           "ratio": 15,
-          "temperature": 90,
+          "temperature": 88,
           "totalTimeSec": 210,
           "totalWater": 300,
         }
@@ -131,7 +131,7 @@ describe("Kasuya 4:6", () => {
         {
           "coffee": 20,
           "dripper": "v60",
-          "grindHint": "medium-coarse",
+          "grindHint": "coarse",
           "method": "kasuya_4_6",
           "notes": [
             "주전자를 천천히, 중심부터 나선형으로.",
@@ -158,7 +158,7 @@ describe("Kasuya 4:6", () => {
             },
           ],
           "ratio": 15,
-          "temperature": 90,
+          "temperature": 88,
           "totalTimeSec": 120,
           "totalWater": 300,
         }
@@ -214,15 +214,15 @@ describe("Kasuya 4:6", () => {
   });
 
   describe("metadata", () => {
-    it("temperature by roast: light=93, medium=90, dark=87", () => {
+    it("temperature by roast: light=94, medium=88, dark=83", () => {
       expect(kasuya46.compute(baseInput({ roast: "light" })).temperature).toBe(
-        93,
+        94,
       );
       expect(kasuya46.compute(baseInput({ roast: "medium" })).temperature).toBe(
-        90,
+        88,
       );
       expect(kasuya46.compute(baseInput({ roast: "dark" })).temperature).toBe(
-        87,
+        83,
       );
     });
 

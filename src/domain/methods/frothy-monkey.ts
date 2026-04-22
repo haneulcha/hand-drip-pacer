@@ -11,7 +11,8 @@ import type {
 
 const METHOD_RATIO = 16;
 const BLOOM_RATIO_TO_COFFEE = 2;
-const PULSE_INTERVAL_SEC = 30;
+const HALFWAY_FRACTION = 0.5;
+const PULSE_INTERVAL_SEC = 15;
 const DRAWDOWN_SEC = 30;
 
 const temperatureByRoast: Record<RoastLevel, number> = {
@@ -21,42 +22,45 @@ const temperatureByRoast: Record<RoastLevel, number> = {
 };
 
 const bloomDurationBySweetness: Record<SweetnessProfile, number> = {
-  sweet: 60,
-  balanced: 45,
-  bright: 30,
+  sweet: 40,
+  balanced: 30,
+  bright: 25,
 };
 
-// Weight pattern for pulses after bloom. Relative only — normalized to remaining water.
-// design.md는 medium/strong을 5푸어로 묶어 사이즈 차등이 없음. strong은 중간 펄스를
-// 더 키워 체감 농도를 강화 (사용자 결정 반영).
-const pulseWeightsByStrength: Record<StrengthProfile, readonly number[]> = {
-  light: [3, 4, 3],
-  medium: [3, 4, 4, 3],
-  strong: [3, 5, 5, 3],
+const pulseCountByStrength: Record<StrengthProfile, number> = {
+  light: 3,
+  medium: 4,
+  strong: 5,
 };
 
 const compute = (input: RecipeInput): Recipe => {
   const { coffee, roast, taste } = input;
-  const totalWater = coffee * METHOD_RATIO;
+  const totalWater = Math.round(coffee * METHOD_RATIO);
   const bloom = Math.round(coffee * BLOOM_RATIO_TO_COFFEE);
-  const remaining = totalWater - bloom;
+  const halfway = Math.round(totalWater * HALFWAY_FRACTION);
+  const main = halfway - bloom;
+  const pulseCount = pulseCountByStrength[taste.strength];
+  const remaining = totalWater - halfway;
+  const pulseAmt = Math.round(remaining / pulseCount);
+  const bloomSec = bloomDurationBySweetness[taste.sweetness];
+  const mainSec = bloomSec + PULSE_INTERVAL_SEC;
 
-  const weights = pulseWeightsByStrength[taste.strength];
-  const weightSum = weights.reduce((a, b) => a + b, 0);
-  const pulses = weights.map((w) => Math.round((remaining * w) / weightSum));
-
-  // absorb rounding drift into the final pulse so bloom + sum(pulses) === totalWater
+  const pulses = Array.from({ length: pulseCount }, () => pulseAmt);
   const pulseSum = pulses.reduce((a, b) => a + b, 0);
   const lastIdx = pulses.length - 1;
   pulses[lastIdx] = pulses[lastIdx]! + (remaining - pulseSum);
 
-  const bloomDuration = bloomDurationBySweetness[taste.sweetness];
-  const amounts = [bloom, ...pulses];
+  const amounts = [bloom, main, ...pulses];
 
   let cumulative = 0;
   const pours: readonly Pour[] = amounts.map((amt, i) => {
     cumulative += amt;
-    const atSec = i === 0 ? 0 : bloomDuration + (i - 1) * PULSE_INTERVAL_SEC;
+    const atSec =
+      i === 0
+        ? 0
+        : i === 1
+          ? mainSec
+          : mainSec + (i - 1) * PULSE_INTERVAL_SEC;
     const base = {
       index: i,
       atSec: s(atSec),
@@ -69,7 +73,7 @@ const compute = (input: RecipeInput): Recipe => {
   const lastAtSec = pours[pours.length - 1]!.atSec;
 
   return {
-    method: "kalita_pulse",
+    method: "frothy_monkey",
     dripper: "kalita_wave",
     coffee,
     totalWater: g(totalWater),
@@ -77,19 +81,20 @@ const compute = (input: RecipeInput): Recipe => {
     temperature: c(temperatureByRoast[roast]),
     pours,
     totalTimeSec: s(lastAtSec + DRAWDOWN_SEC),
-    grindHint: "medium",
+    grindHint: "medium-fine",
     notes: [
-      "각 푸어는 물이 거의 다 빠지기 전에 시작. 수위를 일정하게 유지.",
-      "중심만 좁게 붓고 외곽은 건드리지 않기.",
+      "뜸 후 한 번 큰 푸어로 절반까지 채우고, 이후 짧은 펄스를 반복.",
+      "맛 조정은 펄스 수(strength)와 뜸 시간(sweetness)으로.",
     ],
   };
 };
 
-export const kalitaPulse: BrewMethod = {
-  id: "kalita_pulse",
-  name: "Kalita Wave",
+export const frothyMonkey: BrewMethod = {
+  id: "frothy_monkey",
+  name: "Frothy Monkey",
+  shortName: "Frothy",
   description:
-    "평평한 바닥의 Kalita에 맞춘 펄스 추출. 짧게 끊어 부어 수위를 일정하게 유지.",
+    "바디감을 강조하는 펄스 푸어 방식. 절반까지 한 번에 채우고 짧은 펄스로 마무리.",
   supportedDrippers: ["kalita_wave"],
   defaultRatio: ratio(METHOD_RATIO),
   compute,

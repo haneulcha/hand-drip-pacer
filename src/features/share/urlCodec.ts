@@ -11,9 +11,15 @@ import type { AppState } from "@/features/app/state";
 const METHOD_IDS: readonly BrewMethodId[] = [
   "kasuya_4_6",
   "hoffmann_v60",
-  "kalita_pulse",
+  "scott_rao",
+  "april",
+  "kurasu_kyoto",
+  "frothy_monkey",
+  "standard_3_stage",
+  "caffe_luxxe",
+  "fuglen_tokyo",
 ];
-const DRIPPER_IDS: readonly DripperId[] = ["v60", "kalita_wave"];
+const DRIPPER_IDS: readonly DripperId[] = ["v60", "kalita_wave", "kalita_102"];
 const ROAST_LEVELS: readonly RoastLevel[] = ["light", "medium", "dark"];
 const SWEETNESS: readonly SweetnessProfile[] = ["sweet", "balanced", "bright"];
 const STRENGTHS: readonly StrengthProfile[] = ["light", "medium", "strong"];

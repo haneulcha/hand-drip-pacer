@@ -15,9 +15,9 @@ const DRAWDOWN_SEC = 30;
 const FIRST_40_FRACTION = 0.4;
 
 const temperatureByRoast: Record<RoastLevel, number> = {
-  light: 93,
-  medium: 90,
-  dark: 87,
+  light: 94,
+  medium: 88,
+  dark: 83,
 };
 
 // fraction of first 40% assigned to [pour 1, pour 2]
@@ -75,7 +75,7 @@ const compute = (input: RecipeInput): Recipe => {
     temperature: c(temperatureByRoast[roast]),
     pours,
     totalTimeSec: s(lastIdx * POUR_INTERVAL_SEC + DRAWDOWN_SEC),
-    grindHint: "medium-coarse",
+    grindHint: "coarse",
     notes: [
       "주전자를 천천히, 중심부터 나선형으로.",
       "총 추출 시간 3:30 ± 15초를 목표로. 더 오래 걸리면 분쇄도를 약간 굵게.",
@@ -86,6 +86,7 @@ const compute = (input: RecipeInput): Recipe => {
 export const kasuya46: BrewMethod = {
   id: "kasuya_4_6",
   name: "Kasuya 4:6",
+  shortName: "4:6",
   description:
     "맛 프로파일로 파라미터 매핑이 가장 풍부한 V60 메서드. 첫 40%는 단맛, 나머지 60%는 농도를 결정.",
   supportedDrippers: ["v60"],

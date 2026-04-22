@@ -16,8 +16,11 @@ v1은 순수 계산기, v2에서 타이머/가이드/공유로 확장.
 ### v1 (이 문서가 정의하는 범위)
 
 - 계산기: 입력 → 레시피 출력
-- 드리퍼 2종: **V60**, **Kalita Wave**
-- 메서드 3종: **Kasuya 4:6**, **Hoffmann V60**, **Kalita Wave 펄스**
+- 드리퍼 3종: **V60**, **Kalita Wave**, **Kalita 102**
+- 메서드 9종:
+  - V60: **Kasuya 4:6**, **Hoffmann V60**, **Scott Rao**
+  - Kalita Wave: **April**, **Kurasu Kyoto**, **Frothy Monkey**
+  - Kalita 102: **Standard 3-Stage**, **Caffe Luxxe**, **Fuglen Tokyo**
 - 타겟 맛 프로파일 입력 (Approach A)
 - 입력 모드: 커피 그램수 기반 / 인원수 기반 전환
 - URL 쿼리스트링 공유 (링크만 있으면 동일 레시피 재현)
@@ -56,8 +59,17 @@ export const ratio = (n: number): Ratio => n as Ratio;
 ### Core Types
 
 ```ts
-type DripperId = "v60" | "kalita_wave";
-type BrewMethodId = "kasuya_4_6" | "hoffmann_v60" | "kalita_pulse";
+type DripperId = "v60" | "kalita_wave" | "kalita_102";
+type BrewMethodId =
+  | "kasuya_4_6"
+  | "hoffmann_v60"
+  | "scott_rao"
+  | "april"
+  | "kurasu_kyoto"
+  | "frothy_monkey"
+  | "standard_3_stage"
+  | "caffe_luxxe"
+  | "fuglen_tokyo";
 type RoastLevel = "light" | "medium" | "dark";
 
 type GrindHint = "fine" | "medium-fine" | "medium" | "medium-coarse" | "coarse";
@@ -116,6 +128,7 @@ type InputMode =
 type BrewMethod = {
   readonly id: BrewMethodId;
   readonly name: string;
+  readonly shortName?: string;
   readonly description: string;
   readonly supportedDrippers: readonly DripperId[];
   readonly defaultRatio: Ratio;
@@ -125,7 +138,13 @@ type BrewMethod = {
 export const brewMethods: Record<BrewMethodId, BrewMethod> = {
   kasuya_4_6: kasuya46,
   hoffmann_v60: hoffmannV60,
-  kalita_pulse: kalitaPulse,
+  scott_rao: scottRao,
+  april: april,
+  kurasu_kyoto: kurasuKyoto,
+  frothy_monkey: frothyMonkey,
+  standard_3_stage: standard3Stage,
+  caffe_luxxe: caffeLuxxe,
+  fuglen_tokyo: fuglenTokyo,
 };
 
 // 드리퍼에 호환되는 메서드만 추리는 헬퍼
@@ -174,11 +193,11 @@ export const methodsForDripper = (d: DripperId): BrewMethod[] =>
 
 **Temperature**:
 
-- light roast: 93°C
-- medium: 90°C
-- dark: 87°C
+- light roast: 94°C
+- medium: 88°C
+- dark: 83°C
 
-**Grind**: `medium-coarse`
+**Grind**: `coarse`
 
 **Notes** (UI에 출력):
 
@@ -314,9 +333,16 @@ src/
 │   ├── servings.ts               # 인원수 ↔ 그램수
 │   └── methods/
 │       ├── index.ts              # registry + methodsForDripper
+│       ├── invariants.test.ts    # shared invariant sweep (all methods)
 │       ├── kasuya-4-6.ts
 │       ├── hoffmann-v60.ts
-│       └── kalita-pulse.ts
+│       ├── scott-rao.ts
+│       ├── april.ts
+│       ├── kurasu-kyoto.ts
+│       ├── frothy-monkey.ts
+│       ├── standard-3-stage.ts
+│       ├── caffe-luxxe.ts
+│       └── fuglen-tokyo.ts
 ├── features/
 │   ├── calculator/
 │   │   ├── CalculatorPage.tsx
@@ -358,7 +384,7 @@ src/
 1. **Entry mode toggle**: [커피 그램수 | 인원수]
    - 그램수 모드: 5~50g 슬라이더 + 숫자 입력 (1g 단위)
    - 인원수 모드: 1~6명 stepper. "1인당 15g" 힌트 노출
-2. **Dripper**: V60 / Kalita Wave (segmented)
+2. **Dripper**: V60 / Kalita Wave / Kalita 102 (segmented)
 3. **Method**: 선택된 드리퍼에 호환되는 것만 표시 (segmented)
 4. **Roast**: Light / Medium / Dark (segmented)
 5. **Taste profile**:

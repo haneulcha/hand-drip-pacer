@@ -25,7 +25,7 @@ const recipe: Recipe = {
   coffee: g(20),
   totalWater: g(300),
   ratio: ratio(15),
-  temperature: c(90),
+  temperature: c(88),
   pours: [
     mkPour(0, 0, 60, 60),
     mkPour(1, 45, 60, 120),
@@ -33,7 +33,7 @@ const recipe: Recipe = {
     mkPour(3, 135, 90, 300),
   ],
   totalTimeSec: s(208), // 3:28
-  grindHint: "medium-coarse",
+  grindHint: "coarse",
   notes: [],
 };
 
@@ -88,7 +88,7 @@ describe("CompleteScreen", () => {
     expect(screen.getByText("원두 · 물")).toBeInTheDocument();
     expect(screen.getByText("20 · 300 g")).toBeInTheDocument();
     expect(screen.getByText("온도 · 분쇄")).toBeInTheDocument();
-    expect(screen.getByText(/90° · 거친 설탕 정도/)).toBeInTheDocument();
+    expect(screen.getByText(/88° · 굵은 후추 정도/)).toBeInTheDocument();
   });
 
   it("renders 3 feeling buttons", () => {

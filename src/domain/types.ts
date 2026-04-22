@@ -3,8 +3,17 @@ export type Celsius = number & { readonly __brand: "Celsius" };
 export type Seconds = number & { readonly __brand: "Seconds" };
 export type Ratio = number & { readonly __brand: "Ratio" };
 
-export type DripperId = "v60" | "kalita_wave";
-export type BrewMethodId = "kasuya_4_6" | "hoffmann_v60" | "kalita_pulse";
+export type DripperId = "v60" | "kalita_wave" | "kalita_102";
+export type BrewMethodId =
+  | "kasuya_4_6"
+  | "hoffmann_v60"
+  | "scott_rao"
+  | "april"
+  | "kurasu_kyoto"
+  | "frothy_monkey"
+  | "standard_3_stage"
+  | "caffe_luxxe"
+  | "fuglen_tokyo";
 export type RoastLevel = "light" | "medium" | "dark";
 
 export type GrindHint =
@@ -54,6 +63,7 @@ export type RecipeInput = {
 export type BrewMethod = {
   readonly id: BrewMethodId;
   readonly name: string;
+  readonly shortName?: string;
   readonly description: string;
   readonly supportedDrippers: readonly DripperId[];
   readonly defaultRatio: Ratio;
