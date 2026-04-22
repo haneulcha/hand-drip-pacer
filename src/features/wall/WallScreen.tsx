@@ -11,23 +11,21 @@ type Props = {
 
 export function WallScreen({ selectedDripper, onPickDripper }: Props) {
   return (
-    <div className="mx-auto flex min-h-screen max-w-lg flex-col bg-wall text-text-primary">
+    <div className="mx-auto flex min-h-svh max-w-lg flex-col bg-wall text-text-primary">
       {/* 타이틀 zone */}
-      <header className="flex flex-col items-center gap-2 px-5 pt-16">
+      <header className="text-center w-full px-5 pt-16">
         <h1 className="text-2xl font-medium leading-none tracking-tight">
-          핸드드립 계산기
+          핸드 드립 계산기
         </h1>
-        <p className="text-md italic text-text-secondary">
-          저만 믿고 따라오세요
-        </p>
+        <p className="text-md text-text-secondary mt-2">저만 믿고 따라오세요</p>
       </header>
 
-      {/* breathing room */}
-      <div className="flex-1" />
-
       {/* shelf */}
-      <section aria-label="드리퍼 선반" className="px-8 pb-10">
-        <div className="flex items-end justify-around gap-4 pb-3">
+      <section
+        aria-label="드리퍼 선반"
+        className="flex flex-col flex-1 justify-end pb-12"
+      >
+        <div className="flex items-end justify-center gap-x-6">
           {dripperList.map((d) => {
             const isSelected = d.id === selectedDripper;
             return (
@@ -38,12 +36,11 @@ export function WallScreen({ selectedDripper, onPickDripper }: Props) {
                 aria-pressed={isSelected}
                 aria-label={d.name}
                 style={{ viewTransitionName: `dripper-${d.id}` }}
-                className="flex flex-col items-center gap-2 rounded-card p-2 transition-colors hover:bg-surface-inset/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+                className="transition-colors hover:bg-surface-inset/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-focus"
               >
-                <DripperIcon type={d.id} size={96} selected={isSelected} />
                 <span
                   className={cx(
-                    "text-sm",
+                    "text-sm -mb-2 block",
                     isSelected
                       ? "font-medium text-text-primary"
                       : "text-text-secondary",
@@ -51,13 +48,14 @@ export function WallScreen({ selectedDripper, onPickDripper }: Props) {
                 >
                   {d.name}
                 </span>
+                <DripperIcon type={d.id} size={96} selected={isSelected} />
               </button>
             );
           })}
         </div>
-        <div className="h-px bg-border" />
-        <p className="mt-4 text-center text-xs italic text-text-muted">
-          커피 내릴 드리퍼를 들어볼까요?
+        <div className="mx-8 h-px bg-border-strong" />
+        <p className="mt-8 text-center text-sm text-text-muted">
+          드리퍼를 선택하면 레시피를 고르러 가요
         </p>
       </section>
 

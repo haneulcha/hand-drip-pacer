@@ -104,6 +104,12 @@ export function AppRoot() {
     });
   };
 
+  const handleBackToWall = (): void => {
+    withViewTransition(() => {
+      setState((prev) => mergeState(prev, { screen: "wall" }));
+    });
+  };
+
   if (state.screen === "wall") {
     return (
       <WallScreen
@@ -147,6 +153,7 @@ export function AppRoot() {
       onRoastChange={handleRoastChange}
       onTasteChange={handleTasteChange}
       onStart={handleStart}
+      onBack={handleBackToWall}
     />
   );
 }

@@ -14,6 +14,7 @@ import type {
 import { Segmented } from "@/ui/Segmented";
 import { Slider } from "@/ui/Slider";
 import { DripperIcon } from "@/ui/DripperIcon";
+import { cx } from "@/ui/cx";
 import { formatGrindHint, formatTime } from "@/ui/format";
 import { DripperPopover } from "./DripperPopover";
 import { PourVerticalPreview } from "./PourVerticalPreview";
@@ -34,6 +35,7 @@ type Props = {
   readonly onRoastChange: (roast: RoastLevel) => void;
   readonly onTasteChange: (taste: TasteProfile) => void;
   readonly onStart: () => void;
+  readonly onBack: () => void;
 };
 
 export function RecipeScreen({
@@ -49,6 +51,7 @@ export function RecipeScreen({
   onRoastChange,
   onTasteChange,
   onStart,
+  onBack,
 }: Props) {
   const [popoverOpen, setPopoverOpen] = useState(false);
   const compatMethods = methodsForDripper(dripper);
@@ -56,6 +59,7 @@ export function RecipeScreen({
 
   const ratioDisplay = `1:${Math.round(recipe.ratio)}`;
   const recommendedLine = `${recipe.temperature}° · ${ratioDisplay} 비율 · 총 ${formatTime(recipe.totalTimeSec)} 소요 · ${formatGrindHint(recipe.grindHint)}`;
+  const dripperName = dripperList.find((d) => d.id === dripper)?.name ?? "";
 
   const popoverOptions = dripperList.map((d) => {
     const firstMethod = methodsForDripper(d.id)[0];
@@ -67,34 +71,92 @@ export function RecipeScreen({
   });
 
   return (
-    <div className="relative mx-auto flex min-h-screen max-w-lg flex-col bg-surface text-text-primary">
+    <div className="relative mx-auto flex min-h-lvh max-w-lg flex-col bg-surface text-text-primary">
       {/* top bar */}
-      <header className="flex items-center gap-3 px-5 pt-12">
-        <span style={{ viewTransitionName: `dripper-${dripper}` }}>
-          <DripperIcon type={dripper} size={56} selected />
-        </span>
-        <div className="flex-1">
-          <div className="text-lg font-medium">
-            {dripperList.find((d) => d.id === dripper)?.name}
-          </div>
-          <div className="text-xs text-text-muted">{methodMeta.name}</div>
-        </div>
+      <header className="flex items-center gap-3 px-5 pt-4">
         <button
           type="button"
-          onClick={() => setPopoverOpen(true)}
-          className="whitespace-nowrap text-xs text-text-muted hover:text-text-secondary"
+          onClick={onBack}
+          aria-label="드리퍼 선택으로 돌아가기"
+          className="-ml-2 p-2 text-text-muted transition-colors hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-focus"
         >
-          바꾸기 ›
+          <svg
+            width={20}
+            height={20}
+            viewBox="0 0 20 20"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M12 4 L6 10 L12 16"
+              stroke="currentColor"
+              strokeWidth={1.6}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </button>
+
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setPopoverOpen(true)}
+            aria-haspopup="dialog"
+            aria-expanded={popoverOpen}
+            aria-label={`드리퍼 바꾸기, 현재 ${dripperName}`}
+            className="-ml-1 flex items-center gap-3 rounded-control p-1 transition-colors hover:bg-surface-inset/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+          >
+            <span style={{ viewTransitionName: `dripper-${dripper}` }}>
+              <DripperIcon type={dripper} size={56} selected />
+            </span>
+            <div className="text-left">
+              <div className="flex items-center gap-1 text-lg font-medium">
+                <span>{dripperName}</span>
+                <svg
+                  width={14}
+                  height={14}
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  aria-hidden="true"
+                  className={cx(
+                    "text-text-muted transition-transform",
+                    popoverOpen && "rotate-180",
+                  )}
+                >
+                  <path
+                    d="M3.5 5.5 L7 9 L10.5 5.5"
+                    stroke="currentColor"
+                    strokeWidth={1.4}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+              <div className="text-xs text-text-muted">{methodMeta.name}</div>
+            </div>
+          </button>
+
+          {popoverOpen && (
+            <DripperPopover
+              options={popoverOptions}
+              selected={dripper}
+              onSelect={(id) => {
+                onDripperChange(id);
+                setPopoverOpen(false);
+              }}
+              onClose={() => setPopoverOpen(false)}
+            />
+          )}
+        </div>
       </header>
 
       <main className="flex flex-1 flex-col gap-3 px-5 py-4">
         <div className="h-px bg-border" />
 
         {/* controls */}
-        <Row label="커피">
+        <Row label="커피 양">
           <Slider
-            label="커피"
+            label="커피 양"
             value={coffee}
             onChange={onCoffeeChange}
             min={MIN_COFFEE_G}
@@ -110,9 +172,9 @@ export function RecipeScreen({
             value={taste.sweetness}
             onChange={(v) => onTasteChange({ ...taste, sweetness: v })}
             options={[
-              { value: "sweet", label: "달게" },
-              { value: "balanced", label: "균형" },
-              { value: "bright", label: "산뜻하게" },
+              { value: "sweet", label: "달달함" },
+              { value: "balanced", label: "균형감" },
+              { value: "bright", label: "산뜻함" },
             ]}
           />
         </Row>
@@ -131,18 +193,23 @@ export function RecipeScreen({
           />
         </Row>
 
-        <Row label="방식">
-          <Segmented<BrewMethodId>
-            name="method"
-            label="방식"
-            value={method}
-            onChange={onMethodChange}
-            options={compatMethods.map((m) => ({
-              value: m.id,
-              label: m.shortName ?? m.name,
-            }))}
-          />
-        </Row>
+        <div>
+          <Row label="방식">
+            <Segmented<BrewMethodId>
+              name="method"
+              label="방식"
+              value={method}
+              onChange={onMethodChange}
+              options={compatMethods.map((m) => ({
+                value: m.id,
+                label: m.shortName ?? m.name,
+              }))}
+            />
+          </Row>
+          <p className="pl-16 mt-1 text-xs text-text-muted">
+            {methodMeta.description}
+          </p>
+        </div>
 
         <Row label="로스팅">
           <Segmented<RoastLevel>
@@ -159,7 +226,7 @@ export function RecipeScreen({
         </Row>
 
         {/* recommended row */}
-        <div className="text-center my-2">
+        <div className="text-center my-1">
           <span className="flex-1 text-sm text-text-muted">
             {recommendedLine}
           </span>
@@ -203,18 +270,6 @@ export function RecipeScreen({
           시작
         </button>
       </div>
-
-      {popoverOpen && (
-        <DripperPopover
-          options={popoverOptions}
-          selected={dripper}
-          onSelect={(id) => {
-            onDripperChange(id);
-            setPopoverOpen(false);
-          }}
-          onClose={() => setPopoverOpen(false)}
-        />
-      )}
     </div>
   );
 }

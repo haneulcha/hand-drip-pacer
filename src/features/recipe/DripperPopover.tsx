@@ -22,17 +22,17 @@ export function DripperPopover({
   onClose,
 }: Props) {
   return (
-    <div className="absolute inset-0 z-popover">
+    <>
       <button
         type="button"
         aria-label="팝오버 닫기"
         onClick={onClose}
-        className="absolute inset-0 bg-surface/45"
+        className="fixed inset-0 z-popover bg-surface/45 motion-safe:animate-overlay-in"
       />
       <div
         role="dialog"
         aria-label="드리퍼 선택"
-        className="absolute right-4 top-[4.5rem] min-w-popover rounded-card border border-border bg-surface p-1 shadow-popover"
+        className="absolute left-[4.25rem] top-full z-popover min-w-popover origin-top-left rounded-card border border-border bg-surface p-1 shadow-popover motion-safe:animate-popover-in"
       >
         {options.map((opt) => {
           const isSelected = opt.id === selected;
@@ -50,14 +50,7 @@ export function DripperPopover({
             >
               <DripperIcon type={opt.id} size={32} selected={isSelected} />
               <div className="flex-1">
-                <div
-                  className={cx(
-                    "text-sm",
-                    isSelected ? "font-semibold" : "font-medium",
-                  )}
-                >
-                  {opt.name}
-                </div>
+                <div className="text-sm font-medium">{opt.name}</div>
                 <div className="text-2xs text-text-muted">
                   {opt.methodSubtitle}
                 </div>
@@ -83,6 +76,6 @@ export function DripperPopover({
           );
         })}
       </div>
-    </div>
+    </>
   );
 }

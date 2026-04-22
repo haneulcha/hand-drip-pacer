@@ -54,6 +54,22 @@ export default {
         popover: "var(--shadow-popover)",
         dialog: "var(--shadow-dialog)",
       },
+      keyframes: {
+        "popover-in": {
+          "0%": { opacity: "0", transform: "translateY(-4px) scale(0.96)" },
+          "100%": { opacity: "1", transform: "translateY(0) scale(1)" },
+        },
+        "overlay-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+      },
+      animation: {
+        "popover-in":
+          "popover-in var(--motion-duration-base) var(--motion-easing) both",
+        "overlay-in":
+          "overlay-in var(--motion-duration-base) var(--motion-easing) both",
+      },
       zIndex: {
         popover: "var(--z-popover)",
         dialog: "var(--z-dialog)",

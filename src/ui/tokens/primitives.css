@@ -1,17 +1,17 @@
 :root {
-  /* Neutral scale — ivory → espresso (채도 낮춤, 명도 살짝 ↑) */
-  --neutral-0: #fbfaf6;
-  --neutral-50: #f5f2ec;
-  --neutral-100: #ece7dd;
-  --neutral-200: #dbd4c6;
-  --neutral-300: #c1b7a7;
-  --neutral-400: #a19586;
-  --neutral-500: #7d7266;
-  --neutral-600: #5d554b;
-  --neutral-700: #4b443c;
-  --neutral-800: #3b332c;
-  --neutral-900: #2c2823;
-  --neutral-950: #1f1d19;
+  /* Neutral scale — ivory → espresso (브랜드 앵커 정렬: 채도 ↑, 명도 ↓) */
+  --neutral-0: #fbf7ef;
+  --neutral-50: #f5efe4;
+  --neutral-100: #ebe3d2;
+  --neutral-200: #d8cab3;
+  --neutral-300: #bfae92;
+  --neutral-400: #9e8e74;
+  --neutral-500: #7a6c56;
+  --neutral-600: #5b503e;
+  --neutral-700: #4a4133;
+  --neutral-800: #3a2f26;
+  --neutral-900: #2a241e;
+  --neutral-950: #1c1813;
 
   /* Accent scale — muted ochre / roasted orange */
   --accent-50: #faf1e0;
