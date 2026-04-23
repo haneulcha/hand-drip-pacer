@@ -38,6 +38,7 @@ export default {
         "2xl": ["var(--font-size-2xl)", { lineHeight: "var(--line-height-snug)" }],
         "hero-sm": ["var(--font-size-hero-sm)", { lineHeight: "var(--line-height-tight)" }],
         "hero-lg": ["var(--font-size-hero-lg)", { lineHeight: "var(--line-height-tight)" }],
+        "brewing-hero": ["var(--font-size-brewing-hero)", { lineHeight: "var(--line-height-tight)" }],
       },
       lineHeight: {
         tight: "var(--line-height-tight)",
@@ -53,6 +54,7 @@ export default {
         raised: "var(--shadow-control-raised)",
         popover: "var(--shadow-popover)",
         dialog: "var(--shadow-dialog)",
+        "rim-inset": "var(--shadow-rim-inset)",
       },
       keyframes: {
         "popover-in": {
@@ -63,12 +65,17 @@ export default {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },
         },
+        "brewing-wave": {
+          "0%, 100%": { transform: "translateX(0) scaleY(1)" },
+          "50%": { transform: "translateX(8px) scaleY(1.5)" },
+        },
       },
       animation: {
         "popover-in":
           "popover-in var(--motion-duration-base) var(--motion-easing) both",
         "overlay-in":
           "overlay-in var(--motion-duration-base) var(--motion-easing) both",
+        "brewing-wave": "brewing-wave 4s ease-in-out infinite",
       },
       zIndex: {
         popover: "var(--z-popover)",
@@ -84,6 +91,7 @@ export default {
       },
       height: {
         "progress-rail": "var(--size-progress-rail)",
+        "brewing-rim": "var(--brewing-rim-height)",
       },
       colors: {
         surface: {
@@ -110,9 +118,19 @@ export default {
         danger: "var(--color-danger)",
         warning: "var(--color-warning)",
         success: "var(--color-success)",
+        brewing: {
+          "liquid-top": "var(--color-brewing-liquid-top)",
+          "liquid-mid": "var(--color-brewing-liquid-mid)",
+          "liquid-deep": "var(--color-brewing-liquid-deep)",
+          "liquid-bottom": "var(--color-brewing-liquid-bottom)",
+        },
         pour: {
           bloom: "var(--color-pour-bloom)",
           main: "var(--color-pour-main)",
+        },
+        ring: {
+          future: "var(--color-ring-future)",
+          "on-liquid": "var(--color-ring-on-liquid)",
         },
         timeline: {
           axis: "var(--color-timeline-axis)",
