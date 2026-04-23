@@ -32,11 +32,11 @@
 
   /* Brewing — liquid gradient (coffee amber, red-shifted, 반투명)
      accent 팔레트와 분리 — 브랜드 ochre는 노란 기, 커피는 red-amber.
-     알파 포함 → 크림 컵 배경이 투과되며 따뜻함을 더함. */
-  --color-brewing-liquid-top: rgba(231, 183, 129, 0.82);
-  --color-brewing-liquid-mid: rgba(196, 124, 68, 0.88);
-  --color-brewing-liquid-deep: rgba(138, 70, 32, 0.92);
-  --color-brewing-liquid-bottom: rgba(76, 38, 18, 0.95);
+     알파 낮춤 → 크림 컵 배경이 강하게 투과되며 따뜻함과 투명감을 더함. */
+  --color-brewing-liquid-top: rgba(231, 183, 129, 0.45);
+  --color-brewing-liquid-mid: rgba(196, 124, 68, 0.65);
+  --color-brewing-liquid-deep: rgba(138, 70, 32, 0.82);
+  --color-brewing-liquid-bottom: rgba(76, 38, 18, 0.90);
 
   /* Brewing — rings */
   --color-ring-future: var(--neutral-400);
@@ -112,11 +112,11 @@
   --color-timeline-grid: var(--neutral-800);
 
   /* dark 테마는 뒷배경이 어두워 cream 투과가 안 일어나므로
-     더 불투명 + 약간 밝게. */
-  --color-brewing-liquid-top: rgba(243, 204, 158, 0.94);
-  --color-brewing-liquid-mid: rgba(216, 148, 88, 0.95);
-  --color-brewing-liquid-deep: rgba(158, 88, 48, 0.97);
-  --color-brewing-liquid-bottom: rgba(96, 48, 24, 1);
+     비교적 높은 알파 유지하되 light 테마와의 시각적 차이를 고려해 살짝 완화. */
+  --color-brewing-liquid-top: rgba(243, 204, 158, 0.78);
+  --color-brewing-liquid-mid: rgba(216, 148, 88, 0.86);
+  --color-brewing-liquid-deep: rgba(158, 88, 48, 0.92);
+  --color-brewing-liquid-bottom: rgba(96, 48, 24, 0.97);
 
   --color-ring-future: var(--neutral-500);
   --color-ring-on-liquid: rgba(251, 247, 239, 0.32);

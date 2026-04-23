@@ -141,7 +141,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
           className="absolute inset-x-0 bottom-0"
           style={{
             background:
-              "linear-gradient(180deg, var(--color-brewing-liquid-top) 0%, var(--color-brewing-liquid-mid) 22%, var(--color-brewing-liquid-deep) 60%, var(--color-brewing-liquid-bottom) 100%) no-repeat bottom / 100% var(--cup-height, 100%)",
+              "linear-gradient(180deg, var(--color-brewing-liquid-top) 0%, var(--color-brewing-liquid-mid) 32%, var(--color-brewing-liquid-deep) 78%, var(--color-brewing-liquid-bottom) 100%) no-repeat bottom / 100% var(--cup-height, 100%)",
           }}
         >
           {/* meniscus highlight */}
