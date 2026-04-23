@@ -31,10 +31,10 @@
   --color-timeline-grid: var(--neutral-100);
 
   /* Brewing — liquid gradient (위→아래로 짙어짐) */
-  --color-brewing-liquid-top: var(--accent-300);
-  --color-brewing-liquid-mid: var(--accent-500);
-  --color-brewing-liquid-deep: var(--accent-700);
-  --color-brewing-liquid-bottom: var(--accent-900);
+  --color-brewing-liquid-top: var(--accent-100);
+  --color-brewing-liquid-mid: var(--accent-300);
+  --color-brewing-liquid-deep: var(--accent-500);
+  --color-brewing-liquid-bottom: var(--accent-700);
 
   /* Brewing — rings */
   --color-ring-future: var(--neutral-400);
@@ -109,10 +109,10 @@
   --color-timeline-axis: var(--neutral-600);
   --color-timeline-grid: var(--neutral-800);
 
-  --color-brewing-liquid-top: var(--accent-200);
-  --color-brewing-liquid-mid: var(--accent-400);
-  --color-brewing-liquid-deep: var(--accent-600);
-  --color-brewing-liquid-bottom: var(--accent-800);
+  --color-brewing-liquid-top: var(--accent-100);
+  --color-brewing-liquid-mid: var(--accent-300);
+  --color-brewing-liquid-deep: var(--accent-500);
+  --color-brewing-liquid-bottom: var(--accent-700);
 
   --color-ring-future: var(--neutral-500);
   --color-ring-on-liquid: rgba(251, 247, 239, 0.32);
