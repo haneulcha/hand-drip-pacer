@@ -30,8 +30,12 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
   const isLast = activeIdx === pours.length - 1;
   const done = elapsed >= totalTimeSec || manualStepFloor >= pours.length;
 
-  const fillRatio = useFillRatio(session, totalTimeSec);
-  const fillPct = `${(fillRatio * 100).toFixed(2)}%`;
+  const cupRef = useRef<HTMLDivElement | null>(null);
+  const heroRef = useRef<HTMLDivElement | null>(null);
+  const liquidRef = useRef<HTMLDivElement | null>(null);
+  const [topRingFallback, setTopRingFallback] = useState(false);
+
+  useFillRatio(session, totalTimeSec, liquidRef, heroRef);
 
   const handleSkip = () => {
     setManualStepFloor((prev) => Math.max(prev, clockIdx) + 1);
@@ -47,10 +51,6 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
   // pour 0 (atSec=0) 은 컵 바닥이라 ring 안 그림
   const visibleRings = pours.filter((p) => p.atSec > 0);
   const nextRingIdx = visibleRings.findIndex((p) => p.atSec > elapsed);
-
-  const cupRef = useRef<HTMLDivElement | null>(null);
-  const heroRef = useRef<HTMLDivElement | null>(null);
-  const [topRingFallback, setTopRingFallback] = useState(false);
 
   // Hero clearance 측정: 최상단 ring과 RIM 사이가 Hero보다 좁으면 fallback
   useLayoutEffect(() => {
@@ -117,11 +117,11 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
       <div ref={cupRef} className="relative flex-1 overflow-hidden bg-surface shadow-cup-inset">
         {/* Liquid */}
         <div
+          ref={liquidRef}
           data-testid="liquid"
           aria-hidden="true"
           className="absolute inset-x-0 bottom-0"
           style={{
-            height: fillPct,
             background:
               "linear-gradient(180deg, var(--color-brewing-liquid-top) 0%, var(--color-brewing-liquid-mid) 22%, var(--color-brewing-liquid-deep) 60%, var(--color-brewing-liquid-bottom) 100%)",
           }}
@@ -173,9 +173,6 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
           ref={heroRef}
           data-testid="hero"
           className="pointer-events-none absolute left-3.5 right-24"
-          style={{
-            bottom: `calc(${fillPct} + var(--brewing-hero-gap))`,
-          }}
         >
           <div className="text-2xs font-semibold uppercase tracking-widest text-pour-bloom">
             지금 · <span>{phaseLabel}</span>
