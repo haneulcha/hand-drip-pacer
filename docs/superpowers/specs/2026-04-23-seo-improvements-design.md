@@ -149,8 +149,7 @@ useEffect(() => {
 
 스펙에 명시하여 실제 론칭 전 체크리스트로 사용한다.
 
-1. `https://example.com` → 실제 도메인으로 일괄 치환.
-   - 대상: `index.html`(canonical, og:url, og:image, JSON-LD url), `public/robots.txt`, `public/sitemap.xml`, `src/features/seo/documentMeta.ts`의 `BASE_URL`.
+1. ~~`https://example.com` → 실제 도메인으로 일괄 치환.~~ **완료 (2026-04-24)**: `https://pourover.work`로 치환. 대상 — `index.html`(canonical, og:url, og:image, JSON-LD url), `public/robots.txt`, `public/sitemap.xml`, `src/features/seo/documentMeta.ts`의 `BASE_URL`.
 2. `/public/og-image.png` 생성 (1200×630, 한국어 타이포 + 커피 비주얼).
 3. `<title>`·description 카피 최종 리뷰 (마케팅 관점).
 

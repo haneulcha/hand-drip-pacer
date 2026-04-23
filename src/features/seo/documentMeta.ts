@@ -9,7 +9,7 @@ import type {
 import type { AppState } from "@/features/app/state";
 import { encodeState } from "@/features/share/urlCodec";
 
-export const BASE_URL = "https://example.com";
+export const BASE_URL = "https://pourover.work";
 
 const APP_NAME = "핸드드립 계산기";
 const APP_SUBTITLE = "V60 · Kalita · Kasuya 4:6 · Hoffmann";
