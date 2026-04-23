@@ -5,6 +5,7 @@ import { formatTime } from "@/ui/format";
 import { cx } from "@/ui/cx";
 import { StopConfirmDialog } from "./StopConfirmDialog";
 import { useElapsed } from "./useElapsed";
+import { useFillRatio } from "./useFillRatio";
 
 type Props = {
   readonly session: BrewSession;
@@ -29,7 +30,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
   const isLast = activeIdx === pours.length - 1;
   const done = elapsed >= totalTimeSec || manualStepFloor >= pours.length;
 
-  const fillRatio = Math.min(1, Math.max(0, elapsed / totalTimeSec));
+  const fillRatio = useFillRatio(session, totalTimeSec);
   const fillPct = `${(fillRatio * 100).toFixed(2)}%`;
 
   const handleSkip = () => {
@@ -118,7 +119,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
         <div
           data-testid="liquid"
           aria-hidden="true"
-          className="absolute inset-x-0 bottom-0 motion-safe:transition-[height] duration-DEFAULT ease-DEFAULT"
+          className="absolute inset-x-0 bottom-0"
           style={{
             height: fillPct,
             background:
@@ -171,7 +172,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
         <div
           ref={heroRef}
           data-testid="hero"
-          className="pointer-events-none absolute left-3.5 right-24 motion-safe:transition-[bottom] duration-DEFAULT ease-DEFAULT"
+          className="pointer-events-none absolute left-3.5 right-24"
           style={{
             bottom: `calc(${fillPct} + var(--brewing-hero-gap))`,
           }}
