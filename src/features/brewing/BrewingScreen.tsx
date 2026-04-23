@@ -103,7 +103,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
             className="absolute inset-x-0 top-0 h-0.5"
             style={{
               background:
-                "linear-gradient(90deg, transparent, rgba(255,247,228,0.55), transparent)",
+                "linear-gradient(90deg, transparent, var(--color-meniscus-highlight), transparent)",
             }}
           />
           {/* wave shimmer */}
@@ -111,7 +111,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
             className="motion-safe:animate-brewing-wave absolute inset-x-0 top-0 h-2.5"
             style={{
               background:
-                "radial-gradient(ellipse at 30% 100%, rgba(255,247,228,0.18) 0%, transparent 60%), radial-gradient(ellipse at 70% 100%, rgba(255,247,228,0.14) 0%, transparent 60%)",
+                "radial-gradient(ellipse at 30% 100%, var(--color-wave-shimmer-a) 0%, transparent 60%), radial-gradient(ellipse at 70% 100%, var(--color-wave-shimmer-b) 0%, transparent 60%)",
             }}
           />
         </div>
@@ -194,7 +194,7 @@ function RingMarker({
         : "var(--color-ring-future)";
   const labelColor =
     variant === "below"
-      ? "rgba(251,247,239,0.78)"
+      ? "var(--color-ring-on-liquid-label)"
       : variant === "next"
         ? "var(--color-text-primary)"
         : "var(--color-text-muted)";
@@ -221,7 +221,8 @@ function RingMarker({
         style={{ color: labelColor }}
       >
         <time
-          aria-label={`${label} 시작, ${Math.floor(pour.atSec / 60)}분 ${pour.atSec % 60}초`}
+          aria-label={`${label} 경계, ${Math.floor(pour.atSec / 60)}분 ${pour.atSec % 60}초`}
+          dateTime={`PT${Math.floor(pour.atSec / 60)}M${pour.atSec % 60}S`}
         >
           {formatTime(pour.atSec)}
         </time>
