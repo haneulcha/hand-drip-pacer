@@ -104,6 +104,7 @@ export default {
           secondary: "var(--color-text-secondary)",
           muted: "var(--color-text-muted)",
           "on-accent": "var(--color-text-on-accent)",
+          "on-liquid": "var(--color-text-on-liquid)",
         },
         accent: {
           DEFAULT: "var(--color-accent)",

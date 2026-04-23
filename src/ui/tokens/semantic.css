@@ -48,6 +48,9 @@
   /* Brewing — ring label on liquid (stronger than ring-on-liquid line) */
   --color-ring-on-liquid-label: rgba(251, 247, 239, 0.78);
 
+  /* Brewing — text sitting on the liquid surface (drawdown hero). */
+  --color-text-on-liquid: var(--neutral-0);
+
   /* Brewing — rim */
   --shadow-rim-inset: inset 0 6px 14px -10px rgba(0, 0, 0, 0.18);
   --shadow-cup-inset: inset 0 8px 16px -12px rgba(0, 0, 0, 0.12);
@@ -125,6 +128,8 @@
   --color-meniscus-highlight: rgba(255, 247, 228, 0.42);
 
   --color-ring-on-liquid-label: rgba(251, 247, 239, 0.72);
+
+  --color-text-on-liquid: var(--neutral-0);
 
   --shadow-rim-inset: inset 0 6px 14px -10px rgba(0, 0, 0, 0.5);
   --shadow-cup-inset: inset 0 8px 16px -12px rgba(0, 0, 0, 0.4);

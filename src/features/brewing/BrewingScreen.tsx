@@ -30,13 +30,31 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
   const isLast = activeIdx === pours.length - 1;
   const done = elapsed >= totalTimeSec || manualStepFloor >= pours.length;
 
+  // pour 0 (atSec=0) 은 컵 바닥이라 ring 안 그림
+  const visibleRings = pours.filter((p) => p.atSec > 0);
+  const nextRingIdx = visibleRings.findIndex((p) => p.atSec > elapsed);
+
+  const lastRingAt = visibleRings.length > 0
+    ? Math.max(...visibleRings.map((p) => p.atSec))
+    : 0;
+  const isDrawdown = lastRingAt > 0 && elapsed >= lastRingAt;
+  const lastRingRatio = totalTimeSec > 0 ? lastRingAt / totalTimeSec : 0;
+
   const cupRef = useRef<HTMLDivElement | null>(null);
   const heroRef = useRef<HTMLDivElement | null>(null);
   const liquidRef = useRef<HTMLDivElement | null>(null);
   const [topRingFallback, setTopRingFallback] = useState(false);
   const [maxFillRatio, setMaxFillRatio] = useState(1);
 
-  useFillRatio(session, totalTimeSec, liquidRef, heroRef, maxFillRatio);
+  useFillRatio(
+    session,
+    totalTimeSec,
+    liquidRef,
+    heroRef,
+    isDrawdown ? 1 : maxFillRatio,
+    isDrawdown,
+    lastRingRatio,
+  );
 
   const handleSkip = () => {
     setManualStepFloor((prev) => Math.max(prev, clockIdx) + 1);
@@ -48,10 +66,6 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
       onComplete();
     }
   }, [done, onComplete]);
-
-  // pour 0 (atSec=0) 은 컵 바닥이라 ring 안 그림
-  const visibleRings = pours.filter((p) => p.atSec > 0);
-  const nextRingIdx = visibleRings.findIndex((p) => p.atSec > elapsed);
 
   // Measure cup interior + hero, compute --cup-height CSS var (for liquid
   // gradient sizing), maxFillRatio (cap so hero stays visible), and
@@ -204,27 +218,50 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
           );
         })}
 
-        {/* Hero floating above meniscus */}
+        {/* Hero floating above meniscus (pour phase) or anchored below it (drawdown) */}
         <div
           ref={heroRef}
           data-testid="hero"
           className="pointer-events-none absolute left-3.5 right-24"
         >
-          <div className="text-2xs font-semibold uppercase tracking-widest text-pour-bloom">
-            지금 · <span>{phaseLabel}</span>
+          <div
+            className={cx(
+              "text-2xs font-semibold uppercase tracking-widest",
+              isDrawdown ? "text-text-on-liquid" : "text-pour-bloom",
+            )}
+          >
+            {isDrawdown ? (
+              "드로우다운"
+            ) : (
+              <>
+                지금 · <span>{phaseLabel}</span>
+              </>
+            )}
           </div>
           <div className="mt-1 flex items-baseline gap-1">
             <span
               data-testid="hero-weight"
-              className="text-brewing-hero font-medium leading-none tabular-nums"
+              className={cx(
+                "text-brewing-hero font-medium leading-none tabular-nums",
+                isDrawdown ? "text-text-on-liquid" : "text-text-primary",
+              )}
             >
               {active.cumulativeWater}
             </span>
-            <span className="text-lg text-text-muted">g</span>
+            <span
+              className={cx(
+                "text-lg",
+                isDrawdown ? "text-text-on-liquid opacity-70" : "text-text-muted",
+              )}
+            >
+              g
+            </span>
           </div>
-          <div className="mt-1.5 text-sm italic text-text-secondary">
-            +{active.pourAmount}g 붓기{isLast ? " · 마지막 푸어" : ""}
-          </div>
+          {!isDrawdown && (
+            <div className="mt-1.5 text-sm italic text-text-secondary">
+              +{active.pourAmount}g 붓기{isLast ? " · 마지막 푸어" : ""}
+            </div>
+          )}
         </div>
       </div>
 
