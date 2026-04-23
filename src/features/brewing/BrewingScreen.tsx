@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { activeStepIdx, type BrewSession } from "@/domain/session";
 import type { Pour } from "@/domain/types";
 import { formatTime } from "@/ui/format";
@@ -47,6 +47,23 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
   const visibleRings = pours.filter((p) => p.atSec > 0);
   const nextRingIdx = visibleRings.findIndex((p) => p.atSec > elapsed);
 
+  const cupRef = useRef<HTMLDivElement | null>(null);
+  const heroRef = useRef<HTMLDivElement | null>(null);
+  const [topRingFallback, setTopRingFallback] = useState(false);
+
+  // Hero clearance 측정: 최상단 ring과 RIM 사이가 Hero보다 좁으면 fallback
+  useLayoutEffect(() => {
+    if (!cupRef.current || !heroRef.current || visibleRings.length === 0) {
+      setTopRingFallback(false);
+      return;
+    }
+    const cupHeight = cupRef.current.clientHeight;
+    const heroHeight = heroRef.current.offsetHeight;
+    const lastRingPos = Math.max(...visibleRings.map((p) => p.atSec));
+    const topRingFromTop = cupHeight * (1 - lastRingPos / totalTimeSec);
+    setTopRingFallback(topRingFromTop < heroHeight + 8);
+  }, [visibleRings, totalTimeSec]);
+
   const phaseLabel = active.label === "bloom" ? "bloom" : `${activeIdx}차`;
 
   return (
@@ -58,11 +75,21 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
         data-region="rim"
         className="relative z-10 flex h-brewing-rim items-start justify-between border-b border-border/60 bg-surface px-5 pt-4 shadow-rim-inset"
       >
-        <div>
-          <div className="text-2xs text-text-muted">경과</div>
-          <div className="mt-0.5 text-xl font-medium tabular-nums">
-            {formatTime(elapsed)}
+        <div className="flex items-start gap-4">
+          <div>
+            <div className="text-2xs text-text-muted">경과</div>
+            <div className="mt-0.5 text-xl font-medium tabular-nums">
+              {formatTime(elapsed)}
+            </div>
           </div>
+          {topRingFallback && visibleRings.length > 0 && (
+            <div className="pt-1">
+              <div className="text-2xs text-text-muted">최종</div>
+              <div className="mt-0.5 text-xs tabular-nums text-text-secondary">
+                {formatTime(visibleRings[visibleRings.length - 1]!.atSec)}
+              </div>
+            </div>
+          )}
         </div>
         <div className="flex items-start gap-3 pt-2">
           {!done && (
@@ -86,7 +113,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
       </header>
 
       {/* CUP INTERIOR */}
-      <div className="relative flex-1 overflow-hidden bg-surface">
+      <div ref={cupRef} className="relative flex-1 overflow-hidden bg-surface">
         {/* Liquid */}
         <div
           data-testid="liquid"
@@ -127,6 +154,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
           const localIdx = pours.indexOf(p);
           const ringLabel =
             p.label === "bloom" ? "bloom" : `${localIdx}차`;
+          const isTopRing = i === visibleRings.length - 1;
           return (
             <RingMarker
               key={p.index}
@@ -134,12 +162,14 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
               totalTimeSec={totalTimeSec}
               variant={variant}
               label={ringLabel}
+              hideLabel={isTopRing && topRingFallback}
             />
           );
         })}
 
         {/* Hero floating above meniscus */}
         <div
+          ref={heroRef}
           data-testid="hero"
           className="pointer-events-none absolute left-3.5 right-24 transition-[bottom] duration-DEFAULT ease-DEFAULT"
           style={{
@@ -179,11 +209,13 @@ function RingMarker({
   totalTimeSec,
   variant,
   label,
+  hideLabel = false,
 }: {
   readonly pour: Pour;
   readonly totalTimeSec: number;
   readonly variant: "below" | "next" | "future";
   readonly label: string;
+  readonly hideLabel?: boolean;
 }) {
   const positionPct = `${((pour.atSec / totalTimeSec) * 100).toFixed(2)}%`;
   const lineColor =
@@ -213,23 +245,25 @@ function RingMarker({
           background: lineColor,
         }}
       />
-      <div
-        className={cx(
-          "absolute right-4 -top-1.5 flex items-baseline gap-1.5 text-2xs tabular-nums",
-          variant === "next" && "font-semibold",
-        )}
-        style={{ color: labelColor }}
-      >
-        <time
-          aria-label={`${label} 경계, ${Math.floor(pour.atSec / 60)}분 ${pour.atSec % 60}초`}
-          dateTime={`PT${Math.floor(pour.atSec / 60)}M${pour.atSec % 60}S`}
+      {!hideLabel && (
+        <div
+          className={cx(
+            "absolute right-4 -top-1.5 flex items-baseline gap-1.5 text-2xs tabular-nums",
+            variant === "next" && "font-semibold",
+          )}
+          style={{ color: labelColor }}
         >
-          {formatTime(pour.atSec)}
-        </time>
-        <span className="text-[8px] uppercase tracking-widest opacity-75">
-          {label}
-        </span>
-      </div>
+          <time
+            aria-label={`${label} 경계, ${Math.floor(pour.atSec / 60)}분 ${pour.atSec % 60}초`}
+            dateTime={`PT${Math.floor(pour.atSec / 60)}M${pour.atSec % 60}S`}
+          >
+            {formatTime(pour.atSec)}
+          </time>
+          <span className="text-[8px] uppercase tracking-widest opacity-75">
+            {label}
+          </span>
+        </div>
+      )}
     </div>
   );
 }
