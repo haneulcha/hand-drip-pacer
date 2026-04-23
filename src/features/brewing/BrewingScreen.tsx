@@ -118,7 +118,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
         <div
           data-testid="liquid"
           aria-hidden="true"
-          className="absolute inset-x-0 bottom-0 transition-[height] duration-DEFAULT ease-DEFAULT"
+          className="absolute inset-x-0 bottom-0 motion-safe:transition-[height] duration-DEFAULT ease-DEFAULT"
           style={{
             height: fillPct,
             background:
@@ -171,7 +171,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
         <div
           ref={heroRef}
           data-testid="hero"
-          className="pointer-events-none absolute left-3.5 right-24 transition-[bottom] duration-DEFAULT ease-DEFAULT"
+          className="pointer-events-none absolute left-3.5 right-24 motion-safe:transition-[bottom] duration-DEFAULT ease-DEFAULT"
           style={{
             bottom: `calc(${fillPct} + var(--brewing-hero-gap))`,
           }}
