@@ -15,6 +15,7 @@ import { RecipeScreen } from "@/features/recipe/RecipeScreen";
 import { WallScreen } from "@/features/wall/WallScreen";
 import { loadParams, saveParams, saveSession } from "@/features/share/storage";
 import { decodeState, encodeState } from "@/features/share/urlCodec";
+import { applyMeta, buildMeta } from "@/features/seo/documentMeta";
 import { withViewTransition } from "@/ui/viewTransition";
 import { DEFAULT_STATE, mergeState, type AppState } from "./state";
 
@@ -32,6 +33,17 @@ export function AppRoot() {
   const [state, setState] = useState<AppState>(loadInitialState);
   const [session, setSession] = useState<BrewSession | null>(null);
 
+  const recipe = useMemo(() => {
+    const input: RecipeInput = {
+      method: state.method,
+      dripper: state.dripper,
+      coffee: state.coffee,
+      roast: state.roast,
+      taste: state.taste,
+    };
+    return brewMethods[state.method].compute(input);
+  }, [state.method, state.dripper, state.coffee, state.roast, state.taste]);
+
   useEffect(() => {
     const params = encodeState(state);
     if (state.screen === "wall") {
@@ -44,7 +56,8 @@ export function AppRoot() {
       );
     }
     saveParams(params);
-  }, [state]);
+    applyMeta(buildMeta(state, recipe));
+  }, [state, recipe]);
 
   const patch = (p: Partial<AppState>): void =>
     setState((prev) => mergeState(prev, p));
@@ -55,17 +68,6 @@ export function AppRoot() {
   const handleTasteChange = (taste: TasteProfile): void => patch({ taste });
   const handleCoffeeChange = (coffee: number): void =>
     patch({ coffee: g(coffee) });
-
-  const recipe = useMemo(() => {
-    const input: RecipeInput = {
-      method: state.method,
-      dripper: state.dripper,
-      coffee: state.coffee,
-      roast: state.roast,
-      taste: state.taste,
-    };
-    return brewMethods[state.method].compute(input);
-  }, [state.method, state.dripper, state.coffee, state.roast, state.taste]);
 
   const handleStart = (): void => {
     withViewTransition(() => {
