@@ -46,3 +46,20 @@ export const sessionDurationSec = (session: BrewSession): number =>
   session.completedAt != null
     ? Math.max(0, Math.floor((session.completedAt - session.startedAt) / 1000))
     : session.recipe.totalTimeSec;
+
+// Sub-second resolution version of elapsedSec / totalTimeSec, clamped to [0, 1].
+// elapsedSec floors to integers — this preserves fractional seconds for
+// continuous visual progress (e.g., rAF-driven fills).
+export const elapsedRatio = (
+  session: BrewSession,
+  totalTimeSec: number,
+  now: number,
+): number =>
+  totalTimeSec > 0
+    ? Math.min(1, Math.max(0, (now - session.startedAt) / 1000 / totalTimeSec))
+    : 0;
+
+// Standard label for a pour step: "bloom" for the bloom pour, "{n}차" otherwise.
+// Centralized so UI surfaces (hero, rings, aria-live) share a single format.
+export const pourLabel = (pour: Pour, idx: number): string =>
+  pour.label === "bloom" ? "bloom" : `${idx}차`;

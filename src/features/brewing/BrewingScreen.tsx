@@ -1,5 +1,9 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { activeStepIdx, type BrewSession } from "@/domain/session";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import {
+  activeStepIdx,
+  pourLabel,
+  type BrewSession,
+} from "@/domain/session";
 import type { Pour } from "@/domain/types";
 import { formatTime } from "@/ui/format";
 import { cx } from "@/ui/cx";
@@ -11,6 +15,29 @@ type Props = {
   readonly session: BrewSession;
   readonly onExit: () => void;
   readonly onComplete: () => void;
+};
+
+const HERO_GAP_PX = 12; // mirrors --brewing-hero-gap in semantic.css
+const HERO_SAFETY_PX = 8;
+const MIN_FILL_RATIO = 0.2; // floor so liquid stays visible on tiny viewports
+const RING_OVERLAP_TOLERANCE_PX = 4;
+
+const RING_COLORS: Record<
+  "below" | "next" | "future",
+  { line: string; label: string }
+> = {
+  below: {
+    line: "var(--color-ring-on-liquid)",
+    label: "var(--color-ring-on-liquid-label)",
+  },
+  next: {
+    line: "var(--color-text-primary)",
+    label: "var(--color-text-primary)",
+  },
+  future: {
+    line: "var(--color-ring-future)",
+    label: "var(--color-text-muted)",
+  },
 };
 
 export function BrewingScreen({ session, onExit, onComplete }: Props) {
@@ -30,13 +57,12 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
   const isLast = activeIdx === pours.length - 1;
   const done = elapsed >= totalTimeSec || manualStepFloor >= pours.length;
 
-  // pour 0 (atSec=0) 은 컵 바닥이라 ring 안 그림
-  const visibleRings = pours.filter((p) => p.atSec > 0);
+  const visibleRings = useMemo(
+    () => pours.filter((p) => p.atSec > 0),
+    [pours],
+  );
   const nextRingIdx = visibleRings.findIndex((p) => p.atSec > elapsed);
-
-  const lastRingAt = visibleRings.length > 0
-    ? Math.max(...visibleRings.map((p) => p.atSec))
-    : 0;
+  const lastRingAt = visibleRings.at(-1)?.atSec ?? 0;
   const isDrawdown = lastRingAt > 0 && elapsed >= lastRingAt;
   const lastRingRatio = totalTimeSec > 0 ? lastRingAt / totalTimeSec : 0;
 
@@ -45,16 +71,9 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
   const liquidRef = useRef<HTMLDivElement | null>(null);
   const [topRingFallback, setTopRingFallback] = useState(false);
   const [maxFillRatio, setMaxFillRatio] = useState(1);
+  const [heroHeight, setHeroHeight] = useState(0);
 
-  useFillRatio(
-    session,
-    totalTimeSec,
-    liquidRef,
-    heroRef,
-    isDrawdown ? 1 : maxFillRatio,
-    isDrawdown,
-    lastRingRatio,
-  );
+  const effectiveMaxRatio = isDrawdown ? 1 : maxFillRatio;
 
   const handleSkip = () => {
     setManualStepFloor((prev) => Math.max(prev, clockIdx) + 1);
@@ -67,9 +86,6 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
     }
   }, [done, onComplete]);
 
-  // Measure cup interior + hero, compute --cup-height CSS var (for liquid
-  // gradient sizing), maxFillRatio (cap so hero stays visible), and
-  // topRingFallback (if topmost ring would overlap hero).
   useLayoutEffect(() => {
     const cupEl = cupRef.current;
     const heroEl = heroRef.current;
@@ -81,31 +97,28 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
 
       if (!heroEl) return;
       const heroH = heroEl.offsetHeight;
-
       if (cupH === 0 || heroH === 0) {
         setMaxFillRatio(1);
         setTopRingFallback(false);
+        setHeroHeight(0);
         return;
       }
+      setHeroHeight(heroH);
 
-      const gapPx = 12; // matches --brewing-hero-gap
-      const safetyPx = 8;
-      const reserved = heroH + gapPx + safetyPx;
+      const reserved = heroH + HERO_GAP_PX + HERO_SAFETY_PX;
       const newMax = Math.max(
-        0.2,
+        MIN_FILL_RATIO,
         Math.min(1, (cupH - reserved) / cupH),
       );
       setMaxFillRatio(newMax);
 
       if (visibleRings.length > 0) {
-        const lastRingRatio =
-          Math.max(...visibleRings.map((p) => p.atSec)) / totalTimeSec;
-        const heroBottomPx = newMax * cupH + gapPx;
+        const heroBottomPx = newMax * cupH + HERO_GAP_PX;
         const heroTopPx = heroBottomPx + heroH;
         const ringPx = lastRingRatio * cupH;
-        // Topmost ring overlaps hero's vertical span → push its label to RIM.
         setTopRingFallback(
-          ringPx >= heroBottomPx - 4 && ringPx <= heroTopPx + 4,
+          ringPx >= heroBottomPx - RING_OVERLAP_TOLERANCE_PX &&
+            ringPx <= heroTopPx + RING_OVERLAP_TOLERANCE_PX,
         );
       } else {
         setTopRingFallback(false);
@@ -121,9 +134,20 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
     }
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
-  }, [visibleRings, totalTimeSec]);
+  }, [visibleRings, lastRingRatio]);
 
-  const phaseLabel = active.label === "bloom" ? "bloom" : `${activeIdx}차`;
+  useFillRatio(
+    session,
+    totalTimeSec,
+    liquidRef,
+    heroRef,
+    effectiveMaxRatio,
+    isDrawdown,
+    lastRingRatio,
+    heroHeight,
+  );
+
+  const phaseLabelText = pourLabel(active, activeIdx);
 
   return (
     <div className="relative mx-auto flex min-h-screen max-w-lg flex-col bg-surface text-text-primary">
@@ -145,7 +169,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
             <div className="pt-1">
               <div className="text-2xs text-text-muted">최종</div>
               <div className="mt-0.5 text-xs tabular-nums text-text-secondary">
-                {formatTime(visibleRings[visibleRings.length - 1]!.atSec)}
+                {formatTime(visibleRings.at(-1)!.atSec)}
               </div>
             </div>
           )}
@@ -172,8 +196,10 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
       </header>
 
       {/* CUP INTERIOR */}
-      <div ref={cupRef} className="relative flex-1 overflow-hidden bg-surface shadow-cup-inset">
-        {/* Liquid */}
+      <div
+        ref={cupRef}
+        className="relative flex-1 overflow-hidden bg-surface shadow-cup-inset"
+      >
         <div
           ref={liquidRef}
           data-testid="liquid"
@@ -184,7 +210,6 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
               "linear-gradient(180deg, var(--color-brewing-liquid-top) 0%, var(--color-brewing-liquid-mid) 32%, var(--color-brewing-liquid-deep) 78%, var(--color-brewing-liquid-bottom) 100%) no-repeat bottom / 100% var(--cup-height, 100%)",
           }}
         >
-          {/* meniscus highlight */}
           <div
             className="absolute inset-x-0 top-0 h-0.5"
             style={{
@@ -194,7 +219,6 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
           />
         </div>
 
-        {/* Rings */}
         {visibleRings.map((p, i) => {
           const variant: "below" | "next" | "future" =
             p.atSec <= elapsed
@@ -202,9 +226,6 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
               : i === nextRingIdx
                 ? "next"
                 : "future";
-          const localIdx = pours.indexOf(p);
-          const ringLabel =
-            p.label === "bloom" ? "bloom" : `${localIdx}차`;
           const isTopRing = i === visibleRings.length - 1;
           return (
             <RingMarker
@@ -212,13 +233,12 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
               pour={p}
               totalTimeSec={totalTimeSec}
               variant={variant}
-              label={ringLabel}
+              label={pourLabel(p, p.index)}
               hideLabel={isTopRing && topRingFallback}
             />
           );
         })}
 
-        {/* Hero floating above meniscus (pour phase) or anchored below it (drawdown) */}
         <div
           ref={heroRef}
           data-testid="hero"
@@ -234,7 +254,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
               "드로우다운"
             ) : (
               <>
-                지금 · <span>{phaseLabel}</span>
+                지금 · <span>{phaseLabelText}</span>
               </>
             )}
           </div>
@@ -289,18 +309,7 @@ function RingMarker({
   readonly hideLabel?: boolean;
 }) {
   const positionPct = `${((pour.atSec / totalTimeSec) * 100).toFixed(2)}%`;
-  const lineColor =
-    variant === "below"
-      ? "var(--color-ring-on-liquid)"
-      : variant === "next"
-        ? "var(--color-text-primary)"
-        : "var(--color-ring-future)";
-  const labelColor =
-    variant === "below"
-      ? "var(--color-ring-on-liquid-label)"
-      : variant === "next"
-        ? "var(--color-text-primary)"
-        : "var(--color-text-muted)";
+  const colors = RING_COLORS[variant];
   return (
     <div
       data-testid={variant === "next" ? "ring-next" : undefined}
@@ -313,7 +322,7 @@ function RingMarker({
         className="absolute left-3.5 right-24 top-0"
         style={{
           height: variant === "next" ? "1.5px" : "1px",
-          background: lineColor,
+          background: colors.line,
         }}
       />
       {!hideLabel && (
@@ -322,7 +331,7 @@ function RingMarker({
             "absolute right-4 -top-1.5 flex items-baseline gap-1.5 text-2xs tabular-nums",
             variant === "next" && "font-semibold",
           )}
-          style={{ color: labelColor }}
+          style={{ color: colors.label }}
         >
           <time
             aria-label={`${label} 경계, ${Math.floor(pour.atSec / 60)}분 ${pour.atSec % 60}초`}
@@ -350,8 +359,9 @@ function AriaLiveStep({
   useEffect(() => {
     const pour = session.recipe.pours[activeIdx];
     if (!pour) return;
-    const label = pour.label === "bloom" ? "bloom" : `${activeIdx}차`;
-    setAnnounced(`${label}: ${pour.cumulativeWater}그램까지`);
+    setAnnounced(
+      `${pourLabel(pour, activeIdx)}: ${pour.cumulativeWater}그램까지`,
+    );
   }, [session, activeIdx]);
   return (
     <span className="sr-only" role="status" aria-live="polite">

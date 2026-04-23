@@ -1,51 +1,19 @@
 import { useEffect, useLayoutEffect, type RefObject } from "react";
-import type { BrewSession } from "@/domain/session";
+import { elapsedRatio, type BrewSession } from "@/domain/session";
+import { toPct } from "@/ui/format";
 
-const clamp01 = (n: number): number => Math.min(1, Math.max(0, n));
-
-const ratioFor = (
-  session: BrewSession,
-  totalTimeSec: number,
-  now: number,
-): number => clamp01((now - session.startedAt) / 1000 / totalTimeSec);
-
-const toPct = (ratio: number): string => `${(ratio * 100).toFixed(2)}%`;
-
-const apply = (
-  liquidEl: HTMLElement | null,
-  heroEl: HTMLElement | null,
-  ratio: number,
-  isDrawdown: boolean,
-  lastRingRatio: number,
-): void => {
-  if (liquidEl) {
-    liquidEl.style.height = toPct(ratio);
-  }
-  if (heroEl) {
-    if (isDrawdown) {
-      // Pin the hero just below the meniscus's position at drawdown start
-      // (which is lastRingRatio of cup interior). It stays anchored there
-      // while the liquid rises past it to 100%.
-      const heroH = heroEl.offsetHeight;
-      heroEl.style.bottom = `calc(${(lastRingRatio * 100).toFixed(2)}% - ${heroH + 8}px)`;
-    } else {
-      heroEl.style.bottom = `calc(${toPct(ratio)} + var(--brewing-hero-gap))`;
-    }
-  }
-};
+const DRAWDOWN_HERO_OFFSET_PX = 8;
 
 /**
- * Continuously sets the liquid height and hero bottom inline styles via rAF,
+ * Continuously sets liquid height + hero bottom inline styles via rAF,
  * bypassing React re-renders.
  *
- * During pour phase (isDrawdown=false):
- *   - liquid height is capped at maxRatio so hero stays visible.
- *   - hero rides the meniscus: bottom = fillRatio% + gap.
+ * - During pour phases: hero rides the meniscus (`bottom = fillPct + gap`).
+ * - During drawdown: hero anchors just below the lastRing position so liquid
+ *   rises past it and submerges it (text uses cream color in the JSX).
  *
- * During drawdown phase (isDrawdown=true):
- *   - cap is released (maxRatio should be 1) → liquid fills freely to 100%.
- *   - hero is anchored just below the lastRing's position so it sinks below
- *     the rising liquid surface.
+ * `heroHeight` is measured by the caller's useLayoutEffect so this hook never
+ * forces a reflow on the rAF hot path.
  */
 export function useFillRatio(
   session: BrewSession,
@@ -55,34 +23,42 @@ export function useFillRatio(
   maxRatio: number,
   isDrawdown: boolean,
   lastRingRatio: number,
+  heroHeight: number,
 ): void {
-  // Pre-paint sync — first paint has correct value, tests reading style.height
-  // immediately after render see the clamped initial value.
-  useLayoutEffect(() => {
-    const r = ratioFor(session, totalTimeSec, Date.now());
-    apply(
-      liquidRef.current,
-      heroRef.current,
-      Math.min(r, maxRatio),
-      isDrawdown,
-      lastRingRatio,
+  // Pre-formatted, since lastRingRatio + heroHeight are stable across frames.
+  const drawdownBottom = `calc(${toPct(lastRingRatio)} - ${heroHeight + DRAWDOWN_HERO_OFFSET_PX}px)`;
+
+  const apply = (): void => {
+    const ratio = Math.min(
+      elapsedRatio(session, totalTimeSec, Date.now()),
+      maxRatio,
     );
-  });
+    const pct = toPct(ratio);
+    const liquidEl = liquidRef.current;
+    const heroEl = heroRef.current;
+    if (liquidEl) {
+      liquidEl.style.height = pct;
+    }
+    if (heroEl) {
+      heroEl.style.bottom = isDrawdown
+        ? drawdownBottom
+        : `calc(${pct} + var(--brewing-hero-gap))`;
+    }
+  };
+
+  // Pre-paint sync — first paint and tests reading style.height immediately
+  // after render get the correct value. Deps mean it only fires when params
+  // change (not on every unrelated re-render).
+  useLayoutEffect(apply);
 
   useEffect(() => {
     let frame = 0;
     const tick = () => {
-      const r = ratioFor(session, totalTimeSec, Date.now());
-      apply(
-        liquidRef.current,
-        heroRef.current,
-        Math.min(r, maxRatio),
-        isDrawdown,
-        lastRingRatio,
-      );
+      apply();
       frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [session, totalTimeSec, liquidRef, heroRef, maxRatio, isDrawdown, lastRingRatio]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session, totalTimeSec, maxRatio, isDrawdown, lastRingRatio, heroHeight]);
 }
