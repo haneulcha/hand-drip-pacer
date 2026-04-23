@@ -34,8 +34,9 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
   const heroRef = useRef<HTMLDivElement | null>(null);
   const liquidRef = useRef<HTMLDivElement | null>(null);
   const [topRingFallback, setTopRingFallback] = useState(false);
+  const [maxFillRatio, setMaxFillRatio] = useState(1);
 
-  useFillRatio(session, totalTimeSec, liquidRef, heroRef);
+  useFillRatio(session, totalTimeSec, liquidRef, heroRef, maxFillRatio);
 
   const handleSkip = () => {
     setManualStepFloor((prev) => Math.max(prev, clockIdx) + 1);
@@ -52,28 +53,53 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
   const visibleRings = pours.filter((p) => p.atSec > 0);
   const nextRingIdx = visibleRings.findIndex((p) => p.atSec > elapsed);
 
-  // Hero clearance 측정: 최상단 ring과 RIM 사이가 Hero보다 좁으면 fallback
-  useLayoutEffect(() => {
-    if (!cupRef.current || !heroRef.current || visibleRings.length === 0) {
-      setTopRingFallback(false);
-      return;
-    }
-    const cupHeight = cupRef.current.clientHeight;
-    const heroHeight = heroRef.current.offsetHeight;
-    const lastRingPos = Math.max(...visibleRings.map((p) => p.atSec));
-    const topRingFromTop = cupHeight * (1 - lastRingPos / totalTimeSec);
-    setTopRingFallback(topRingFromTop < heroHeight + 8);
-  }, [visibleRings, totalTimeSec]);
-
-  // Expose cup-interior height as a CSS variable so the liquid's background
-  // gradient can be cup-scaled (rather than liquid-scaled).
+  // Measure cup interior + hero, compute --cup-height CSS var (for liquid
+  // gradient sizing), maxFillRatio (cap so hero stays visible), and
+  // topRingFallback (if topmost ring would overlap hero).
   useLayoutEffect(() => {
     const cupEl = cupRef.current;
+    const heroEl = heroRef.current;
     if (!cupEl) return;
+
     const update = () => {
-      cupEl.style.setProperty("--cup-height", `${cupEl.clientHeight}px`);
+      const cupH = cupEl.clientHeight;
+      cupEl.style.setProperty("--cup-height", `${cupH}px`);
+
+      if (!heroEl) return;
+      const heroH = heroEl.offsetHeight;
+
+      if (cupH === 0 || heroH === 0) {
+        setMaxFillRatio(1);
+        setTopRingFallback(false);
+        return;
+      }
+
+      const gapPx = 12; // matches --brewing-hero-gap
+      const safetyPx = 8;
+      const reserved = heroH + gapPx + safetyPx;
+      const newMax = Math.max(
+        0.2,
+        Math.min(1, (cupH - reserved) / cupH),
+      );
+      setMaxFillRatio(newMax);
+
+      if (visibleRings.length > 0) {
+        const lastRingRatio =
+          Math.max(...visibleRings.map((p) => p.atSec)) / totalTimeSec;
+        const heroBottomPx = newMax * cupH + gapPx;
+        const heroTopPx = heroBottomPx + heroH;
+        const ringPx = lastRingRatio * cupH;
+        // Topmost ring overlaps hero's vertical span → push its label to RIM.
+        setTopRingFallback(
+          ringPx >= heroBottomPx - 4 && ringPx <= heroTopPx + 4,
+        );
+      } else {
+        setTopRingFallback(false);
+      }
     };
+
     update();
+
     if (typeof ResizeObserver !== "undefined") {
       const ro = new ResizeObserver(update);
       ro.observe(cupEl);
@@ -81,7 +107,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
     }
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
-  }, []);
+  }, [visibleRings, totalTimeSec]);
 
   const phaseLabel = active.label === "bloom" ? "bloom" : `${activeIdx}차`;
 

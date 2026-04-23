@@ -26,40 +26,33 @@ const apply = (
 };
 
 /**
- * Continuously sets the liquid's height and the hero's bottom inline styles
- * every animation frame, bypassing React re-renders entirely.
- *
- * Applied synchronously in useLayoutEffect so the first paint has the correct
- * position (important for initial render correctness and tests that read
- * style.height immediately after render).
+ * Continuously sets the liquid height and hero bottom inline styles via rAF,
+ * bypassing React re-renders. The ratio is clamped to `maxRatio` so the hero
+ * (which rides on the meniscus) is never pushed past the cup interior's top
+ * edge by the rising fill.
  */
 export function useFillRatio(
   session: BrewSession,
   totalTimeSec: number,
   liquidRef: RefObject<HTMLElement | null>,
   heroRef: RefObject<HTMLElement | null>,
+  maxRatio: number,
 ): void {
-  // Pre-paint sync — ensures initial value is there before browser paints and
-  // that tests reading style.height right after render see the correct value.
+  // Pre-paint sync — first paint has correct value, tests reading style.height
+  // immediately after render see the clamped initial value.
   useLayoutEffect(() => {
-    apply(
-      liquidRef.current,
-      heroRef.current,
-      ratioFor(session, totalTimeSec, Date.now()),
-    );
+    const r = ratioFor(session, totalTimeSec, Date.now());
+    apply(liquidRef.current, heroRef.current, Math.min(r, maxRatio));
   });
 
   useEffect(() => {
     let frame = 0;
     const tick = () => {
-      apply(
-        liquidRef.current,
-        heroRef.current,
-        ratioFor(session, totalTimeSec, Date.now()),
-      );
+      const r = ratioFor(session, totalTimeSec, Date.now());
+      apply(liquidRef.current, heroRef.current, Math.min(r, maxRatio));
       frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [session, totalTimeSec, liquidRef, heroRef]);
+  }, [session, totalTimeSec, liquidRef, heroRef, maxRatio]);
 }
