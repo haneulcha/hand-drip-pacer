@@ -230,4 +230,45 @@ describe("BrewingScreen", () => {
     );
     expect(onComplete).toHaveBeenCalledTimes(1);
   });
+
+  it("liquid height grows proportionally to elapsed time", () => {
+    vi.setSystemTime(new Date(1_000_000_000_000));
+    const session = makeSession(1_000_000_000_000 - 105_000); // elapsed=105 of 210 (50%)
+    render(
+      <BrewingScreen session={session} onExit={vi.fn()} onComplete={vi.fn()} />,
+    );
+    const liquid = screen.getByTestId("liquid");
+    expect(liquid.style.height).toMatch(/^50(\.0+)?%$/);
+  });
+
+  it("hero floats above meniscus (bottom uses fillRatio)", () => {
+    vi.setSystemTime(new Date(1_000_000_000_000));
+    const session = makeSession(1_000_000_000_000 - 105_000);
+    render(
+      <BrewingScreen session={session} onExit={vi.fn()} onComplete={vi.fn()} />,
+    );
+    const hero = screen.getByTestId("hero");
+    // bottom is calc(<fill>% + gap) — assert the fill portion contains 50%
+    expect(hero.style.bottom).toContain("50");
+  });
+
+  it("ring at next pour boundary has 'next' variant", () => {
+    vi.setSystemTime(new Date(1_000_000_000_000));
+    const session = makeSession(1_000_000_000_000); // elapsed=0; next boundary is pour 1 at 45s
+    render(
+      <BrewingScreen session={session} onExit={vi.fn()} onComplete={vi.fn()} />,
+    );
+    const nextRing = screen.getByTestId("ring-next");
+    expect(nextRing.dataset.atSec).toBe("45");
+  });
+
+  it("skip button is rendered inside the rim region", () => {
+    vi.setSystemTime(new Date(1_000_000_000_000));
+    const session = makeSession(1_000_000_000_000);
+    render(
+      <BrewingScreen session={session} onExit={vi.fn()} onComplete={vi.fn()} />,
+    );
+    const skip = screen.getByRole("button", { name: "다음 스텝으로 건너뛰기" });
+    expect(skip.closest('[data-region="rim"]')).not.toBeNull();
+  });
 });
