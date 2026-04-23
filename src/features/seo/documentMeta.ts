@@ -68,3 +68,47 @@ export function buildMeta(state: AppState, recipe: Recipe): DocumentMeta {
 
   return { title, description, canonical };
 }
+
+type Selector =
+  | { kind: "meta-name"; value: string }
+  | { kind: "meta-property"; value: string }
+  | { kind: "link-rel"; value: string };
+
+function upsert(sel: Selector, attr: "content" | "href", value: string): void {
+  if (typeof document === "undefined") return;
+  const selectorStr =
+    sel.kind === "meta-name"
+      ? `meta[name="${sel.value}"]`
+      : sel.kind === "meta-property"
+        ? `meta[property="${sel.value}"]`
+        : `link[rel="${sel.value}"]`;
+  let el = document.head.querySelector<HTMLElement>(selectorStr);
+  if (!el) {
+    if (sel.kind === "link-rel") {
+      const link = document.createElement("link");
+      link.setAttribute("rel", sel.value);
+      el = link;
+    } else {
+      const meta = document.createElement("meta");
+      meta.setAttribute(
+        sel.kind === "meta-name" ? "name" : "property",
+        sel.value,
+      );
+      el = meta;
+    }
+    document.head.appendChild(el);
+  }
+  el.setAttribute(attr, value);
+}
+
+export function applyMeta(meta: DocumentMeta): void {
+  if (typeof document === "undefined") return;
+  document.title = meta.title;
+  upsert({ kind: "meta-name", value: "description" }, "content", meta.description);
+  upsert({ kind: "link-rel", value: "canonical" }, "href", meta.canonical);
+  upsert({ kind: "meta-property", value: "og:title" }, "content", meta.title);
+  upsert({ kind: "meta-property", value: "og:description" }, "content", meta.description);
+  upsert({ kind: "meta-property", value: "og:url" }, "content", meta.canonical);
+  upsert({ kind: "meta-name", value: "twitter:title" }, "content", meta.title);
+  upsert({ kind: "meta-name", value: "twitter:description" }, "content", meta.description);
+}
