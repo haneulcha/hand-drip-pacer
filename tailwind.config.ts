@@ -66,17 +66,12 @@ export default {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },
         },
-        "brewing-wave": {
-          "0%, 100%": { transform: "translateX(0) scaleY(1)" },
-          "50%": { transform: "translateX(8px) scaleY(1.5)" },
-        },
       },
       animation: {
         "popover-in":
           "popover-in var(--motion-duration-base) var(--motion-easing) both",
         "overlay-in":
           "overlay-in var(--motion-duration-base) var(--motion-easing) both",
-        "brewing-wave": "brewing-wave 4s ease-in-out infinite",
       },
       zIndex: {
         popover: "var(--z-popover)",

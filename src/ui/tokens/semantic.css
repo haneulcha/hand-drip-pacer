@@ -42,8 +42,6 @@
 
   /* Brewing — liquid surface */
   --color-meniscus-highlight: rgba(255, 247, 228, 0.55);
-  --color-wave-shimmer-a: rgba(255, 247, 228, 0.18);
-  --color-wave-shimmer-b: rgba(255, 247, 228, 0.14);
 
   /* Brewing — ring label on liquid (stronger than ring-on-liquid line) */
   --color-ring-on-liquid-label: rgba(251, 247, 239, 0.78);
@@ -121,8 +119,6 @@
 
   /* Brewing — liquid surface (dark: slightly more opaque for visibility) */
   --color-meniscus-highlight: rgba(255, 247, 228, 0.42);
-  --color-wave-shimmer-a: rgba(255, 247, 228, 0.14);
-  --color-wave-shimmer-b: rgba(255, 247, 228, 0.10);
 
   --color-ring-on-liquid-label: rgba(251, 247, 239, 0.72);
 

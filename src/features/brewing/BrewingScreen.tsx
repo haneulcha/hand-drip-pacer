@@ -152,14 +152,6 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
                 "linear-gradient(90deg, transparent, var(--color-meniscus-highlight), transparent)",
             }}
           />
-          {/* wave shimmer */}
-          <div
-            className="motion-safe:animate-brewing-wave absolute inset-x-0 top-0 h-2.5"
-            style={{
-              background:
-                "radial-gradient(ellipse at 30% 100%, var(--color-wave-shimmer-a) 0%, transparent 60%), radial-gradient(ellipse at 70% 100%, var(--color-wave-shimmer-b) 0%, transparent 60%)",
-            }}
-          />
         </div>
 
         {/* Rings */}
