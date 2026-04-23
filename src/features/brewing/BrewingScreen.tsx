@@ -65,6 +65,24 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
     setTopRingFallback(topRingFromTop < heroHeight + 8);
   }, [visibleRings, totalTimeSec]);
 
+  // Expose cup-interior height as a CSS variable so the liquid's background
+  // gradient can be cup-scaled (rather than liquid-scaled).
+  useLayoutEffect(() => {
+    const cupEl = cupRef.current;
+    if (!cupEl) return;
+    const update = () => {
+      cupEl.style.setProperty("--cup-height", `${cupEl.clientHeight}px`);
+    };
+    update();
+    if (typeof ResizeObserver !== "undefined") {
+      const ro = new ResizeObserver(update);
+      ro.observe(cupEl);
+      return () => ro.disconnect();
+    }
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
   const phaseLabel = active.label === "bloom" ? "bloom" : `${activeIdx}차`;
 
   return (
@@ -123,7 +141,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
           className="absolute inset-x-0 bottom-0"
           style={{
             background:
-              "linear-gradient(180deg, var(--color-brewing-liquid-top) 0%, var(--color-brewing-liquid-mid) 22%, var(--color-brewing-liquid-deep) 60%, var(--color-brewing-liquid-bottom) 100%)",
+              "linear-gradient(180deg, var(--color-brewing-liquid-top) 0%, var(--color-brewing-liquid-mid) 22%, var(--color-brewing-liquid-deep) 60%, var(--color-brewing-liquid-bottom) 100%) no-repeat bottom / 100% var(--cup-height, 100%)",
           }}
         >
           {/* meniscus highlight */}
