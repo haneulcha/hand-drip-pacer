@@ -31,3 +31,4 @@ coverage
 # Playwright / visual QA artifacts (from dev sessions)
 .playwright-mcp/
 /*.png
+.superpowers/

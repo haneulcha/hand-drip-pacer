@@ -17,6 +17,10 @@ const GRIND_HINT_LABEL: Record<GrindHint, string> = {
 export const formatGrindHint = (hint: GrindHint): string =>
   GRIND_HINT_LABEL[hint];
 
+// Percentage formatter for CSS sizing (always 2 decimals, "%" suffix).
+export const toPct = (ratio: number): string =>
+  `${(ratio * 100).toFixed(2)}%`;
+
 export const formatBrewedAt = (epochMs: number): string => {
   const d = new Date(epochMs);
   const year = d.getFullYear();
