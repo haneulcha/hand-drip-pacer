@@ -55,6 +55,7 @@ export default {
         popover: "var(--shadow-popover)",
         dialog: "var(--shadow-dialog)",
         "rim-inset": "var(--shadow-rim-inset)",
+        "cup-inset": "var(--shadow-cup-inset)",
       },
       keyframes: {
         "popover-in": {

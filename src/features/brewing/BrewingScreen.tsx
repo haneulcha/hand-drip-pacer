@@ -91,13 +91,13 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
             </div>
           )}
         </div>
-        <div className="flex items-start gap-3 pt-2">
+        <div className="flex items-center gap-3">
           {!done && (
             <button
               type="button"
               onClick={handleSkip}
               aria-label="다음 스텝으로 건너뛰기"
-              className="px-2 py-1 text-xs text-text-muted hover:text-text-secondary"
+              className="flex min-h-11 items-center px-2 text-xs text-text-muted hover:text-text-secondary"
             >
               건너뛰기 <span aria-hidden>›</span>
             </button>
@@ -105,7 +105,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
           <button
             type="button"
             onClick={() => setStopDialogOpen(true)}
-            className="px-2 py-1 text-xs text-text-muted hover:text-text-secondary"
+            className="flex min-h-11 items-center px-2 text-xs text-text-muted hover:text-text-secondary"
           >
             중단
           </button>
@@ -113,7 +113,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
       </header>
 
       {/* CUP INTERIOR */}
-      <div ref={cupRef} className="relative flex-1 overflow-hidden bg-surface">
+      <div ref={cupRef} className="relative flex-1 overflow-hidden bg-surface shadow-cup-inset">
         {/* Liquid */}
         <div
           data-testid="liquid"
@@ -259,7 +259,7 @@ function RingMarker({
           >
             {formatTime(pour.atSec)}
           </time>
-          <span className="text-[8px] uppercase tracking-widest opacity-75">
+          <span className="uppercase tracking-widest opacity-75">
             {label}
           </span>
         </div>
