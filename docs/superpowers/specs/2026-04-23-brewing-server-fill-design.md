@@ -223,7 +223,7 @@ BrewingScreen
 /* Brewing — sizing */
 --brewing-rim-height:    84px;
 --brewing-hero-gap:      12px;
---font-size-brewing-hero: clamp(36px, 7.2vh, 56px);
+--font-size-brewing-hero: clamp(32px, 6.5vh, 48px);
 ```
 
 Dark 변형은 동일 키에 `--accent-200/400/600/800` + `rgba(0,0,0,…)` 기반 inset shadow로 매핑.
