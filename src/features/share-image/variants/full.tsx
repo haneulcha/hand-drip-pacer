@@ -71,7 +71,7 @@ export function Full({ session, photoUrl, color }: ShareVariantProps) {
 
           <div className={cx("my-6 h-px", dividerColor)} />
 
-          <dl className="grid grid-cols-[7rem_1fr] gap-y-3 text-base tabular-nums">
+          <dl className="grid grid-cols-[7rem_1fr] gap-y-3 text-md tabular-nums">
             <dt className={labelColor}>드리퍼</dt>
             <dd>{dripperName}</dd>
             <dt className={labelColor}>원두 · 물</dt>
@@ -85,7 +85,7 @@ export function Full({ session, photoUrl, color }: ShareVariantProps) {
               <div className={cx("my-6 h-px", dividerColor)} />
               <div className="flex items-center gap-3">
                 <FeelingGlyph kind={session.feeling} size={28} />
-                <span className="text-base">
+                <span className="text-md">
                   {FEELING_LABEL[session.feeling]}
                 </span>
               </div>

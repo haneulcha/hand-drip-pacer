@@ -88,7 +88,7 @@ export function ShareImageDialog({ open, session, onClose }: Props) {
       role="dialog"
       aria-modal="true"
       aria-label="공유 이미지 만들기"
-      className="fixed inset-0 z-50 flex flex-col bg-surface px-6 pb-6 pt-12 text-text-primary"
+      className="fixed inset-0 z-dialog flex flex-col bg-surface px-6 pb-6 pt-12 text-text-primary"
     >
       <header className="flex items-center justify-between">
         <h2 className="text-md font-semibold">공유하기</h2>
