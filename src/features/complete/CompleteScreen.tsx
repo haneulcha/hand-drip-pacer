@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { brewMethods } from "@/domain/methods";
 import { drippers } from "@/domain/drippers";
 import {
@@ -9,6 +10,7 @@ import { cx } from "@/ui/cx";
 import { Footer } from "@/ui/Footer";
 import { formatBrewedAt, formatGrindHint, formatTime } from "@/ui/format";
 import { FeelingGlyph } from "./FeelingGlyph";
+import { ShareImageDialog } from "@/features/share-image/ShareImageDialog";
 
 type Props = {
   readonly session: BrewSession;
@@ -27,6 +29,7 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
   const dripperName = drippers[recipe.dripper].name;
   const methodName = brewMethods[recipe.method].name;
   const dateText = formatBrewedAt(session.startedAt);
+  const [shareOpen, setShareOpen] = useState(false);
 
   const handleFeelingTap = (feeling: Feeling): void => {
     onFeelingChange(session.feeling === feeling ? null : feeling);
@@ -110,9 +113,9 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
       <div className="mt-auto flex gap-2 pt-10 text-sm font-medium">
         <button
           type="button"
-          disabled
+          onClick={() => setShareOpen(true)}
           aria-label="공유"
-          className="w-16 rounded-button border border-border py-3.5 text-text-muted opacity-disabled"
+          className="w-16 rounded-button border border-text-primary bg-surface-subtle py-3.5 text-text-primary transition-colors hover:bg-surface-inset"
         >
           공유
         </button>
@@ -126,6 +129,11 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
       </div>
 
       <Footer />
+      <ShareImageDialog
+        open={shareOpen}
+        session={session}
+        onClose={() => setShareOpen(false)}
+      />
     </div>
   );
 }
