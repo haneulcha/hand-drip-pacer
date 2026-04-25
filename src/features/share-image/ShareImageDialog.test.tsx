@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import type { Pour, Recipe } from "@/domain/types";
 import type { BrewSession } from "@/domain/session";
 import { c, g, ratio, s } from "@/domain/units";
@@ -42,12 +42,6 @@ const session: BrewSession = {
   completedAt: new Date(2026, 3, 25, 9, 0).getTime() + 180_000,
 };
 
-beforeEach(() => {
-  let n = 0;
-  vi.spyOn(URL, "createObjectURL").mockImplementation(() => `blob:m${++n}`);
-  vi.spyOn(URL, "revokeObjectURL").mockImplementation(() => {});
-});
-
 afterEach(() => {
   vi.restoreAllMocks();
   vi.clearAllMocks();
@@ -76,7 +70,7 @@ describe("ShareImageDialog", () => {
     ).toBeInTheDocument();
   });
 
-  it("transitions to 'preview' after picking a file", () => {
+  it("transitions to 'preview' after picking a file", async () => {
     const { container } = render(
       <ShareImageDialog open={true} session={session} onClose={vi.fn()} />,
     );
@@ -85,7 +79,7 @@ describe("ShareImageDialog", () => {
     ) as HTMLInputElement;
     fireEvent.change(galleryInput, { target: { files: [mkFile()] } });
     expect(
-      screen.getByRole("button", { name: "이미지 저장" }),
+      await screen.findByRole("button", { name: "이미지 저장" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "사진 변경" }),
@@ -101,7 +95,7 @@ describe("ShareImageDialog", () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  it("returns to 'empty' when 사진 변경 tapped", () => {
+  it("returns to 'empty' when 사진 변경 tapped", async () => {
     const { container } = render(
       <ShareImageDialog open={true} session={session} onClose={vi.fn()} />,
     );
@@ -109,7 +103,7 @@ describe("ShareImageDialog", () => {
       'input[data-source="gallery"]',
     ) as HTMLInputElement;
     fireEvent.change(galleryInput, { target: { files: [mkFile()] } });
-    fireEvent.click(screen.getByRole("button", { name: "사진 변경" }));
+    fireEvent.click(await screen.findByRole("button", { name: "사진 변경" }));
     expect(
       screen.getByRole("button", { name: "사진 찍기" }),
     ).toBeInTheDocument();

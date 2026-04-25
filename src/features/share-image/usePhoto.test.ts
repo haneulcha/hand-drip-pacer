@@ -1,26 +1,9 @@
-import { act, renderHook } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { act, renderHook, waitFor } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 import { usePhoto } from "./usePhoto";
 
-let createdUrls: string[] = [];
-
-beforeEach(() => {
-  createdUrls = [];
-  let n = 0;
-  vi.spyOn(URL, "createObjectURL").mockImplementation(() => {
-    const url = `blob:mock-${++n}`;
-    createdUrls.push(url);
-    return url;
-  });
-  vi.spyOn(URL, "revokeObjectURL").mockImplementation(() => {});
-});
-
-afterEach(() => {
-  vi.restoreAllMocks();
-});
-
-const mkFile = (name: string): File =>
-  new File([new Uint8Array([1, 2, 3])], name, { type: "image/jpeg" });
+const mkFile = (name: string, bytes: number[] = [1, 2, 3]): File =>
+  new File([new Uint8Array(bytes)], name, { type: "image/jpeg" });
 
 describe("usePhoto", () => {
   it("starts in 'empty' state", () => {
@@ -28,40 +11,47 @@ describe("usePhoto", () => {
     expect(result.current.state).toEqual({ kind: "empty" });
   });
 
-  it("setFile transitions to 'loaded' with object URL", () => {
+  it("setFile transitions to 'loading' then 'loaded' with a data URL", async () => {
     const { result } = renderHook(() => usePhoto());
     const file = mkFile("a.jpg");
+
     act(() => result.current.setFile(file));
-    expect(result.current.state).toEqual({
-      kind: "loaded",
-      url: "blob:mock-1",
-      file,
+    expect(result.current.state).toEqual({ kind: "loading" });
+
+    await waitFor(() => expect(result.current.state.kind).toBe("loaded"));
+    if (result.current.state.kind !== "loaded") throw new Error("unreachable");
+    expect(result.current.state.file).toBe(file);
+    expect(result.current.state.url.startsWith("data:image/jpeg")).toBe(true);
+  });
+
+  it("setFile twice replaces the previous photo", async () => {
+    const { result } = renderHook(() => usePhoto());
+    act(() => result.current.setFile(mkFile("a.jpg", [1, 2])));
+    await waitFor(() => expect(result.current.state.kind).toBe("loaded"));
+    const firstUrl =
+      result.current.state.kind === "loaded" ? result.current.state.url : null;
+
+    act(() => result.current.setFile(mkFile("b.jpg", [3, 4, 5])));
+    await waitFor(() => {
+      expect(result.current.state.kind).toBe("loaded");
+      if (result.current.state.kind === "loaded") {
+        expect(result.current.state.url).not.toBe(firstUrl);
+      }
     });
   });
 
-  it("setFile twice revokes the previous URL", () => {
+  it("clear returns to 'empty'", async () => {
     const { result } = renderHook(() => usePhoto());
     act(() => result.current.setFile(mkFile("a.jpg")));
-    act(() => result.current.setFile(mkFile("b.jpg")));
-    expect(URL.revokeObjectURL).toHaveBeenCalledWith("blob:mock-1");
-    expect(result.current.state).toMatchObject({
-      kind: "loaded",
-      url: "blob:mock-2",
-    });
-  });
-
-  it("clear revokes URL and returns to 'empty'", () => {
-    const { result } = renderHook(() => usePhoto());
-    act(() => result.current.setFile(mkFile("a.jpg")));
+    await waitFor(() => expect(result.current.state.kind).toBe("loaded"));
     act(() => result.current.clear());
-    expect(URL.revokeObjectURL).toHaveBeenCalledWith("blob:mock-1");
     expect(result.current.state).toEqual({ kind: "empty" });
   });
 
-  it("unmount revokes the URL", () => {
-    const { result, unmount } = renderHook(() => usePhoto());
-    act(() => result.current.setFile(mkFile("a.jpg")));
-    unmount();
-    expect(URL.revokeObjectURL).toHaveBeenCalledWith("blob:mock-1");
+  it("clear from already-empty state preserves reference equality (no re-render)", () => {
+    const { result } = renderHook(() => usePhoto());
+    const firstState = result.current.state;
+    act(() => result.current.clear());
+    expect(result.current.state).toBe(firstState);
   });
 });

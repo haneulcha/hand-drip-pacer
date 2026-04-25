@@ -73,7 +73,8 @@ export function ShareImageDialog({ open, session, onClose }: Props) {
       }
       setErrorMsg("공유에 실패했어요. 다시 시도해주세요.");
       setPhase("error");
-    } catch {
+    } catch (err) {
+      console.error("[share-image] export failed:", err);
       setErrorMsg("이미지를 만들지 못했어요. 다시 시도해주세요.");
       setPhase("error");
     }
@@ -100,6 +101,12 @@ export function ShareImageDialog({ open, session, onClose }: Props) {
           닫기
         </button>
       </header>
+
+      {photo.state.kind === "loading" && (
+        <div className="mt-10 flex flex-1 items-center justify-center">
+          <p className="text-sm text-text-secondary">사진을 불러오는 중…</p>
+        </div>
+      )}
 
       {photo.state.kind === "empty" && (
         <div className="mt-10 flex flex-1 flex-col justify-center gap-6">
