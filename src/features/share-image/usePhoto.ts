@@ -1,15 +1,17 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 export type PhotoState =
   | { readonly kind: "empty" }
   | { readonly kind: "loaded"; readonly url: string; readonly file: File };
+
+const EMPTY_STATE: PhotoState = { kind: "empty" };
 
 export const usePhoto = (): {
   state: PhotoState;
   setFile: (file: File) => void;
   clear: () => void;
 } => {
-  const [state, setState] = useState<PhotoState>({ kind: "empty" });
+  const [state, setState] = useState<PhotoState>(EMPTY_STATE);
   const currentUrlRef = useRef<string | null>(null);
 
   const revokeCurrent = useCallback(() => {
@@ -29,12 +31,14 @@ export const usePhoto = (): {
     [revokeCurrent],
   );
 
+  // Bails out when already empty — preserves reference equality so
+  // callers depending on `clear` in effect deps don't re-render in a loop.
   const clear = useCallback(() => {
     revokeCurrent();
-    setState({ kind: "empty" });
+    setState((prev) => (prev.kind === "empty" ? prev : EMPTY_STATE));
   }, [revokeCurrent]);
 
   useEffect(() => () => revokeCurrent(), [revokeCurrent]);
 
-  return { state, setFile, clear };
+  return useMemo(() => ({ state, setFile, clear }), [state, setFile, clear]);
 };
