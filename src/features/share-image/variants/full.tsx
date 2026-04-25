@@ -38,13 +38,16 @@ export function Full({ session, photoUrl, color }: ShareVariantProps) {
       data-share-variant="full"
       data-color={color}
       className="relative h-full w-full overflow-hidden font-sans"
-      style={{
-        backgroundImage: `url(${photoUrl})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
     >
-      <div className="flex h-full flex-col justify-end p-12">
+      {/* <img> instead of CSS background-image: html-to-image inlines <img>
+          src reliably, but drops background-image: url(blob:...) during
+          foreignObject rasterization. */}
+      <img
+        src={photoUrl}
+        alt=""
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+      <div className="relative flex h-full flex-col justify-end p-12">
         <div className={cx(cardBase, cardColor, "rounded-card p-10")}>
           <div className="flex items-baseline justify-between text-sm tracking-wide">
             <span className="font-semibold uppercase">{methodName}</span>

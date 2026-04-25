@@ -73,7 +73,7 @@ describe("Full variant", () => {
     expect(screen.queryByText("아쉬워요")).not.toBeInTheDocument();
   });
 
-  it("uses photoUrl as background image", () => {
+  it("renders photoUrl as <img> backdrop (so html-to-image can inline it)", () => {
     const { container } = render(
       <Full
         session={baseSession}
@@ -81,9 +81,11 @@ describe("Full variant", () => {
         color="positive"
       />,
     );
-    const root = container.querySelector('[data-share-variant="full"]');
-    expect(root).not.toBeNull();
-    expect(root?.getAttribute("style") ?? "").toContain("blob:my-photo");
+    const img = container.querySelector(
+      '[data-share-variant="full"] img',
+    ) as HTMLImageElement | null;
+    expect(img).not.toBeNull();
+    expect(img?.getAttribute("src")).toBe("blob:my-photo");
   });
 
   it("applies color class for negative", () => {
