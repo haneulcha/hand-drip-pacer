@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import type { Recipe, Pour } from "@/domain/types";
 import type { BrewSession } from "@/domain/session";
 import { c, g, ratio, s } from "@/domain/units";
-import { Full } from "./full";
+import { Full, fullVariant } from "./full";
 
 const mkPour = (i: number, atSec: number, amt: number, cum: number): Pour => ({
   index: i,
@@ -32,7 +32,7 @@ const baseSession: BrewSession = {
 };
 
 describe("Full variant", () => {
-  it("renders method name, date, total time and recipe cells", () => {
+  it("renders method name, date, total time, recipe row and labels", () => {
     render(
       <Full
         session={baseSession}
@@ -41,15 +41,29 @@ describe("Full variant", () => {
       />,
     );
     expect(screen.getByText("Kasuya 4:6")).toBeInTheDocument();
-    expect(screen.getByText("2026.04.25")).toBeInTheDocument();
     expect(screen.getByText("3:42")).toBeInTheDocument();
+    expect(screen.getByText("시간")).toBeInTheDocument();
+    expect(screen.getByText("2026.04.25")).toBeInTheDocument();
+    expect(screen.getByText("날짜")).toBeInTheDocument();
     expect(screen.getByText("V60")).toBeInTheDocument();
-    expect(screen.getByText("20 · 300 g")).toBeInTheDocument();
-    expect(screen.getByText(/93° · 고운 소금 정도/)).toBeInTheDocument();
+    expect(screen.getByText("드리퍼")).toBeInTheDocument();
+    expect(screen.getByText("20g · 300g · 93°")).toBeInTheDocument();
+    expect(screen.getByText("원두 · 물 · 온도")).toBeInTheDocument();
     expect(screen.getByText("pourover.work")).toBeInTheDocument();
   });
 
-  it("renders feeling row when feeling is set", () => {
+  it("does not render the grind hint", () => {
+    render(
+      <Full
+        session={baseSession}
+        photoUrl="blob:fake"
+        color="positive"
+      />,
+    );
+    expect(screen.queryByText(/고운 소금/)).not.toBeInTheDocument();
+  });
+
+  it("renders feeling row with label when feeling is set", () => {
     render(
       <Full
         session={{ ...baseSession, feeling: "calm" }}
@@ -58,6 +72,7 @@ describe("Full variant", () => {
       />,
     );
     expect(screen.getByText("만족스러워요")).toBeInTheDocument();
+    expect(screen.getByText("오늘의 기분")).toBeInTheDocument();
   });
 
   it("omits feeling row when feeling is unset", () => {
@@ -71,6 +86,7 @@ describe("Full variant", () => {
     expect(screen.queryByText("만족스러워요")).not.toBeInTheDocument();
     expect(screen.queryByText("글쎄요")).not.toBeInTheDocument();
     expect(screen.queryByText("아쉬워요")).not.toBeInTheDocument();
+    expect(screen.queryByText("오늘의 기분")).not.toBeInTheDocument();
   });
 
   it("renders photoUrl as <img> backdrop (so html-to-image can inline it)", () => {
@@ -86,6 +102,10 @@ describe("Full variant", () => {
     ) as HTMLImageElement | null;
     expect(img).not.toBeNull();
     expect(img?.getAttribute("src")).toBe("blob:my-photo");
+  });
+
+  it("exports as a square image (1080x1080)", () => {
+    expect(fullVariant.exportSize).toEqual({ width: 1080, height: 1080 });
   });
 
   it("applies color class for negative", () => {
