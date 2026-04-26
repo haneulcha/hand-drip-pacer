@@ -71,7 +71,7 @@ export function RecipeScreen({
   });
 
   return (
-    <div className="relative mx-auto flex min-h-lvh max-w-lg flex-col bg-surface text-text-primary">
+    <div className="relative mx-auto flex min-h-svh max-w-lg flex-col bg-surface text-text-primary">
       {/* top bar */}
       <header className="flex items-center gap-3 px-5 pt-4">
         <button
@@ -235,20 +235,19 @@ export function RecipeScreen({
         <div className="h-px bg-border" />
 
         {/* pour schedule */}
-        <section
-          className="flex min-h-0 flex-1 flex-col gap-2"
-          aria-label="푸어 스케줄"
-        >
-          <div className="flex items-baseline justify-between">
+        <section className="min-h-0" aria-label="푸어 스케줄">
+          <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-text-muted">
-              푸어 스케줄
+              미리보기
             </span>
             <span className="text-xs text-text-muted tabular-nums">
-              {recipe.totalWater}g · {formatTime(recipe.totalTimeSec)} ·{" "}
-              {recipe.pours.length} pours
+              {[
+                `${recipe.totalWater}g · ${formatTime(recipe.totalTimeSec)} · ${recipe.pours.length}번에 나누어 붓기`,
+              ].join(" · ")}
             </span>
           </div>
-          <div className="flex-1">
+
+          <div className="mt-3">
             <PourVerticalPreview
               pours={recipe.pours}
               totalTimeSec={recipe.totalTimeSec}
@@ -258,7 +257,7 @@ export function RecipeScreen({
       </main>
 
       {/* start button */}
-      <div className="px-5 pb-6">
+      <div className="px-5 pb-6 mt-4">
         <button
           type="button"
           onClick={onStart}

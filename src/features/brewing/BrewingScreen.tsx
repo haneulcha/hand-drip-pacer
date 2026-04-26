@@ -1,9 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import {
-  activeStepIdx,
-  pourLabel,
-  type BrewSession,
-} from "@/domain/session";
+import { activeStepIdx, pourLabel, type BrewSession } from "@/domain/session";
 import type { Pour } from "@/domain/types";
 import { formatTime } from "@/ui/format";
 import { cx } from "@/ui/cx";
@@ -46,8 +42,9 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
   const [manualStepFloor, setManualStepFloor] = useState(0);
   const completedRef = useRef(false);
 
-  const { recipe } = session;
-  const { pours, totalTimeSec } = recipe;
+  const {
+    recipe: { pours, totalTimeSec },
+  } = session;
   const clockIdx = activeStepIdx(pours, elapsed);
   const activeIdx = Math.min(
     pours.length - 1,
@@ -57,10 +54,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
   const isLast = activeIdx === pours.length - 1;
   const done = elapsed >= totalTimeSec || manualStepFloor >= pours.length;
 
-  const visibleRings = useMemo(
-    () => pours.filter((p) => p.atSec > 0),
-    [pours],
-  );
+  const visibleRings = useMemo(() => pours.filter((p) => p.atSec > 0), [pours]);
   const nextRingIdx = visibleRings.findIndex((p) => p.atSec > elapsed);
   const lastRingAt = visibleRings.at(-1)?.atSec ?? 0;
   const isDrawdown = lastRingAt > 0 && elapsed >= lastRingAt;
@@ -150,13 +144,13 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
   const phaseLabelText = pourLabel(active, activeIdx);
 
   return (
-    <div className="relative mx-auto flex min-h-screen max-w-lg flex-col bg-surface text-text-primary">
+    <div className="relative mx-auto flex min-h-svh max-w-lg flex-col bg-surface text-text-primary">
       <AriaLiveStep session={session} activeIdx={activeIdx} />
 
       {/* RIM */}
       <header
         data-region="rim"
-        className="relative z-10 flex h-brewing-rim items-start justify-between border-b border-border/60 bg-surface px-5 pt-4 shadow-rim-inset"
+        className="relative z-10 flex h-brewing-rim items-start justify-between border-b border-border/60 bg-surface px-5 pt-4"
       >
         <div className="flex items-start gap-4">
           <div>
@@ -271,14 +265,16 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
             <span
               className={cx(
                 "text-lg",
-                isDrawdown ? "text-text-on-liquid opacity-70" : "text-text-muted",
+                isDrawdown
+                  ? "text-text-on-liquid opacity-70"
+                  : "text-text-muted",
               )}
             >
               g
             </span>
           </div>
           {!isDrawdown && (
-            <div className="mt-1.5 text-sm italic text-text-secondary">
+            <div className="mt-1.5 text-sm text-text-secondary">
               +{active.pourAmount}g 붓기{isLast ? " · 마지막 푸어" : ""}
             </div>
           )}
@@ -339,9 +335,7 @@ function RingMarker({
           >
             {formatTime(pour.atSec)}
           </time>
-          <span className="uppercase tracking-widest opacity-75">
-            {label}
-          </span>
+          <span className="uppercase tracking-widest opacity-75">{label}</span>
         </div>
       )}
     </div>
