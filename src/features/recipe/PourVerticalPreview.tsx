@@ -2,9 +2,9 @@ import type { Pour } from "@/domain/types";
 import { formatTime } from "@/ui/format";
 
 const STROKE = {
-  hairline: 0.8,
-  base: 2,
-  bold: 2.2,
+  hairline: 1,
+  base: 2.5,
+  bold: 2.8,
 } as const;
 
 type Props = {
@@ -18,7 +18,7 @@ export function PourVerticalPreview({
   pours,
   totalTimeSec,
   width = 340,
-  height = 230,
+  height = 200,
 }: Props) {
   if (pours.length === 0 || totalTimeSec <= 0) return null;
 
@@ -35,10 +35,9 @@ export function PourVerticalPreview({
 
   return (
     <svg
-      width={width}
       height={height}
       viewBox={`0 0 ${width} ${height}`}
-      className="block max-w-full"
+      className="block size-full"
       role="img"
       aria-label="푸어 스케줄"
     >
@@ -71,16 +70,10 @@ export function PourVerticalPreview({
 
         return (
           <g key={p.index}>
-            <text
-              x={axisX - 8}
-              y={y + 3}
-              fontSize={10}
-              fill="var(--color-text-secondary)"
-              textAnchor="end"
-              className="tabular-nums"
-            >
+            <Label x={axisX} y={y}>
               {formatTime(p.atSec)}
-            </text>
+            </Label>
+
             <circle cx={axisX} cy={y} r={nodeR} fill={color} stroke={color} />
             <line
               x1={barStart}
@@ -95,29 +88,64 @@ export function PourVerticalPreview({
             <text
               x={barStart + barW + 8}
               y={y + 3.5}
-              fontSize={11}
+              fontSize={12}
               fill="var(--color-text-primary)"
-              fontWeight={500}
               className="tabular-nums"
             >
               +{p.pourAmount}g
             </text>
+
             {bloom && (
               <text
                 x={width - 4}
                 y={y + 3.5}
-                fontSize={9}
+                fontSize={10}
+                fontWeight={700}
                 fill="var(--color-pour-bloom)"
                 textAnchor="end"
-                fontWeight={600}
-                letterSpacing={0.4}
               >
-                bloom
+                뜸 들이기 (Bloom)
               </text>
             )}
           </g>
         );
       })}
+
+      <g>
+        <Label x={axisX} y={ty(totalTimeSec)}>
+          {formatTime(totalTimeSec)}
+        </Label>
+        <circle
+          cx={axisX}
+          cy={ty(totalTimeSec)}
+          r={nodeR}
+          fill="var(--color-text-secondary)"
+          stroke="var(--color-text-secondary)"
+        />
+      </g>
     </svg>
   );
 }
+
+const Label = ({
+  x,
+  y,
+  children,
+}: {
+  x: number;
+  y: number;
+  children: React.ReactNode;
+}) => {
+  return (
+    <text
+      x={x - 12}
+      y={y + 4}
+      fontSize={12}
+      fill="var(--color-text-secondary)"
+      textAnchor="end"
+      className="tabular-nums"
+    >
+      {children}
+    </text>
+  );
+};

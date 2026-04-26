@@ -1,9 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import {
-  activeStepIdx,
-  pourLabel,
-  type BrewSession,
-} from "@/domain/session";
+import { activeStepIdx, pourLabel, type BrewSession } from "@/domain/session";
 import type { Pour } from "@/domain/types";
 import { formatTime } from "@/ui/format";
 import { cx } from "@/ui/cx";
@@ -41,13 +37,24 @@ const RING_COLORS: Record<
 };
 
 export function BrewingScreen({ session, onExit, onComplete }: Props) {
-  const elapsed = useElapsed(session);
   const [stopDialogOpen, setStopDialogOpen] = useState(false);
+  const [pausedAt, setPausedAt] = useState<number | null>(null);
+  const [pauseOffsetMs, setPauseOffsetMs] = useState(0);
   const [manualStepFloor, setManualStepFloor] = useState(0);
   const completedRef = useRef(false);
 
-  const { recipe } = session;
-  const { pours, totalTimeSec } = recipe;
+  const effectiveSession = useMemo(
+    () =>
+      pauseOffsetMs === 0
+        ? session
+        : { ...session, startedAt: session.startedAt + pauseOffsetMs },
+    [session, pauseOffsetMs],
+  );
+  const elapsed = useElapsed(effectiveSession, pausedAt);
+
+  const {
+    recipe: { pours, totalTimeSec },
+  } = session;
   const clockIdx = activeStepIdx(pours, elapsed);
   const activeIdx = Math.min(
     pours.length - 1,
@@ -57,10 +64,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
   const isLast = activeIdx === pours.length - 1;
   const done = elapsed >= totalTimeSec || manualStepFloor >= pours.length;
 
-  const visibleRings = useMemo(
-    () => pours.filter((p) => p.atSec > 0),
-    [pours],
-  );
+  const visibleRings = useMemo(() => pours.filter((p) => p.atSec > 0), [pours]);
   const nextRingIdx = visibleRings.findIndex((p) => p.atSec > elapsed);
   const lastRingAt = visibleRings.at(-1)?.atSec ?? 0;
   const isDrawdown = lastRingAt > 0 && elapsed >= lastRingAt;
@@ -77,6 +81,19 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
 
   const handleSkip = () => {
     setManualStepFloor((prev) => Math.max(prev, clockIdx) + 1);
+  };
+
+  const handleStopRequest = () => {
+    setPausedAt(Date.now());
+    setStopDialogOpen(true);
+  };
+
+  const handleStopCancel = () => {
+    if (pausedAt !== null) {
+      setPauseOffsetMs((prev) => prev + (Date.now() - pausedAt));
+      setPausedAt(null);
+    }
+    setStopDialogOpen(false);
   };
 
   useEffect(() => {
@@ -137,7 +154,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
   }, [visibleRings, lastRingRatio]);
 
   useFillRatio(
-    session,
+    effectiveSession,
     totalTimeSec,
     liquidRef,
     heroRef,
@@ -145,18 +162,19 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
     isDrawdown,
     lastRingRatio,
     heroHeight,
+    pausedAt,
   );
 
   const phaseLabelText = pourLabel(active, activeIdx);
 
   return (
-    <div className="relative mx-auto flex min-h-screen max-w-lg flex-col bg-surface text-text-primary">
+    <div className="relative mx-auto flex min-h-svh max-w-lg flex-col bg-surface text-text-primary">
       <AriaLiveStep session={session} activeIdx={activeIdx} />
 
       {/* RIM */}
       <header
         data-region="rim"
-        className="relative z-10 flex h-brewing-rim items-start justify-between border-b border-border/60 bg-surface px-5 pt-4 shadow-rim-inset"
+        className="relative z-10 flex h-brewing-rim items-start justify-between bg-surface px-5 pt-4"
       >
         <div className="flex items-start gap-4">
           <div>
@@ -187,7 +205,7 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
           )}
           <button
             type="button"
-            onClick={() => setStopDialogOpen(true)}
+            onClick={handleStopRequest}
             className="flex min-h-11 items-center px-2 text-xs text-text-muted hover:text-text-secondary"
           >
             중단
@@ -195,11 +213,10 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
         </div>
       </header>
 
+      <FinishMarker totalTimeSec={totalTimeSec} />
+
       {/* CUP INTERIOR */}
-      <div
-        ref={cupRef}
-        className="relative flex-1 overflow-hidden bg-surface shadow-cup-inset"
-      >
+      <div ref={cupRef} className="relative flex-1 overflow-hidden bg-surface">
         <div
           ref={liquidRef}
           data-testid="liquid"
@@ -271,14 +288,16 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
             <span
               className={cx(
                 "text-lg",
-                isDrawdown ? "text-text-on-liquid opacity-70" : "text-text-muted",
+                isDrawdown
+                  ? "text-text-on-liquid opacity-70"
+                  : "text-text-muted",
               )}
             >
               g
             </span>
           </div>
           {!isDrawdown && (
-            <div className="mt-1.5 text-sm italic text-text-secondary">
+            <div className="mt-1.5 text-sm text-text-secondary">
               +{active.pourAmount}g 붓기{isLast ? " · 마지막 푸어" : ""}
             </div>
           )}
@@ -287,10 +306,29 @@ export function BrewingScreen({ session, onExit, onComplete }: Props) {
 
       {stopDialogOpen && (
         <StopConfirmDialog
-          onCancel={() => setStopDialogOpen(false)}
+          onCancel={handleStopCancel}
           onConfirm={onExit}
         />
       )}
+    </div>
+  );
+}
+
+function FinishMarker({ totalTimeSec }: { readonly totalTimeSec: number }) {
+  const mm = Math.floor(totalTimeSec / 60);
+  const ss = totalTimeSec % 60;
+  return (
+    <div className="relative h-3 bg-surface" aria-hidden="false">
+      <div
+        className="pointer-events-none absolute left-3.5 right-24 top-1/2 -translate-y-1/2"
+        style={{ height: "2px", background: "var(--color-border)" }}
+      />
+      <div className="absolute right-4 top-1/2 flex -translate-y-1/2 items-center gap-1.5 text-xs tabular-nums text-text-muted">
+        <time aria-label={`완료, ${mm}분 ${ss}초`} dateTime={`PT${mm}M${ss}S`}>
+          {formatTime(totalTimeSec)}
+        </time>
+        <span className="uppercase tracking-widest opacity-75">완료</span>
+      </div>
     </div>
   );
 }
@@ -328,7 +366,7 @@ function RingMarker({
       {!hideLabel && (
         <div
           className={cx(
-            "absolute right-4 -top-1.5 flex items-baseline gap-1.5 text-2xs tabular-nums",
+            "absolute right-4 -top-1.5 flex items-center gap-1.5 text-xs tabular-nums",
             variant === "next" && "font-semibold",
           )}
           style={{ color: colors.label }}
@@ -339,9 +377,7 @@ function RingMarker({
           >
             {formatTime(pour.atSec)}
           </time>
-          <span className="uppercase tracking-widest opacity-75">
-            {label}
-          </span>
+          <span className="uppercase tracking-widest opacity-75">{label}</span>
         </div>
       )}
     </div>

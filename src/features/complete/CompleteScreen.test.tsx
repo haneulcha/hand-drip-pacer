@@ -169,7 +169,7 @@ describe("CompleteScreen", () => {
     expect(onExit).toHaveBeenCalledTimes(1);
   });
 
-  it("renders 공유 button as disabled", () => {
+  it("opens share dialog when 공유 tapped", () => {
     render(
       <CompleteScreen
         session={baseSession}
@@ -178,6 +178,10 @@ describe("CompleteScreen", () => {
       />,
     );
     const shareBtn = screen.getByRole("button", { name: "공유" });
-    expect(shareBtn).toBeDisabled();
+    expect(shareBtn).not.toBeDisabled();
+    fireEvent.click(shareBtn);
+    expect(
+      screen.getByRole("dialog", { name: "공유 이미지 만들기" }),
+    ).toBeInTheDocument();
   });
 });

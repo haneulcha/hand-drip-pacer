@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { brewMethods } from "@/domain/methods";
 import { drippers } from "@/domain/drippers";
 import {
@@ -9,6 +10,7 @@ import { cx } from "@/ui/cx";
 import { Footer } from "@/ui/Footer";
 import { formatBrewedAt, formatGrindHint, formatTime } from "@/ui/format";
 import { FeelingGlyph } from "./FeelingGlyph";
+import { ShareImageDialog } from "@/features/share-image/ShareImageDialog";
 
 type Props = {
   readonly session: BrewSession;
@@ -27,31 +29,24 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
   const dripperName = drippers[recipe.dripper].name;
   const methodName = brewMethods[recipe.method].name;
   const dateText = formatBrewedAt(session.startedAt);
+  const [shareOpen, setShareOpen] = useState(false);
 
   const handleFeelingTap = (feeling: Feeling): void => {
     onFeelingChange(session.feeling === feeling ? null : feeling);
   };
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-lg flex-col bg-surface px-6 pb-4 pt-16 text-text-primary">
+    <div className="mx-auto flex min-h-svh max-w-lg flex-col bg-surface px-6 pb-4 pt-16 text-text-primary">
       {/* quiet header */}
       <header className="flex flex-col items-center gap-1">
-        <span className="text-xs font-semibold uppercase tracking-widest text-pour-bloom">
-          완료
-        </span>
-        <span className="text-xs text-text-muted tabular-nums">
-          {dateText}
-        </span>
+        <span className="text-xs text-text-muted tabular-nums">{dateText}</span>
       </header>
 
       {/* hero */}
-      <section aria-label="총 시간" className="mt-6 flex flex-col items-center">
+      <section aria-label="총 시간" className="mt-4 flex flex-col items-center">
         <span className="text-xs text-text-muted">오늘의 커피</span>
         <span className="mt-1 text-hero-sm font-medium leading-none tabular-nums">
           {formatTime(sessionDurationSec(session))}
-        </span>
-        <span className="mt-2 text-sm italic text-text-secondary">
-          이제 음미해보세요.
         </span>
       </section>
 
@@ -63,7 +58,7 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
           <SummaryCell label="레시피" value={methodName} />
           <SummaryCell
             label="원두 · 물"
-            value={`${recipe.coffee} · ${recipe.totalWater} g`}
+            value={`${recipe.coffee} g · ${recipe.totalWater} g`}
           />
           <SummaryCell
             label="온도 · 분쇄"
@@ -78,7 +73,7 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
         aria-label="감정 기록"
         className="mt-10 flex flex-col items-center gap-3"
       >
-        <p className="text-sm italic text-text-secondary">
+        <p className="text-sm text-text-secondary">
           오늘의 핸드드립 경험은 어땠나요?
         </p>
         <div className="flex w-full gap-2">
@@ -110,22 +105,27 @@ export function CompleteScreen({ session, onFeelingChange, onExit }: Props) {
       <div className="mt-auto flex gap-2 pt-10 text-sm font-medium">
         <button
           type="button"
-          disabled
+          onClick={() => setShareOpen(true)}
           aria-label="공유"
-          className="w-16 rounded-button border border-border py-3.5 text-text-muted opacity-disabled"
+          className="w-16 rounded-button border border-text-primary bg-surface-subtle py-3 text-text-primary transition-colors hover:bg-surface-inset"
         >
           공유
         </button>
         <button
           type="button"
           onClick={onExit}
-          className="flex-1 rounded-button border border-text-primary bg-surface-subtle py-3.5 transition-colors hover:bg-surface-inset"
+          className="flex-1 rounded-button border border-text-primary bg-surface-subtle py-3 transition-colors hover:bg-surface-inset"
         >
           처음으로
         </button>
       </div>
 
       <Footer />
+      <ShareImageDialog
+        open={shareOpen}
+        session={session}
+        onClose={() => setShareOpen(false)}
+      />
     </div>
   );
 }
