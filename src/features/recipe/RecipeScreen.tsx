@@ -232,7 +232,7 @@ export function RecipeScreen({
           </span>
         </div>
 
-        <div className="h-px bg-border" />
+        <div className="h-px bg-border my-2" />
 
         {/* pour schedule */}
         <section className="min-h-0" aria-label="푸어 스케줄">
@@ -261,11 +261,8 @@ export function RecipeScreen({
         <button
           type="button"
           onClick={onStart}
-          className="w-full flex items-center justify-center gap-3 rounded-button border border-text-primary bg-surface-subtle py-3.5 transition-colors hover:bg-surface-inset"
+          className="w-full flex items-center justify-center gap-3 rounded-button border border-text-primary bg-surface-subtle py-3 transition-colors hover:bg-surface-inset"
         >
-          <svg width={14} height={16} viewBox="0 0 14 16" aria-hidden="true">
-            <path d="M 2 2 L 12 8 L 2 14 Z" fill="currentColor" />
-          </svg>
           시작
         </button>
       </div>

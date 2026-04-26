@@ -24,13 +24,14 @@ export function useFillRatio(
   isDrawdown: boolean,
   lastRingRatio: number,
   heroHeight: number,
+  pausedAt: number | null = null,
 ): void {
   // Pre-formatted, since lastRingRatio + heroHeight are stable across frames.
   const drawdownBottom = `calc(${toPct(lastRingRatio)} - ${heroHeight + DRAWDOWN_HERO_OFFSET_PX}px)`;
 
   const apply = (): void => {
     const ratio = Math.min(
-      elapsedRatio(session, totalTimeSec, Date.now()),
+      elapsedRatio(session, totalTimeSec, pausedAt ?? Date.now()),
       maxRatio,
     );
     const pct = toPct(ratio);
@@ -60,5 +61,13 @@ export function useFillRatio(
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session, totalTimeSec, maxRatio, isDrawdown, lastRingRatio, heroHeight]);
+  }, [
+    session,
+    totalTimeSec,
+    maxRatio,
+    isDrawdown,
+    lastRingRatio,
+    heroHeight,
+    pausedAt,
+  ]);
 }
